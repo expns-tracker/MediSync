@@ -93,5 +93,5 @@ A catalog of known allergens (e.g., Peanuts, Penicillin) used to tag patient pro
 **Relationships:**
 * Many-to-Many with Patient.
 
-<img width="3970" height="2940" alt="medisync" src="https://github.com/user-attachments/assets/6727084b-b644-4675-b24c-bc1aad71e264" />
+<img width="3970" height="2940" alt="medisync" src="/medisync.png" />
 
