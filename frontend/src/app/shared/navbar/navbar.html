@@ -1,0 +1,17 @@
+<header class="navbar">
+  <div class="navbar-container">
+    <div class="logo">
+      <h2>MediSync</h2>
+    </div>
+    <nav class="nav-links">
+      <div class="nav-buttons" *ngIf="!isAuthenticated">
+        <a routerLink="/login" class="btn-secondary">Sign In</a>
+        <a routerLink="/register" class="btn-primary-nav">Register</a>
+      </div>
+      <div class="nav-buttons" *ngIf="isAuthenticated">
+        <span class="welcome-user">Welcome, {{ currentUser?.firstName || 'User' }}</span>
+        <button (click)="logout()" class="btn-secondary">Logout</button>
+      </div>
+    </nav>
+  </div>
+</header>
