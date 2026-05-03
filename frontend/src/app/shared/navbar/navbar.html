@@ -9,7 +9,7 @@
         <a routerLink="/register" class="btn-primary-nav">Register</a>
       </div>
       <div class="nav-buttons" *ngIf="isAuthenticated">
-        <span class="welcome-user">Welcome, {{ currentUser?.firstName || 'User' }}</span>
+        <span class="welcome-user">Welcome, {{ currentUser?.email || 'User' }}</span>
         <button (click)="logout()" class="btn-secondary">Logout</button>
       </div>
     </nav>

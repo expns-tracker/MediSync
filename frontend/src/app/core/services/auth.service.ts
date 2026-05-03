@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import {
@@ -169,10 +169,13 @@ export class AuthService {
       throw new Error('Invalid token');
     }
 
-    const decoded = JSON.parse(
-      atob(parts[1].replace(/-/g, '+').replace(/_/g, '/'))
-    );
-    return decoded;
+    const payload = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+    const decodedPayload =
+      typeof atob === 'function'
+        ? atob(payload)
+        : Buffer.from(payload, 'base64').toString('utf-8');
+
+    return JSON.parse(decodedPayload);
   }
 
   private handleError(error: HttpErrorResponse) {

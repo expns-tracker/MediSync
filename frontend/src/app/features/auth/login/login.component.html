@@ -1,0 +1,82 @@
+<div class="login-container">
+  <div class="login-box">
+    <h1>MediSync Login</h1>
+    <p class="subtitle">Sign in to your account</p>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="you@example.com"
+          class="form-input"
+          [class.error]="
+            loginForm.get('email')?.invalid && loginForm.get('email')?.touched
+          "
+          aria-describedby="email-error"
+          aria-invalid="{{ loginForm.get('email')?.invalid }}"
+        />
+        <span
+          id="email-error"
+          class="error-message"
+          *ngIf="
+            loginForm.get('email')?.invalid && loginForm.get('email')?.touched
+          "
+        >
+          Please enter a valid email.
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          placeholder="••••••••"
+          class="form-input"
+          [class.error]="
+            loginForm.get('password')?.invalid &&
+            loginForm.get('password')?.touched
+          "
+          aria-describedby="password-error"
+          aria-invalid="{{ loginForm.get('password')?.invalid }}"
+        />
+        <span
+          id="password-error"
+          class="error-message"
+          *ngIf="
+            loginForm.get('password')?.invalid &&
+            loginForm.get('password')?.touched
+          "
+        >
+          Password is required.
+        </span>
+      </div>
+
+      <button
+        type="submit"
+        class="btn-primary"
+        [disabled]="loginForm.invalid || isLoading"
+      >
+        {{ isLoading ? 'Signing in...' : 'Sign In' }}
+      </button>
+    </form>
+
+    <div class="login-footer">
+      <p>
+        <a routerLink="/" class="link-home">← Back to Home</a>
+      </p>
+      <p>
+        Don't have an account?
+        <a routerLink="/register" class="link">Register as a patient</a>
+      </p>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-banner" role="alert">
+      {{ errorMessage }}
+    </div>
+  </div>
+</div>
