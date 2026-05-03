@@ -5,6 +5,8 @@ import { PatientRegisterComponent } from './features/auth/register/patient-regis
 import { HomeComponent } from './features/home/home.component';
 import { DoctorListComponent } from './features/doctors/doctor-list.component';
 import { AppointmentBookComponent } from './features/appointments/book/appointment-book.component';
+import { UpcomingAppointmentsComponent } from './features/appointments/upcoming/upcoming-appointments.component';
+import { AppointmentHistoryComponent } from './features/appointments/history/appointment-history.component';
 import { UnauthorizedComponent } from './features/unauthorized/unauthorized.component';
 import { AuthGuard, GuestGuard, RoleGuard } from './core/guards/role.guard';
 
@@ -27,6 +29,22 @@ export const routes: Routes = [
   {
     path: 'appointments/book',
     component: AppointmentBookComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: {
+      roles: ['PATIENT'],
+    },
+  },
+  {
+    path: 'appointments/upcoming',
+    component: UpcomingAppointmentsComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: {
+      roles: ['PATIENT'],
+    },
+  },
+  {
+    path: 'appointments/history',
+    component: AppointmentHistoryComponent,
     canActivate: [AuthGuard, RoleGuard],
     data: {
       roles: ['PATIENT'],

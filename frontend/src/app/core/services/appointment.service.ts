@@ -19,6 +19,12 @@ export class AppointmentService {
       .pipe(catchError((error) => this.handleError(error)));
   }
 
+  getPatientAppointments(patientId: number): Observable<AppointmentDto[]> {
+    return this.http
+      .get<AppointmentDto[]>(`${this.baseUrl}/patients/${patientId}/appointments`)
+      .pipe(catchError((error) => this.handleError(error)));
+  }
+
   private handleError(error: HttpErrorResponse) {
     const message =
       error.error?.message || error.error?.error || `HTTP Error: ${error.status}`;

@@ -5,6 +5,8 @@
     </div>
     <nav class="nav-links">
       <a routerLink="/doctors" class="nav-link" *ngIf="isAuthenticated">Doctors</a>
+      <a routerLink="/appointments/upcoming" class="nav-link" *ngIf="isAuthenticated && currentUser?.role === 'PATIENT'">My Appointments</a>
+      <a routerLink="/appointments/history" class="nav-link" *ngIf="isAuthenticated && currentUser?.role === 'PATIENT'">History</a>
       <div class="nav-buttons" *ngIf="!isAuthenticated">
         <a routerLink="/login" class="btn-secondary">Sign In</a>
         <a routerLink="/register" class="btn-primary-nav">Register</a>

@@ -1,0 +1,35 @@
+<section class="appointment-list">
+  <div class="list-header">
+    <h1>{{ title }}</h1>
+    <ng-content select="[actions]"></ng-content>
+  </div>
+
+  <div *ngIf="appointments.length; else emptyState">
+    <div class="appointment-card" *ngFor="let appointment of appointments">
+      <div class="card-row">
+        <span class="label">Date</span>
+        <span>{{ appointment.appointmentTime | date:'EEE, MMM d, y h:mm a' }}</span>
+      </div>
+      <div class="card-row">
+        <span class="label">Doctor</span>
+        <span>{{ appointment.doctor.firstName }} {{ appointment.doctor.lastName }}</span>
+      </div>
+      <div class="card-row">
+        <span class="label">Department</span>
+        <span>{{ appointment.doctor.departmentName || appointment.doctor.specialization }}</span>
+      </div>
+      <div class="card-row">
+        <span class="label">Status</span>
+        <span class="status status-{{ appointment.status.toLowerCase() }}">{{ appointment.status }}</span>
+      </div>
+      <div class="card-row reason-row">
+        <span class="label">Reason</span>
+        <span>{{ appointment.reason }}</span>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #emptyState>
+    <div class="empty-state">No appointments found.</div>
+  </ng-template>
+</section>

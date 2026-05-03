@@ -1,0 +1,22 @@
+<section class="page-shell">
+  <div class="page-content">
+    <div class="page-header">
+      <div>
+        <p class="eyebrow">Appointment history</p>
+        <h1>Past visits</h1>
+        <p>See your completed, cancelled, and no-show appointments in one place.</p>
+      </div>
+      <a routerLink="/appointments/upcoming" class="btn-secondary">View upcoming</a>
+    </div>
+
+    <div *ngIf="errorMessage()" class="status-message status-error">{{ errorMessage() }}</div>
+    <div *ngIf="isLoading()" class="status-message status-info">Loading history…</div>
+
+    <app-appointment-list
+      *ngIf="!isLoading()"
+      [title]="'Appointment history'"
+      [appointments]="appointments()"
+    >
+    </app-appointment-list>
+  </div>
+</section>
