@@ -1,0 +1,83 @@
+<section class="appointment-page">
+  <div class="appointment-panel">
+    <div class="panel-header">
+      <p class="eyebrow">Book appointment</p>
+      <h1>Schedule your visit</h1>
+      <p>Choose a doctor, pick a time, and tell us the reason for your appointment.</p>
+    </div>
+
+    <form [formGroup]="appointmentForm" (ngSubmit)="submit()" novalidate>
+      <div class="form-group">
+        <label for="doctorId">Doctor</label>
+        <select id="doctorId" formControlName="doctorId" class="form-input">
+          <option [ngValue]="null" disabled>Select a doctor</option>
+          <option *ngFor="let doctor of doctors()" [ngValue]="doctor.id">
+            {{ doctor.firstName }} {{ doctor.lastName }} • {{ doctor.departmentName || doctor.specializationLabel || doctor.specialization }}
+          </option>
+        </select>
+        <span class="error-message" *ngIf="appointmentForm.get('doctorId')?.invalid && appointmentForm.get('doctorId')?.touched">
+          Please select a doctor.
+        </span>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="appointmentDate">Appointment date</label>
+          <input
+            id="appointmentDate"
+            type="date"
+            formControlName="appointmentDate"
+            class="form-input"
+          />
+          <span class="error-message" *ngIf="appointmentForm.get('appointmentDate')?.invalid && appointmentForm.get('appointmentDate')?.touched">
+            Please choose a date.
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="appointmentTimeSlot">Available slot</label>
+          <select
+            id="appointmentTimeSlot"
+            formControlName="appointmentTimeSlot"
+            class="form-input"
+            [disabled]="isSlotLoading() || !availableSlots().length"
+          >
+            <option [ngValue]="null" disabled *ngIf="!isSlotLoading()">Select a slot</option>
+            <option *ngFor="let slot of availableSlots()" [ngValue]="slot">
+              {{ slot }}
+            </option>
+          </select>
+          <div class="helper-text" *ngIf="isSlotLoading()">Loading available slots…</div>
+          <div class="helper-text" *ngIf="!isSlotLoading() && appointmentForm.get('doctorId')?.value && appointmentForm.get('appointmentDate')?.value && !availableSlots().length">
+            No available slots for selected doctor and date.
+          </div>
+          <span class="error-message" *ngIf="appointmentForm.get('appointmentTimeSlot')?.invalid && appointmentForm.get('appointmentTimeSlot')?.touched">
+            Please choose a time slot.
+          </span>
+          <span class="error-message" *ngIf="slotError()">{{ slotError() }}</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="reason">Reason</label>
+        <textarea
+          id="reason"
+          rows="5"
+          formControlName="reason"
+          class="form-input"
+          placeholder="Describe what you would like to discuss with the doctor"
+        ></textarea>
+        <span class="error-message" *ngIf="appointmentForm.get('reason')?.invalid && appointmentForm.get('reason')?.touched">
+          Reason must be at least 10 characters.
+        </span>
+      </div>
+
+      <button type="submit" class="btn-primary" [disabled]="appointmentForm.invalid || isLoading()">
+        {{ isLoading() ? 'Booking appointment...' : 'Book appointment' }}
+      </button>
+    </form>
+
+    <div class="status-message status-success" *ngIf="successMessage()">{{ successMessage() }}</div>
+    <div class="status-message status-error" *ngIf="errorMessage()">{{ errorMessage() }}</div>
+  </div>
+</section>

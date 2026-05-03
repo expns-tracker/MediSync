@@ -27,12 +27,14 @@ export interface UserDto {
   email: string;
   role: 'ADMIN' | 'DOCTOR' | 'PATIENT';
   active: boolean;
+  patientId?: number;
 }
 
 export interface DecodedToken {
   sub: string;
   role: string;
   userId: number;
+  patientId?: number;
   iat: number;
   exp: number;
 }

@@ -1,14 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { NavbarComponent } from '../../shared/navbar/navbar';
 import { AuthService } from '../../core/services/auth.service';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [CommonModule, RouterModule, NavbarComponent],
+  imports: [CommonModule, RouterModule],
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.scss'],
 })

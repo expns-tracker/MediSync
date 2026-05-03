@@ -10,12 +10,13 @@ import {
 } from '../models/auth.models';
 import { Observable, BehaviorSubject, throwError } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly apiUrl = 'http://localhost:8080/api';
+  private readonly apiUrl = environment.apiUrl;
   private readonly tokenKey = 'auth_token';
   private readonly userKey = 'current_user';
 
@@ -107,6 +108,11 @@ export class AuthService {
     return user ? user.id : null;
   }
 
+  getPatientId(): number | null {
+    const user = this.currentUser$.value;
+    return user?.patientId ?? null;
+  }
+
   // ============ Private helpers ============
 
   private isBrowser(): boolean {
@@ -132,8 +138,35 @@ export class AuthService {
 
   private loadCurrentUser(): UserDto | null {
     if (!this.isBrowser()) return null;
-    const user = localStorage.getItem(this.userKey);
-    return user ? JSON.parse(user) : null;
+    const storedUser = localStorage.getItem(this.userKey);
+    if (storedUser) {
+      try {
+        return JSON.parse(storedUser);
+      } catch (error) {
+        console.warn('Clearing invalid stored user payload:', error);
+        localStorage.removeItem(this.userKey);
+      }
+    }
+
+    const token = this.getToken();
+    if (!token) return null;
+
+    try {
+      const decoded = this.decodeToken(token);
+      const user: UserDto = {
+        id: decoded.userId,
+        email: decoded.sub,
+        role: decoded.role as any,
+        active: true,
+        patientId: decoded.patientId ?? undefined,
+      };
+      localStorage.setItem(this.userKey, JSON.stringify(user));
+      return user;
+    } catch (error) {
+      console.warn('Unable to recover user from token:', error);
+      localStorage.removeItem(this.tokenKey);
+      return null;
+    }
   }
 
   private loadCurrentRole(): string | null {
@@ -155,11 +188,13 @@ export class AuthService {
         email: decoded.sub,
         role: decoded.role as any,
         active: true,
+        patientId: decoded.patientId ?? undefined,
       };
       localStorage.setItem(this.userKey, JSON.stringify(user));
       this.currentUser$.next(user);
     } catch (error) {
       console.error('Failed to decode token:', error);
+      this.clearToken();
     }
   }
 
@@ -175,7 +210,11 @@ export class AuthService {
         ? atob(payload)
         : Buffer.from(payload, 'base64').toString('utf-8');
 
-    return JSON.parse(decodedPayload);
+    try {
+      return JSON.parse(decodedPayload);
+    } catch (error) {
+      throw new Error('Invalid token payload');
+    }
   }
 
   private handleError(error: HttpErrorResponse) {

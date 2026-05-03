@@ -2,8 +2,8 @@ import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/
 import { provideRouter } from '@angular/router';
 import {
   provideHttpClient,
-  withInterceptors,
   withFetch,
+  withInterceptorsFromDi,
   HTTP_INTERCEPTORS,
 } from '@angular/common/http';
 
@@ -16,7 +16,7 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
-    provideHttpClient(withFetch()),
+    provideHttpClient(withFetch(), withInterceptorsFromDi()),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

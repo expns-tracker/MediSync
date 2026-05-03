@@ -3,7 +3,10 @@ import { LandingComponent } from './features/landing/landing.component';
 import { LoginComponent } from './features/auth/login/login.component';
 import { PatientRegisterComponent } from './features/auth/register/patient-register.component';
 import { HomeComponent } from './features/home/home.component';
-import { AuthGuard, GuestGuard } from './core/guards/role.guard';
+import { DoctorListComponent } from './features/doctors/doctor-list.component';
+import { AppointmentBookComponent } from './features/appointments/book/appointment-book.component';
+import { UnauthorizedComponent } from './features/unauthorized/unauthorized.component';
+import { AuthGuard, GuestGuard, RoleGuard } from './core/guards/role.guard';
 
 export const routes: Routes = [
   {
@@ -15,6 +18,23 @@ export const routes: Routes = [
     path: 'home',
     component: HomeComponent,
     canActivate: [AuthGuard],
+  },
+  {
+    path: 'doctors',
+    component: DoctorListComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'appointments/book',
+    component: AppointmentBookComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: {
+      roles: ['PATIENT'],
+    },
+  },
+  {
+    path: 'unauthorized',
+    component: UnauthorizedComponent,
   },
   {
     path: 'login',
