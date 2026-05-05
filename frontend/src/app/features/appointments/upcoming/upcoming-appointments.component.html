@@ -16,6 +16,7 @@
       *ngIf="!isLoading()"
       [title]="'Upcoming appointments'"
       [appointments]="appointments()"
+      (cancelRequested)="onCancelAppointment($event)"
     >
     </app-appointment-list>
   </div>

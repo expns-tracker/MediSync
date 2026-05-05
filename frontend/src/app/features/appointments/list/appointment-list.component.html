@@ -26,6 +26,12 @@
         <span class="label">Reason</span>
         <span>{{ appointment.reason }}</span>
       </div>
+      <div class="card-actions" *ngIf="appointment.status === 'SCHEDULED'">
+        <button mat-stroked-button color="warn" (click)="onCancelClick(appointment.id)">
+          <mat-icon>close</mat-icon>
+          Cancel Appointment
+        </button>
+      </div>
     </div>
   </div>
 

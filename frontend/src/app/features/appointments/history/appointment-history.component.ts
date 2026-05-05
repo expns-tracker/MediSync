@@ -56,4 +56,21 @@ export class AppointmentHistoryComponent implements OnInit {
       },
     });
   }
+
+  onCancelAppointment(appointmentId: number): void {
+    const patientId = this.authService.getPatientId();
+    if (!patientId) {
+      this.errorMessage.set('Unable to cancel appointment. Please sign out and sign in again.');
+      return;
+    }
+
+    this.appointmentService.cancelAppointment(appointmentId).subscribe({
+      next: () => {
+        this.loadAppointments(patientId);
+      },
+      error: (error: Error) => {
+        this.errorMessage.set(error.message);
+      },
+    });
+  }
 }
