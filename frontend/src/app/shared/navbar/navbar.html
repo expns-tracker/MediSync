@@ -1,8 +1,8 @@
 <header class="navbar">
   <div class="navbar-container">
-    <div class="logo">
+    <a routerLink="/" class="logo">
       <h2>MediSync</h2>
-    </div>
+    </a>
     <nav class="nav-links">
       <a routerLink="/doctors" class="nav-link" *ngIf="isAuthenticated">Doctors</a>
       <a routerLink="/profile" class="nav-link" *ngIf="isAuthenticated && currentUser?.role === 'PATIENT'">Profile</a>

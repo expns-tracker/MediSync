@@ -26,6 +26,21 @@
         <span class="label">Reason</span>
         <span>{{ appointment.reason }}</span>
       </div>
+      <div *ngIf="appointment.medicalRecord" class="medical-record-section">
+        <h3>Medical Record</h3>
+        <div class="card-row">
+          <span class="label">Diagnosis</span>
+          <span>{{ appointment.medicalRecord.diagnosis }}</span>
+        </div>
+        <div class="card-row" *ngIf="appointment.medicalRecord.treatmentPlan">
+          <span class="label">Treatment Plan</span>
+          <span>{{ appointment.medicalRecord.treatmentPlan }}</span>
+        </div>
+        <div class="card-row" *ngIf="appointment.medicalRecord.prescription">
+          <span class="label">Prescription</span>
+          <span>{{ appointment.medicalRecord.prescription }}</span>
+        </div>
+      </div>
       <div class="card-actions" *ngIf="appointment.status === 'SCHEDULED'">
         <button mat-stroked-button color="warn" (click)="onCancelClick(appointment.id)">
           <mat-icon>close</mat-icon>
