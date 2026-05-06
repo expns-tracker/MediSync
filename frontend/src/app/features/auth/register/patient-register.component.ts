@@ -9,21 +9,36 @@ import {
 } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { AllergyService } from '../../../core/services/allergy.service';
 import { CommonModule } from '@angular/common';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { AllergyDto } from '../../../core/models/allergy.models';
 import { PatientRegistrationDto } from '../../../core/models/auth.models';
 
 @Component({
   selector: 'app-patient-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatOptionModule,
+  ],
   templateUrl: './patient-register.component.html',
   styleUrls: ['./patient-register.component.scss'],
 })
 export class PatientRegisterComponent implements OnInit {
   registrationForm!: FormGroup;
   isLoading = false;
+  isAllergiesLoading = false;
   errorMessage = '';
+  allergyLoadError = '';
   successMessage = '';
+  allergies: AllergyDto[] = [];
 
   private passwordRegex =
     /^(?=.*[0-9])(?=.*[A-Z])(?=.*[!@#$%^&()+=_-])(?=\S+$).{8,}$/;
@@ -31,6 +46,7 @@ export class PatientRegisterComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
+    private allergyService: AllergyService,
     private router: Router
   ) {}
 
@@ -47,7 +63,10 @@ export class PatientRegisterComponent implements OnInit {
       city: [''],
       county: [''],
       country: [''],
+      allergyIds: [[]],
     });
+
+    this.loadAllergies();
   }
 
   passwordValidator(control: AbstractControl): ValidationErrors | null {
@@ -87,5 +106,45 @@ export class PatientRegisterComponent implements OnInit {
           'Registration failed. Please try again or contact support.';
       },
     });
+  }
+
+  private loadAllergies(): void {
+    this.isAllergiesLoading = true;
+    this.allergyLoadError = '';
+
+    this.allergyService.getAllergies().subscribe({
+      next: (allergies) => {
+        this.allergies = allergies;
+        this.isAllergiesLoading = false;
+      },
+      error: (error: Error) => {
+        this.allergyLoadError = error.message;
+        this.isAllergiesLoading = false;
+      },
+    });
+  }
+
+  toggleAllergy(checked: boolean, allergyId: number): void {
+    const selected = [...(this.registrationForm.get('allergyIds')?.value ?? [])] as number[];
+    const index = selected.indexOf(allergyId);
+
+    if (checked && index === -1) {
+      selected.push(allergyId);
+    }
+
+    if (!checked && index !== -1) {
+      selected.splice(index, 1);
+    }
+
+    this.registrationForm.get('allergyIds')?.setValue(selected);
+  }
+
+  isAllergySelected(allergyId: number): boolean {
+    return (this.registrationForm.get('allergyIds')?.value ?? []).includes(allergyId);
+  }
+
+  getSelectedAllergies(): AllergyDto[] {
+    const selectedIds = this.registrationForm.get('allergyIds')?.value ?? [];
+    return this.allergies.filter(allergy => selectedIds.includes(allergy.id));
   }
 }

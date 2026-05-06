@@ -204,6 +204,27 @@
       </section>
 
       <section class="section-block">
+        <h2>Allergies</h2>
+        <p class="field-help">Select any known allergies to improve your care coordination.</p>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Allergies</mat-label>
+          <mat-select multiple formControlName="allergyIds">
+            <mat-option *ngFor="let allergy of allergies" [value]="allergy.id">
+              {{ allergy.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div class="selected-allergies" *ngIf="getSelectedAllergies().length">
+          <h3>Selected allergies:</h3>
+          <ul>
+            <li *ngFor="let allergy of getSelectedAllergies()">{{ allergy.name }}</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section-block">
         <h2>Security</h2>
 
         <div class="form-group">
