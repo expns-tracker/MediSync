@@ -1,9 +1,10 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { distinctUntilChanged } from 'rxjs';
 import { DoctorService } from '../../core/services/doctor.service';
+import { AuthService } from '../../core/services/auth.service';
 import { DoctorDto, DepartmentDto } from '../../core/models/doctor.models';
 
 @Component({
@@ -19,6 +20,9 @@ export class DoctorListComponent implements OnInit {
   isLoading = signal(false);
   isDepartmentsLoading = signal(false);
   errorMessage = signal('');
+  isDoctor = signal(false);
+
+  private authService = inject(AuthService);
 
   filterForm!: FormGroup;
 
@@ -29,6 +33,11 @@ export class DoctorListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.isDoctor.set(this.authService.hasRole('DOCTOR'));
+    this.authService.currentRole$.subscribe((role) => {
+      this.isDoctor.set(role === 'DOCTOR');
+    });
+
     this.loadDepartments();
     this.loadDoctors(null);
     this.filterForm

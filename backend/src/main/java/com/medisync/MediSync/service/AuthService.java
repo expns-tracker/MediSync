@@ -4,6 +4,7 @@ import com.medisync.MediSync.dto.AuthTokenDto;
 import com.medisync.MediSync.dto.CredentialsDto;
 import com.medisync.MediSync.entity.Patient;
 import com.medisync.MediSync.entity.User;
+import com.medisync.MediSync.repository.DoctorRepository;
 import com.medisync.MediSync.repository.PatientRepository;
 import com.medisync.MediSync.repository.UserRepository;
 import com.medisync.MediSync.security.JwtService;
@@ -20,6 +21,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final PatientRepository patientRepository;
+    private final DoctorRepository doctorRepository;
 
     public AuthTokenDto login(CredentialsDto credentials) {
         Authentication authentication = authenticationManager.authenticate(
@@ -34,12 +36,20 @@ public class AuthService {
                 .orElseThrow(() -> new IllegalStateException("Authenticated user not found"));
 
         Long patientId = null;
+        Long doctorId = null;
+
         if (user.getRole().name().equals("PATIENT")) {
             Patient patient = patientRepository.findByUserId(user.getId())
                     .orElseThrow(() -> new IllegalStateException("Patient record for authenticated user not found"));
             patientId = patient.getId();
         }
 
-        return new AuthTokenDto(jwtService.generateToken(email, user.getRole().name(), user.getId(), patientId));
+        if (user.getRole().name().equals("DOCTOR")) {
+            doctorId = doctorRepository.findByUserId(user.getId())
+                    .orElseThrow(() -> new IllegalStateException("Doctor record for authenticated user not found"))
+                    .getId();
+        }
+
+        return new AuthTokenDto(jwtService.generateToken(email, user.getRole().name(), user.getId(), patientId, doctorId));
     }
 }

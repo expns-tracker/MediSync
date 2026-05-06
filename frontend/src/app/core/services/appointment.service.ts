@@ -5,6 +5,12 @@ import { catchError } from 'rxjs/operators';
 import { AppointmentBookDto, AppointmentDto } from '../models/appointment.models';
 import { environment } from '../../../environments/environment';
 
+export interface MedicalRecordCreateDto {
+  diagnosis: string;
+  treatmentPlan?: string;
+  prescription?: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -28,6 +34,12 @@ export class AppointmentService {
   cancelAppointment(appointmentId: number): Observable<AppointmentDto> {
     return this.http
       .put<AppointmentDto>(`${this.baseUrl}/appointments/${appointmentId}/cancel`, {})
+      .pipe(catchError((error) => this.handleError(error)));
+  }
+
+  completeAppointment(appointmentId: number, medicalRecord: MedicalRecordCreateDto): Observable<any> {
+    return this.http
+      .post(`${this.baseUrl}/appointments/${appointmentId}/complete`, medicalRecord)
       .pipe(catchError((error) => this.handleError(error)));
   }
 

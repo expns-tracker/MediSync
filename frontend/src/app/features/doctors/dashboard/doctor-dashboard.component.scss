@@ -1,0 +1,87 @@
+.doctor-dashboard {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dashboard-header {
+  margin-bottom: 2rem;
+
+  h1 {
+    margin: 0 0 0.5rem 0;
+    color: #1f2937;
+  }
+
+  p {
+    margin: 0;
+    color: #6b7280;
+  }
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+}
+
+.dashboard-card {
+  height: fit-content;
+}
+
+.appointments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.appointment-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  background: #f9fafb;
+}
+
+.appointment-info {
+  .time {
+    font-weight: 600;
+    color: #1f2937;
+  }
+
+  .patient {
+    font-size: 0.9rem;
+    color: #374151;
+  }
+
+  .reason {
+    font-size: 0.8rem;
+    color: #6b7280;
+  }
+
+  .date {
+    font-size: 0.8rem;
+    color: #6b7280;
+  }
+}
+
+.no-appointments {
+  text-align: center;
+  color: #6b7280;
+  margin: 2rem 0;
+}
+
+.quick-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: flex-start;
+  }
+}

@@ -14,6 +14,7 @@ import java.util.Optional;
 @Repository
 public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     List<Doctor> findByDepartmentId(Long departmentId);
+    Optional<Doctor> findByUserId(Long userId);
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT d FROM Doctor d WHERE d.id = :id")
     Optional<Doctor> findByIdWithLock(Long id);

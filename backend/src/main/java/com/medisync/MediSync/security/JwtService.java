@@ -18,7 +18,7 @@ import java.util.Date;
 public class JwtService {
     private final ApplicationProperties applicationProperties;
 
-    public String generateToken(String email, String role, Long userId, Long patientId) {
+    public String generateToken(String email, String role, Long userId, Long patientId, Long doctorId) {
 
         Instant now = Instant.now();
 
@@ -32,6 +32,10 @@ public class JwtService {
 
         if (patientId != null) {
             builder.claim("patientId", patientId);
+        }
+
+        if (doctorId != null) {
+            builder.claim("doctorId", doctorId);
         }
 
         return builder.compact();

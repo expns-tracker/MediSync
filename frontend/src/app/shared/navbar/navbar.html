@@ -8,6 +8,8 @@
       <a routerLink="/profile" class="nav-link" *ngIf="isAuthenticated && currentUser?.role === 'PATIENT'">Profile</a>
       <a routerLink="/appointments/upcoming" class="nav-link" *ngIf="isAuthenticated && currentUser?.role === 'PATIENT'">My Appointments</a>
       <a routerLink="/appointments/history" class="nav-link" *ngIf="isAuthenticated && currentUser?.role === 'PATIENT'">History</a>
+      <a routerLink="/doctor/dashboard" class="nav-link" *ngIf="isAuthenticated && currentUser?.role === 'DOCTOR'">Dashboard</a>
+      <a routerLink="/doctor/appointments" class="nav-link" *ngIf="isAuthenticated && currentUser?.role === 'DOCTOR'">My Appointments</a>
       <div class="nav-buttons" *ngIf="!isAuthenticated">
         <a routerLink="/login" class="btn-secondary">Sign In</a>
         <a routerLink="/register" class="btn-primary-nav">Register</a>

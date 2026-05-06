@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -9,6 +10,30 @@ import { RouterModule } from '@angular/router';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
+  ngOnInit() {
+    this.redirectToDashboard();
+  }
+
+  private redirectToDashboard() {
+    const user = this.authService.getCurrentUser();
+    if (user) {
+      switch (user.role) {
+        case 'PATIENT':
+          this.router.navigate(['/appointments/history']);
+          break;
+        case 'DOCTOR':
+          this.router.navigate(['/doctor/dashboard']);
+          break;
+        case 'ADMIN':
+          // TODO: Admin dashboard
+          break;
+        default:
+          this.router.navigate(['/unauthorized']);
+      }
+    }
+  }
 }

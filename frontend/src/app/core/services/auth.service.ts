@@ -101,6 +101,13 @@ export class AuthService {
   }
 
   /**
+   * Get the current user object
+   */
+  getCurrentUser(): UserDto | null {
+    return this.currentUser$.value;
+  }
+
+  /**
    * Get the current user ID
    */
   getUserId(): number | null {
@@ -111,6 +118,11 @@ export class AuthService {
   getPatientId(): number | null {
     const user = this.currentUser$.value;
     return user?.patientId ?? null;
+  }
+
+  getDoctorId(): number | null {
+    const user = this.currentUser$.value;
+    return user?.doctorId ?? null;
   }
 
   // ============ Private helpers ============
@@ -159,6 +171,7 @@ export class AuthService {
         role: decoded.role as any,
         active: true,
         patientId: decoded.patientId ?? undefined,
+        doctorId: decoded.doctorId ?? undefined,
       };
       localStorage.setItem(this.userKey, JSON.stringify(user));
       return user;
@@ -189,6 +202,7 @@ export class AuthService {
         role: decoded.role as any,
         active: true,
         patientId: decoded.patientId ?? undefined,
+        doctorId: decoded.doctorId ?? undefined,
       };
       localStorage.setItem(this.userKey, JSON.stringify(user));
       this.currentUser$.next(user);

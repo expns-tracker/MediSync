@@ -1,0 +1,89 @@
+<main class="doctor-appointments">
+  <div class="header">
+    <h1>My Appointments</h1>
+    <button mat-raised-button color="primary" routerLink="/doctor/dashboard">
+      <mat-icon>dashboard</mat-icon>
+      Back to Dashboard
+    </button>
+  </div>
+
+  <mat-tab-group>
+    <!-- Scheduled Appointments -->
+    <mat-tab label="Scheduled ({{ scheduledAppointments().length }})">
+      <div class="tab-content">
+        <div class="appointments-list" *ngIf="scheduledAppointments().length > 0; else noScheduled">
+          <mat-card class="appointment-card" *ngFor="let appointment of scheduledAppointments()">
+            <mat-card-content>
+              <div class="card-row">
+                <span class="label">Date & Time</span>
+                <span>{{ appointment.appointmentTime | date:'mediumDate' }} at {{ appointment.appointmentTime | date:'shortTime' }}</span>
+              </div>
+              <div class="card-row">
+                <span class="label">Patient</span>
+                <span>{{ appointment.patient.firstName }} {{ appointment.patient.lastName }}</span>
+              </div>
+              <div class="card-row">
+                <span class="label">Reason</span>
+                <span>{{ appointment.reason }}</span>
+              </div>
+              <div class="card-row">
+                <span class="label">Status</span>
+                <mat-chip [color]="getStatusColor(appointment.status)" selected>
+                  {{ appointment.status }}
+                </mat-chip>
+              </div>
+            </mat-card-content>
+            <mat-card-actions>
+              <button mat-stroked-button color="primary" (click)="onCompleteAppointment(appointment)">
+                <mat-icon>check_circle</mat-icon>
+                Complete Appointment
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+        <ng-template #noScheduled>
+          <p class="no-appointments">No scheduled appointments.</p>
+        </ng-template>
+      </div>
+    </mat-tab>
+
+    <!-- Completed Appointments -->
+    <mat-tab label="Completed ({{ completedAppointments().length }})">
+      <div class="tab-content">
+        <div class="appointments-list" *ngIf="completedAppointments().length > 0; else noCompleted">
+          <mat-card class="appointment-card" *ngFor="let appointment of completedAppointments()">
+            <mat-card-content>
+              <div class="card-row">
+                <span class="label">Date & Time</span>
+                <span>{{ appointment.appointmentTime | date:'mediumDate' }} at {{ appointment.appointmentTime | date:'shortTime' }}</span>
+              </div>
+              <div class="card-row">
+                <span class="label">Patient</span>
+                <span>{{ appointment.patient.firstName }} {{ appointment.patient.lastName }}</span>
+              </div>
+              <div class="card-row">
+                <span class="label">Reason</span>
+                <span>{{ appointment.reason }}</span>
+              </div>
+              <div class="card-row">
+                <span class="label">Status</span>
+                <mat-chip [color]="getStatusColor(appointment.status)" selected>
+                  {{ appointment.status }}
+                </mat-chip>
+              </div>
+            </mat-card-content>
+            <mat-card-actions>
+              <button mat-stroked-button (click)="onViewMedicalRecord(appointment)">
+                <mat-icon>visibility</mat-icon>
+                View Medical Record
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+        <ng-template #noCompleted>
+          <p class="no-appointments">No completed appointments.</p>
+        </ng-template>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</main>

@@ -40,7 +40,7 @@
         <p><strong>Department:</strong> {{ doctor.departmentName || 'General' }}</p>
         <p><strong>Duration:</strong> {{ doctor.appointmentDuration || 30 }} mins</p>
       </div>
-      <div class="doctor-actions">
+      <div class="doctor-actions" *ngIf="!isDoctor()">
         <a
           [routerLink]="['/appointments/book']"
           [queryParams]="{ doctorId: doctor.id }"

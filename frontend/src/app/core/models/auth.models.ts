@@ -28,6 +28,7 @@ export interface UserDto {
   role: 'ADMIN' | 'DOCTOR' | 'PATIENT';
   active: boolean;
   patientId?: number;
+  doctorId?: number;
 }
 
 export interface DecodedToken {
@@ -35,6 +36,7 @@ export interface DecodedToken {
   role: string;
   userId: number;
   patientId?: number;
+  doctorId?: number;
   iat: number;
   exp: number;
 }

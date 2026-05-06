@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http'
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { DoctorDto, DepartmentDto } from '../models/doctor.models';
+import { AppointmentDto } from '../models/appointment.models';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -33,6 +34,12 @@ export class DoctorService {
     const params = new HttpParams().set('date', date);
     return this.http
       .get<string[]>(`${this.baseUrl}/doctors/${doctorId}/appointments/slots`, { params })
+      .pipe(catchError((error) => this.handleError(error)));
+  }
+
+  getDoctorAppointments(doctorId: number): Observable<AppointmentDto[]> {
+    return this.http
+      .get<AppointmentDto[]>(`${this.baseUrl}/doctors/${doctorId}/appointments`)
       .pipe(catchError((error) => this.handleError(error)));
   }
 
