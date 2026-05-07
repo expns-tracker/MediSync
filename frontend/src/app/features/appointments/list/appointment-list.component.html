@@ -46,7 +46,7 @@
           <p class="no-medical-record">Medical record is not yet available. Please contact your doctor.</p>
         </ng-template>
       </div>
-      <div class="card-actions" *ngIf="appointment.status === 'SCHEDULED'">
+      <div class="card-actions" *ngIf="allowCancel && appointment.status === 'SCHEDULED'">
         <button mat-stroked-button color="warn" (click)="onCancelClick(appointment.id)">
           <mat-icon>close</mat-icon>
           Cancel Appointment

@@ -1,0 +1,52 @@
+<main class="doctor-patient-list">
+  <section class="list-header">
+    <div>
+      <p class="eyebrow">Patient directory</p>
+      <h1>Search and review patients</h1>
+      <p>Search by name or email, then open the patient record for appointment history.</p>
+    </div>
+    <form [formGroup]="searchForm" class="search-form">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Search patients</mat-label>
+        <input matInput formControlName="query" placeholder="Enter name or email" />
+        <button mat-icon-button matSuffix aria-label="Search patients">
+          <mat-icon>search</mat-icon>
+        </button>
+      </mat-form-field>
+    </form>
+  </section>
+
+  <section class="patients-content">
+    <div *ngIf="isLoading()" class="loading-state">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+
+    <div *ngIf="!isLoading() && errorMessage()" class="error-state">
+      <p>{{ errorMessage() }}</p>
+    </div>
+
+    <div *ngIf="!isLoading() && !patients().length && !errorMessage()" class="empty-state">
+      <p>No patients found. Try a different search term.</p>
+    </div>
+
+    <div class="patient-grid" *ngIf="!isLoading() && patients().length">
+      <mat-card class="patient-card" *ngFor="let patient of patients()">
+        <div class="patient-title">
+          <h2>{{ patient.firstName }} {{ patient.lastName }}</h2>
+          <span class="patient-id">#{{ patient.id }}</span>
+        </div>
+        <div class="patient-info">
+          <p><strong>Email:</strong> {{ patient.email || 'N/A' }}</p>
+          <p><strong>Phone:</strong> {{ patient.phoneNumber || 'N/A' }}</p>
+          <p><strong>Gender:</strong> {{ patient.gender || 'Unknown' }}</p>
+          <p><strong>DOB:</strong> {{ patient.dateOfBirth || 'Unknown' }}</p>
+        </div>
+        <div class="patient-actions">
+          <button mat-stroked-button color="primary" [routerLink]="['/doctor/patients', patient.id]">
+            View history
+          </button>
+        </div>
+      </mat-card>
+    </div>
+  </section>
+</main>

@@ -57,6 +57,12 @@ public class PatientController {
         return ResponseEntity.ok(patientService.getById(patientId));
     }
 
+    @GetMapping
+    @PreAuthorize("hasRole('DOCTOR') or hasRole('ADMIN')")
+    public ResponseEntity<List<PatientDto>> searchPatients(@RequestParam(required = false) String search) {
+        return ResponseEntity.ok(patientService.searchPatients(search));
+    }
+
     @PutMapping("/{patientId}/")
     @PreAuthorize("hasRole('PATIENT')")
     @Operation(

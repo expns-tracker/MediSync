@@ -25,6 +25,13 @@ export class PatientService {
       .pipe(catchError((error) => this.handleError(error)));
   }
 
+  searchPatients(search?: string): Observable<PatientDto[]> {
+    const params = search ? { params: { search } } : {};
+    return this.http
+      .get<PatientDto[]>(`${this.baseUrl}/patients`, params)
+      .pipe(catchError((error) => this.handleError(error)));
+  }
+
   private handleError(error: HttpErrorResponse) {
     const message =
       error.error?.message || error.error?.error || `HTTP Error: ${error.status}`;

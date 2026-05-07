@@ -18,6 +18,7 @@ export class AppointmentListComponent {
 
   @Input() title = '';
   @Input() appointments: AppointmentDto[] = [];
+  @Input() allowCancel = true;
   @Output() cancelRequested = new EventEmitter<number>();
 
   onCancelClick(appointmentId: number): void {
