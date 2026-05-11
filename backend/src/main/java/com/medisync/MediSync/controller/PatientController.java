@@ -16,6 +16,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -105,9 +106,15 @@ public class PatientController {
             @ApiResponse(responseCode = "403", description = "Forbidden - Not authorized to view this patient's history", content = @Content),
             @ApiResponse(responseCode = "404", description = "Patient not found", content = @Content)
     })
-    public ResponseEntity<List<AppointmentDto>> getAppointmentsByPatientId(@PathVariable Long patientId,
-                                                                           Principal principal) {
-        return ResponseEntity.ok(appointmentService.getPatientAppointments(patientId, principal.getName()));
+    public ResponseEntity<List<AppointmentDto>> getAppointmentsByPatientId(
+            @PathVariable Long patientId,
+            @RequestParam(defaultValue = "all") String timeframe,
+            @PageableDefault(size = 20, sort = "appointmentDate", direction = Sort.Direction.DESC) Pageable pageable,
+            Principal principal
+                                                                           ) {
+        return ResponseEntity.ok(
+                appointmentService.getPatientAppointments(patientId, principal.getName(), timeframe, pageable)
+        );
     }
 
     @PutMapping("/{patientId}/deactivate")

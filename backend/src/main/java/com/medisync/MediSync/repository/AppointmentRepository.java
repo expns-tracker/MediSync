@@ -17,7 +17,20 @@ import java.util.List;
 
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
-    List<Appointment> findByPatient(Patient patient);
+    @Query("""
+        SELECT a FROM Appointment a 
+        WHERE a.patient.id = :patientId 
+        AND (:timeframe = 'all' 
+             OR (:timeframe = 'past' AND a.appointmentTime < :now) 
+             OR (:timeframe = 'upcoming' AND a.appointmentTime >= :now))
+    """)
+    Page<Appointment> findPatientAppointmentsFiltered(
+            @Param("patientId") Long patientId,
+            @Param("timeframe") String timeframe,
+            @Param("now") LocalDateTime now,
+            Pageable pageable
+    );
+
     @Query("""
         SELECT a FROM Appointment a 
         WHERE a.doctor.id = :doctorId 
