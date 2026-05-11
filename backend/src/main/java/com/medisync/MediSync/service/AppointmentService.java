@@ -11,6 +11,8 @@ import com.medisync.MediSync.entity.enums.Role;
 import com.medisync.MediSync.exception.ResourceNotFoundException;
 import com.medisync.MediSync.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,7 +56,7 @@ public class AppointmentService {
         return AppointmentDto.mapToDto(appointment);
     }
 
-    public List<AppointmentDto> getPatientAppointments(Long patientId, String currentUserEmail) {
+    public Page<AppointmentDto> getPatientAppointments(Long patientId, String currentUserEmail, String timeframe, Pageable pageable) {
         Patient patient = patientRepository.findById(patientId)
                 .orElseThrow(() -> new ResourceNotFoundException("Patient with id=" + patientId + " not found."));
 
@@ -70,16 +72,35 @@ public class AppointmentService {
             );
         }
 
-        List<Appointment> appointments = appointmentRepository.findByPatient(patient);
-        return appointments.stream().map(AppointmentDto::mapToDto).toList();
+        String normalizedTimeframe = (timeframe != null) ? timeframe.trim().toLowerCase() : "all";
+        if (!normalizedTimeframe.equals("past") && !normalizedTimeframe.equals("upcoming")) {
+            normalizedTimeframe = "all";
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+
+        Page<Appointment> appointments = appointmentRepository.findPatientAppointmentsFiltered(
+                patient.getId(), timeframe, now, pageable
+        );
+        return appointments.map(AppointmentDto::mapToDto);
     }
 
-    public List<AppointmentDto> getDoctorAppointments(Long doctorId) {
+    public Page<AppointmentDto> getDoctorAppointments(Long doctorId, String timeframe, Pageable pageable) {
         Doctor doctor = doctorRepository.findById(doctorId)
                 .orElseThrow(() -> new ResourceNotFoundException("Doctor with id=" + doctorId + " not found."));
 
-        List<Appointment> appointments = appointmentRepository.findByDoctor(doctor);
-        return appointments.stream().map(AppointmentDto::mapToDto).toList();
+        String normalizedTimeframe = (timeframe != null) ? timeframe.trim().toLowerCase() : "all";
+        if (!normalizedTimeframe.equals("past") && !normalizedTimeframe.equals("upcoming")) {
+            normalizedTimeframe = "all";
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+
+        Page<Appointment> appointmentsPage = appointmentRepository.findDoctorAppointmentsFiltered(
+                doctor.getId(), normalizedTimeframe, now, pageable
+        );
+
+        return appointmentsPage.map(AppointmentDto::mapToDto);
     }
 
     public List<LocalTime> getAvailableSlots(Long doctorId, LocalDate date) {

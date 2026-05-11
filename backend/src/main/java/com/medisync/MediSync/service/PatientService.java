@@ -17,6 +17,8 @@ import com.medisync.MediSync.repository.PatientRepository;
 import com.medisync.MediSync.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -76,20 +78,10 @@ public class PatientService {
                 .orElseThrow(() -> new ResourceNotFoundException("Patient with id=" + patientId + " not found!")));
     }
 
-    public List<PatientDto> searchPatients(String search) {
-        String normalized = search == null ? "" : search.trim().toLowerCase();
-        return patientRepository.findAll().stream()
-                .filter(patient -> patient.getUser().getIsActive())
-                .filter(patient -> {
-                    if (normalized.isEmpty()) {
-                        return true;
-                    }
-                    return patient.getFirstName().toLowerCase().contains(normalized)
-                            || patient.getLastName().toLowerCase().contains(normalized)
-                            || patient.getUser().getEmail().toLowerCase().contains(normalized);
-                })
-                .map(PatientDto::mapToDto)
-                .toList();
+    public Page<PatientDto> searchPatients(String search, Pageable pageable) {
+        String normalizedSearch = (search == null || search.trim().isEmpty()) ? null : search.trim();
+        Page<Patient> patientsPage = patientRepository.findActivePatientsWithSearch(normalizedSearch, pageable);
+        return patientsPage.map(PatientDto::mapToDto);
     }
 
     @Transactional
