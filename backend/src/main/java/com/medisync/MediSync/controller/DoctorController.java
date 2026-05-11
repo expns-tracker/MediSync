@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -59,15 +60,19 @@ public class DoctorController {
     @PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN')")
     @Operation(
             summary = "Get doctor's appointments",
-            description = "Retrieves all appointments for a specific doctor. Restricted to the Doctor themselves or Admins."
+            description = "Retrieves all/past/future appointments for a specific doctor. Restricted to the Doctor themselves or Admins."
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved appointments"),
             @ApiResponse(responseCode = "403", description = "Forbidden - Requires DOCTOR or ADMIN role", content = @Content),
             @ApiResponse(responseCode = "404", description = "Doctor not found", content = @Content)
     })
-    public ResponseEntity<List<AppointmentDto>> getAppointmentsByDoctorId(@PathVariable Long doctorId) {
-        return ResponseEntity.ok(appointmentService.getDoctorAppointments(doctorId));
+    public ResponseEntity<Page<AppointmentDto>> getAppointmentsByDoctorId(
+            @PathVariable Long doctorId,
+            @RequestParam(defaultValue = "all") String timeframe,
+            @PageableDefault(size = 20, sort = "appointmentDate", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        return ResponseEntity.ok(appointmentService.getDoctorAppointments(doctorId, timeframe, pageable));
     }
 
     @GetMapping("/{doctorId}/appointments/slots")

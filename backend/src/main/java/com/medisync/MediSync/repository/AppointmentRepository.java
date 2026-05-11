@@ -4,8 +4,11 @@ import com.medisync.MediSync.entity.Appointment;
 import com.medisync.MediSync.entity.Doctor;
 import com.medisync.MediSync.entity.Patient;
 import com.medisync.MediSync.entity.enums.AppointmentStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -15,7 +18,19 @@ import java.util.List;
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
     List<Appointment> findByPatient(Patient patient);
-    List<Appointment> findByDoctor(Doctor doctor);
+    @Query("""
+        SELECT a FROM Appointment a 
+        WHERE a.doctor.id = :doctorId 
+        AND (:timeframe = 'all' 
+             OR (:timeframe = 'past' AND a.appointmentTime < :now) 
+             OR (:timeframe = 'upcoming' AND a.appointmentTime >= :now))
+    """)
+    Page<Appointment> findDoctorAppointmentsFiltered(
+            @Param("doctorId") Long doctorId,
+            @Param("timeframe") String timeframe,
+            @Param("now") LocalDateTime now,
+            Pageable pageable
+    );
 
     @Query("""
         SELECT COUNT(a) > 0 FROM Appointment a
