@@ -106,7 +106,7 @@ public class PatientController {
             @ApiResponse(responseCode = "403", description = "Forbidden - Not authorized to view this patient's history", content = @Content),
             @ApiResponse(responseCode = "404", description = "Patient not found", content = @Content)
     })
-    public ResponseEntity<List<AppointmentDto>> getAppointmentsByPatientId(
+    public ResponseEntity<Page<AppointmentDto>> getAppointmentsByPatientId(
             @PathVariable Long patientId,
             @RequestParam(defaultValue = "all") String timeframe,
             @PageableDefault(size = 20, sort = "appointmentDate", direction = Sort.Direction.DESC) Pageable pageable,
