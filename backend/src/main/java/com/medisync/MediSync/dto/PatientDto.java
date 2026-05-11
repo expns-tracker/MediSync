@@ -9,6 +9,7 @@ import lombok.Data;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -24,6 +25,7 @@ public class PatientDto {
     private String city;
     private String county;
     private String country;
+    private List<Long> allergyIds;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -40,6 +42,7 @@ public class PatientDto {
                 .city(patient.getCity())
                 .county(patient.getCounty())
                 .country(patient.getCountry())
+                .allergyIds(patient.getAllergies() != null ? patient.getAllergies().stream().map(allergy -> allergy.getId()).collect(Collectors.toList()) : null)
                 .createdAt(patient.getCreatedAt())
                 .updatedAt(patient.getUpdatedAt())
                 .build();

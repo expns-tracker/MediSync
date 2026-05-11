@@ -1,6 +1,7 @@
 package com.medisync.MediSync.security;
 
 import com.medisync.MediSync.config.ApplicationProperties;
+import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -17,16 +18,27 @@ import java.util.Date;
 public class JwtService {
     private final ApplicationProperties applicationProperties;
 
-    public String generateToken(String email) {
+    public String generateToken(String email, String role, Long userId, Long patientId, Long doctorId) {
 
         Instant now = Instant.now();
 
-        return Jwts.builder()
+        JwtBuilder builder = Jwts.builder()
                 .setSubject(email)
+                .claim("role", role)
+                .claim("userId", userId)
                 .setIssuedAt(Date.from(now))
                 .setExpiration(Date.from(now.plus(10, ChronoUnit.HOURS)))
-                .signWith(Keys.hmacShaKeyFor(applicationProperties.getSecretKey().getBytes()), SignatureAlgorithm.HS256)
-                .compact();
+                .signWith(Keys.hmacShaKeyFor(applicationProperties.getSecretKey().getBytes()), SignatureAlgorithm.HS256);
+
+        if (patientId != null) {
+            builder.claim("patientId", patientId);
+        }
+
+        if (doctorId != null) {
+            builder.claim("doctorId", doctorId);
+        }
+
+        return builder.compact();
     }
 
     public String extractEmail(String token) {

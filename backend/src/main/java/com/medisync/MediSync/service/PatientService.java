@@ -76,6 +76,22 @@ public class PatientService {
                 .orElseThrow(() -> new ResourceNotFoundException("Patient with id=" + patientId + " not found!")));
     }
 
+    public List<PatientDto> searchPatients(String search) {
+        String normalized = search == null ? "" : search.trim().toLowerCase();
+        return patientRepository.findAll().stream()
+                .filter(patient -> patient.getUser().getIsActive())
+                .filter(patient -> {
+                    if (normalized.isEmpty()) {
+                        return true;
+                    }
+                    return patient.getFirstName().toLowerCase().contains(normalized)
+                            || patient.getLastName().toLowerCase().contains(normalized)
+                            || patient.getUser().getEmail().toLowerCase().contains(normalized);
+                })
+                .map(PatientDto::mapToDto)
+                .toList();
+    }
+
     @Transactional
     public PatientDto updatePatient(Long patientId, PatientUpdateDto patientUpdateDto, String currentUserEmail) {
         Patient patient = patientRepository.findById(patientId).orElseThrow(

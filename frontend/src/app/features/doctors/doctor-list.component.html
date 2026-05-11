@@ -1,0 +1,58 @@
+<section class="doctor-page">
+  <div class="doctor-header">
+    <div>
+      <p class="eyebrow">Find a specialist</p>
+      <h1>Browse doctors by department</h1>
+      <p>Select the right provider and book an appointment in a few clicks.</p>
+    </div>
+
+    <form [formGroup]="filterForm" class="filter-form" novalidate>
+      <label for="departmentId">Filter by department</label>
+      <select id="departmentId" formControlName="departmentId" class="form-input">
+        <option [ngValue]="null">All departments</option>
+        <option *ngFor="let department of departments()" [ngValue]="department.id">
+          {{ department.name }}
+        </option>
+      </select>
+      <div class="field-help" *ngIf="isDepartmentsLoading()">
+        Loading departments...
+      </div>
+      <div class="field-error" *ngIf="!isDepartmentsLoading() && departments().length === 0">
+        No departments loaded from the server.
+      </div>
+    </form>
+  </div>
+
+  <div class="status-bar" *ngIf="isLoading()">
+    Loading doctor directory...
+  </div>
+  <div class="status-bar status-error" *ngIf="errorMessage()">
+    {{ errorMessage() }}
+  </div>
+
+  <div class="doctor-grid" *ngIf="!isLoading() && doctors().length > 0">
+    <article class="doctor-card" *ngFor="let doctor of doctors()">
+      <div class="doctor-card-header">
+        <h2>{{ doctor.firstName }} {{ doctor.lastName }}</h2>
+        <span class="doctor-specialty">{{ doctor.specializationLabel || doctor.specialization }}</span>
+      </div>
+      <div class="doctor-details">
+        <p><strong>Department:</strong> {{ doctor.departmentName || 'General' }}</p>
+        <p><strong>Duration:</strong> {{ doctor.appointmentDuration || 30 }} mins</p>
+      </div>
+      <div class="doctor-actions" *ngIf="!isDoctor()">
+        <a
+          [routerLink]="['/appointments/book']"
+          [queryParams]="{ doctorId: doctor.id }"
+          class="btn-primary"
+        >
+          Book appointment
+        </a>
+      </div>
+    </article>
+  </div>
+
+  <div class="empty-state" *ngIf="!isLoading() && doctors().length === 0 && !errorMessage()">
+    No doctors match the selected department yet.
+  </div>
+</section>

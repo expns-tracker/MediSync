@@ -3,7 +3,17 @@ import { LandingComponent } from './features/landing/landing.component';
 import { LoginComponent } from './features/auth/login/login.component';
 import { PatientRegisterComponent } from './features/auth/register/patient-register.component';
 import { HomeComponent } from './features/home/home.component';
-import { AuthGuard, GuestGuard } from './core/guards/role.guard';
+import { DoctorListComponent } from './features/doctors/doctor-list.component';
+import { DoctorDashboardComponent } from './features/doctors/dashboard/doctor-dashboard.component';
+import { DoctorAppointmentsComponent } from './features/doctors/appointments/doctor-appointments.component';
+import { DoctorPatientListComponent } from './features/doctors/patients/doctor-patient-list.component';
+import { DoctorPatientDetailComponent } from './features/doctors/patients/doctor-patient-detail.component';
+import { AppointmentBookComponent } from './features/appointments/book/appointment-book.component';
+import { UpcomingAppointmentsComponent } from './features/appointments/upcoming/upcoming-appointments.component';
+import { AppointmentHistoryComponent } from './features/appointments/history/appointment-history.component';
+import { PatientProfileComponent } from './features/patients/profile/patient-profile.component';
+import { UnauthorizedComponent } from './features/unauthorized/unauthorized.component';
+import { AuthGuard, GuestGuard, RoleGuard } from './core/guards/role.guard';
 
 export const routes: Routes = [
   {
@@ -15,6 +25,79 @@ export const routes: Routes = [
     path: 'home',
     component: HomeComponent,
     canActivate: [AuthGuard],
+  },
+  {
+    path: 'doctors',
+    component: DoctorListComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'doctor/dashboard',
+    component: DoctorDashboardComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: {
+      roles: ['DOCTOR'],
+    },
+  },
+  {
+    path: 'doctor/patients',
+    component: DoctorPatientListComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: {
+      roles: ['DOCTOR'],
+    },
+  },
+  {
+    path: 'doctor/patients/:patientId',
+    component: DoctorPatientDetailComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: {
+      roles: ['DOCTOR'],
+    },
+  },
+  {
+    path: 'doctor/appointments',
+    component: DoctorAppointmentsComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: {
+      roles: ['DOCTOR'],
+    },
+  },
+  {
+    path: 'appointments/book',
+    component: AppointmentBookComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: {
+      roles: ['PATIENT'],
+    },
+  },
+  {
+    path: 'appointments/upcoming',
+    component: UpcomingAppointmentsComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: {
+      roles: ['PATIENT'],
+    },
+  },
+  {
+    path: 'appointments/history',
+    component: AppointmentHistoryComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: {
+      roles: ['PATIENT'],
+    },
+  },
+  {
+    path: 'profile',
+    component: PatientProfileComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: {
+      roles: ['PATIENT'],
+    },
+  },
+  {
+    path: 'unauthorized',
+    component: UnauthorizedComponent,
   },
   {
     path: 'login',

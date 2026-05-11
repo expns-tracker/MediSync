@@ -1,0 +1,64 @@
+<main class="patient-detail">
+  <section class="detail-header">
+    <button mat-icon-button routerLink="/doctor/patients" class="back-button">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div>
+      <h1 *ngIf="patient()">{{ patient()?.firstName }} {{ patient()?.lastName }}</h1>
+      <p *ngIf="patient()" class="patient-meta">#{{ patient()?.id }} • {{ patient()?.email }}</p>
+    </div>
+  </section>
+
+  <div *ngIf="isLoading()" class="loading-state">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+
+  <div *ngIf="errorMessage()" class="error-state">
+    <p>{{ errorMessage() }}</p>
+  </div>
+
+  <section class="patient-content" *ngIf="!isLoading() && patient()">
+    <mat-card class="patient-info-card">
+      <mat-card-header>
+        <mat-card-title>Patient Information</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="label">Email</span>
+            <span>{{ patient()?.email || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Phone</span>
+            <span>{{ patient()?.phoneNumber || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Gender</span>
+            <span>{{ patient()?.gender || 'Unknown' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Date of Birth</span>
+            <span>{{ patient()?.dateOfBirth || 'Unknown' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Address</span>
+            <span>{{ patient()?.address || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">City</span>
+            <span>{{ patient()?.city || 'N/A' }}</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <div class="appointments-section">
+      <h2>Appointment History</h2>
+      <app-appointment-list
+        title="All Appointments"
+        [appointments]="appointments()"
+        [allowCancel]="false"
+      ></app-appointment-list>
+    </div>
+  </section>
+</main>

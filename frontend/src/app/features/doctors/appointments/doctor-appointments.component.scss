@@ -1,0 +1,47 @@
+.doctor-appointments {
+  padding: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+
+  h1 {
+    margin: 0;
+    color: #1f2937;
+  }
+}
+
+.tab-content {
+  padding: 2rem 0;
+}
+
+.appointments-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.appointment-card {
+  .card-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+    color: #333;
+
+    .label {
+      font-weight: 600;
+      color: #555;
+    }
+  }
+}
+
+.no-appointments {
+  text-align: center;
+  color: #6b7280;
+  padding: 2rem;
+}

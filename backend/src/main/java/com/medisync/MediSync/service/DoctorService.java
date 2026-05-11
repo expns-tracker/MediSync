@@ -47,7 +47,7 @@ public class DoctorService {
         if(!departmentRepository.existsById(departmentId)) {
             throw new ResourceNotFoundException("Department with id " + departmentId + " not found");
         }
-        return doctorRepository.findByDepartmentIdAndUserIsActive(departmentId, deactivated).stream()
+        return doctorRepository.findByDepartmentIdAndUserIsActive(departmentId, !deactivated).stream()
                 .map(DoctorDto::mapToDto).toList();
     }
 
