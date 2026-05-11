@@ -18,6 +18,8 @@ import com.medisync.MediSync.repository.DoctorRepository;
 import com.medisync.MediSync.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -39,16 +41,16 @@ public class DoctorService {
         return DoctorDto.mapToDto(doctor);
     }
 
-    public List<DoctorDto> getDoctors(Long departmentId, boolean deactivated) {
+    public Page<DoctorDto> getDoctors(Long departmentId, boolean deactivated, Pageable pageable) {
         if (departmentId == null) {
-            return doctorRepository.findAllByUserIsActive(!deactivated).stream()
-                    .map(DoctorDto::mapToDto).toList();
+            return doctorRepository.findAllByUserIsActive(!deactivated, pageable)
+                    .map(DoctorDto::mapToDto);
         }
         if(!departmentRepository.existsById(departmentId)) {
             throw new ResourceNotFoundException("Department with id " + departmentId + " not found");
         }
-        return doctorRepository.findByDepartmentIdAndUserIsActive(departmentId, !deactivated).stream()
-                .map(DoctorDto::mapToDto).toList();
+        return doctorRepository.findByDepartmentIdAndUserIsActive(departmentId, !deactivated, pageable)
+                .map(DoctorDto::mapToDto);
     }
 
 
