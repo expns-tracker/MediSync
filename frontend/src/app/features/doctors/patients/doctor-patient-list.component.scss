@@ -1,0 +1,93 @@
+.doctor-patient-list {
+  min-height: 100vh;
+  padding: 2.5rem 2rem;
+  background: #f3f4f6;
+}
+
+.list-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1.5rem;
+  align-items: flex-end;
+  margin-bottom: 2rem;
+}
+
+.list-header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.list-header p {
+  color: #475569;
+  line-height: 1.75;
+  max-width: 680px;
+}
+
+.search-form {
+  flex: 1 1 320px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.search-field {
+  width: 100%;
+}
+
+.patients-content {
+  display: grid;
+  gap: 1rem;
+}
+
+.loading-state,
+.error-state,
+.empty-state {
+  text-align: center;
+  color: #475569;
+}
+
+.patient-grid {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+}
+
+.patient-card {
+  padding: 1.5rem;
+  border-radius: 1rem;
+}
+
+.patient-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.patient-title h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.patient-id {
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.patient-info p {
+  margin: 0.5rem 0;
+  color: #334155;
+}
+
+.patient-actions {
+  margin-top: 1.25rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (max-width: 720px) {
+  .list-header {
+    align-items: stretch;
+  }
+}

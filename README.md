@@ -95,3 +95,173 @@ A catalog of known allergens (e.g., Peanuts, Penicillin) used to tag patient pro
 
 <img width="3970" height="2940" alt="medisync" src="/medisync.png" />
 
+## 4. Backend Implementation
+The backend is built with Spring Boot 4 and Java 21 using a layered architecture:
+* `controller` – REST endpoints and request validation.
+* `service` – business rules, appointment validation, and authorization checks.
+* `repository` – Spring Data JPA data access.
+* `entity` – JPA entities for Patient, Doctor, Appointment, Department, Allergy, DoctorSchedule, MedicalRecord, and User.
+* `dto` – data transfer objects for request/response payloads.
+* `config` and `security` – JWT authentication, security filters, and OpenAPI configuration.
+
+### Core backend features
+* JWT-based authentication at `/api/auth/login`.
+* Patient self-registration via `/api/patients`.
+* Doctor and department administration via `/api/doctors` and `/api/departments`.
+* Appointment booking, cancellation, completion, and no-show management.
+* Recurring doctor schedule management to prevent bookings outside working hours.
+* Medical record creation by doctors after appointment completion.
+* Allergy catalog CRUD and patient allergy tracking.
+* Soft activation/deactivation for patients and doctors.
+
+### Security and roles
+* `PATIENT` – book appointments, update own profile, view own appointment history.
+* `DOCTOR` – view assigned appointments, complete consultations, manage medical records.
+* `ADMIN` – manage doctors, departments, schedules, allergies, and activate/deactivate accounts.
+
+## 5. Backend Setup
+### Prerequisites
+* Java 21
+* Maven (or use the included Maven wrapper)
+* PostgreSQL database
+
+### Environment configuration
+The backend uses the `dev` Spring profile by default.
+The active configuration file is `backend/src/main/resources/application-dev.properties`.
+
+Required environment variables:
+* `PSQL_USERNAME` – PostgreSQL user
+* `PSQL_PASSWORD` – PostgreSQL password
+* `SECRET_KEY` – JWT signing key
+
+Database connection:
+* `jdbc:postgresql://localhost:5432/medisync`
+
+### Run locally
+From the project root:
+```bash
+cd backend
+# On Windows
+mvnw.cmd spring-boot:run
+# On macOS/Linux
+./mvnw spring-boot:run
+```
+
+To build the backend artifact:
+```bash
+cd backend
+# On Windows
+mvnw.cmd clean package
+# On macOS/Linux
+./mvnw clean package
+```
+
+If you want to run the backend with Maven directly:
+```bash
+cd backend
+mvn clean package
+mvn spring-boot:run
+```
+
+### Notes
+* `spring.jpa.hibernate.ddl-auto=update` is enabled in development mode.
+* SQL initialization is allowed via `spring.sql.init.mode=always`.
+
+## 6. API Documentation
+The backend exposes OpenAPI documentation via Springdoc. After starting the backend, open one of these URLs:
+* Swagger UI: `http://localhost:8080/swagger-ui/index.html`
+* OpenAPI JSON: `http://localhost:8080/v3/api-docs`
+
+### Authentication
+* `POST /api/auth/login`
+  * Request: `CredentialsDto` with `email` and `password`
+  * Response: `AuthTokenDto` with JWT token
+
+### Patients
+* `POST /api/patients`
+  * Register a new patient. Public endpoint.
+* `GET /api/patients/{patientId}`
+  * Get patient profile.
+* `GET /api/patients`
+  * Search active patients. Requires `DOCTOR` or `ADMIN`.
+* `PUT /api/patients/{patientId}/`
+  * Update patient profile. Requires authenticated patient owner.
+* `GET /api/patients/{patientId}/appointments`
+  * Get patient appointment history.
+* `PUT /api/patients/{patientId}/deactivate`
+  * Deactivate patient account. Requires `ADMIN`.
+* `PUT /api/patients/{patientId}/activate`
+  * Activate patient account. Requires `ADMIN`.
+
+### Doctors
+* `GET /api/doctors`
+  * List doctors with optional department filtering.
+* `GET /api/doctors/{doctorId}`
+  * Get doctor profile.
+* `GET /api/doctors/{doctorId}/appointments`
+  * Get appointments for a doctor. Requires `DOCTOR` or `ADMIN`.
+* `GET /api/doctors/{doctorId}/appointments/slots?date={yyyy-MM-dd}`
+  * Get available appointment slots for a doctor.
+* `POST /api/doctors`
+  * Register a new doctor. Requires `ADMIN`.
+* `PUT /api/doctors/{doctorId}`
+  * Update doctor details. Requires `ADMIN`.
+* `PUT /api/doctors/{doctorId}/deactivate`
+  * Deactivate doctor. Requires `ADMIN`.
+* `PUT /api/doctors/{doctorId}/activate`
+  * Activate doctor account. Requires `ADMIN`.
+
+### Appointments
+* `GET /api/appointments/{appointmentId}`
+  * Get appointment details.
+* `POST /api/appointments`
+  * Book a new appointment. Requires `PATIENT`.
+* `POST /api/appointments/{appointmentId}/complete`
+  * Complete an appointment and create a medical record. Requires `DOCTOR`.
+* `PUT /api/appointments/{appointmentId}/cancel`
+  * Cancel an appointment.
+* `PUT /api/appointments/{appointmentId}/no-show`
+  * Mark appointment as no-show. Requires `DOCTOR` or `ADMIN`.
+
+### Medical Records
+* `PUT /api/medical-records/{medicalRecordId}`
+  * Update a medical record. Requires `DOCTOR`.
+* `DELETE /api/medical-records/{medicalRecordId}`
+  * Delete a medical record. Requires `DOCTOR`.
+
+### Departments
+* `GET /api/departments`
+  * List all departments.
+* `GET /api/departments/{id}`
+  * Get department details.
+* `POST /api/departments`
+  * Create a department. Requires `ADMIN`.
+* `PUT /api/departments/{id}`
+  * Update a department. Requires `ADMIN`.
+* `DELETE /api/departments/{id}`
+  * Delete a department. Requires `ADMIN`.
+
+### Allergies
+* `GET /api/allergies`
+  * List all allergies.
+* `GET /api/allergies/{allergyId}`
+  * Get allergy details.
+* `POST /api/allergies`
+  * Create new allergy. Requires `ADMIN`.
+* `PUT /api/allergies/{allergyId}`
+  * Update allergy. Requires `ADMIN`.
+* `DELETE /api/allergies/{allergyId}`
+  * Delete allergy. Requires `ADMIN`.
+
+### Doctor Schedules
+* `GET /doctors/{doctorId}/schedules`
+  * List doctor weekly shifts.
+* `GET /doctors/{doctorId}/schedules/{scheduleId}`
+  * Get specific schedule item.
+* `POST /doctors/{doctorId}/schedules`
+  * Create a shift. Requires `ADMIN`.
+* `PUT /doctors/{doctorId}/schedules/{scheduleId}`
+  * Update a shift. Requires `ADMIN`.
+* `DELETE /doctors/{doctorId}/schedules/{scheduleId}`
+  * Delete a shift. Requires `ADMIN`.
+

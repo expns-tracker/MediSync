@@ -1,0 +1,40 @@
+<h2 mat-dialog-title>
+  {{ readonly ? 'View Medical Record' : 'Complete Appointment' }}
+</h2>
+
+<mat-dialog-content>
+  <div class="appointment-info">
+    <h3>Appointment Details</h3>
+    <p><strong>Patient:</strong> {{ appointment.patient.firstName }} {{ appointment.patient.lastName }}</p>
+    <p><strong>Date:</strong> {{ appointment.appointmentTime | date:'mediumDate' }}</p>
+    <p><strong>Time:</strong> {{ appointment.appointmentTime | date:'shortTime' }}</p>
+    <p><strong>Reason:</strong> {{ appointment.reason }}</p>
+  </div>
+
+  <form [formGroup]="medicalRecordForm" class="medical-record-form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Diagnosis</mat-label>
+      <textarea matInput formControlName="diagnosis" rows="3" [readonly]="readonly"></textarea>
+      <mat-error *ngIf="medicalRecordForm.get('diagnosis')?.invalid && medicalRecordForm.get('diagnosis')?.touched">
+        Diagnosis is required
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Treatment Plan</mat-label>
+      <textarea matInput formControlName="treatmentPlan" rows="3" [readonly]="readonly"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Prescription</mat-label>
+      <textarea matInput formControlName="prescription" rows="3" [readonly]="readonly"></textarea>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" (click)="onSave()" *ngIf="!readonly" [disabled]="medicalRecordForm.invalid">
+    Save Medical Record
+  </button>
+</mat-dialog-actions>

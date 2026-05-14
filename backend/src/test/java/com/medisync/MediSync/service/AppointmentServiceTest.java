@@ -16,6 +16,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.time.*;
 import java.util.ArrayList;
@@ -25,6 +29,8 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -81,8 +87,6 @@ class AppointmentServiceTest {
                 .status(AppointmentStatus.SCHEDULED)
                 .appointmentTime(LocalDateTime.of(2025, 1, 1, 9, 0)) // Past date for completion tests
                 .build();
-
-
     }
 
     @Test
@@ -103,36 +107,71 @@ class AppointmentServiceTest {
 
     @Test
     void getPatientAppointments_Success() {
-        when(patientRepository.findById(2L)).thenReturn(Optional.of(patient));
-        when(appointmentRepository.findByPatient(patient)).thenReturn(List.of(appointment));
-        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(appointment.getPatient().getUser()));
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(0, 20);
+        org.springframework.data.domain.Page<Appointment> page = new org.springframework.data.domain.PageImpl<>(List.of(appointment));
 
-        List<AppointmentDto> results = appointmentService.getPatientAppointments(2L,
-                appointment.getPatient().getUser().getEmail());
-        assertThat(results).hasSize(1);
+        when(patientRepository.findById(2L)).thenReturn(Optional.of(patient));
+        when(appointmentRepository.findPatientAppointmentsFiltered(
+                org.mockito.ArgumentMatchers.eq(2L),
+                org.mockito.ArgumentMatchers.anyString(),
+                org.mockito.ArgumentMatchers.any(LocalDateTime.class),
+                org.mockito.ArgumentMatchers.eq(pageable)
+        )).thenReturn(page);
+        when(userRepository.findByEmail(org.mockito.ArgumentMatchers.anyString())).thenReturn(Optional.of(appointment.getPatient().getUser()));
+
+        org.springframework.data.domain.Page<AppointmentDto> results = appointmentService.getPatientAppointments(2L,
+                appointment.getPatient().getUser().getEmail(), "all", pageable);
+
+        assertThat(results.getContent()).hasSize(1);
     }
 
     @Test
     void getPatientAppointments_PatientNotFound() {
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(0, 20);
+
         when(patientRepository.findById(99L)).thenReturn(Optional.empty());
+
         assertThatThrownBy(() -> appointmentService.getPatientAppointments(99L,
-                appointment.getPatient().getUser().getEmail()))
+                appointment.getPatient().getUser().getEmail(), "all", pageable))
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
     @Test
-    void getDoctorAppointments_Success() {
-        when(doctorRepository.findById(1L)).thenReturn(Optional.of(doctor));
-        when(appointmentRepository.findByDoctor(doctor)).thenReturn(List.of(appointment));
+    void getPatientAppointments_AccessDenied() {
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(0, 20);
+        User otherPatientUser = User.builder().id(3L).email("other@test.com").isActive(true).role(com.medisync.MediSync.entity.enums.Role.PATIENT).build();
 
-        List<AppointmentDto> results = appointmentService.getDoctorAppointments(1L);
-        assertThat(results).hasSize(1);
+        when(patientRepository.findById(2L)).thenReturn(Optional.of(patient));
+        when(userRepository.findByEmail("other@test.com")).thenReturn(Optional.of(otherPatientUser));
+
+        assertThatThrownBy(() -> appointmentService.getPatientAppointments(2L,
+                "other@test.com", "all", pageable))
+                .isInstanceOf(org.springframework.security.access.AccessDeniedException.class)
+                .hasMessageContaining("You are not authorized");
+    }
+
+    @Test
+    void getDoctorAppointments_Success() {
+        Pageable pageable = PageRequest.of(0, 20);
+        Page<Appointment> page = new PageImpl<>(List.of(appointment));
+
+        lenient().when(doctorRepository.findById(1L)).thenReturn(Optional.of(doctor));
+        lenient().when(doctorRepository.existsById(1L)).thenReturn(true);
+        when(appointmentRepository.findDoctorAppointmentsFiltered(eq(1L), eq("all"), any(LocalDateTime.class), eq(pageable)))
+                .thenReturn(page);
+
+        Page<AppointmentDto> results = appointmentService.getDoctorAppointments(1L, "all", pageable);
+        assertThat(results.getContent()).hasSize(1);
     }
 
     @Test
     void getDoctorAppointments_DoctorNotFound() {
-        when(doctorRepository.findById(99L)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> appointmentService.getDoctorAppointments(99L))
+        Pageable pageable = PageRequest.of(0, 20);
+
+        lenient().when(doctorRepository.findById(99L)).thenReturn(Optional.empty());
+        lenient().when(doctorRepository.existsById(99L)).thenReturn(false);
+
+        assertThatThrownBy(() -> appointmentService.getDoctorAppointments(99L, "all", pageable))
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 

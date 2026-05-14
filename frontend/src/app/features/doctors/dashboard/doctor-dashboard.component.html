@@ -1,0 +1,71 @@
+<main class="doctor-dashboard">
+  <div class="dashboard-header">
+    <h1>Doctor Dashboard</h1>
+    <p>Welcome back, Dr. {{ authService.getCurrentUser()?.email }}</p>
+  </div>
+
+  <div class="dashboard-grid">
+    <!-- Today's Appointments -->
+    <mat-card class="dashboard-card">
+      <mat-card-header>
+        <mat-card-title>Today's Appointments</mat-card-title>
+        <mat-card-subtitle>{{ todayAppointments().length }} scheduled</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="appointments-list" *ngIf="todayAppointments().length > 0; else noTodayAppts">
+          <div class="appointment-item" *ngFor="let appt of todayAppointments()">
+            <div class="appointment-info">
+              <div class="time">{{ appt.appointmentTime | date:'shortTime' }}</div>
+              <div class="patient">{{ appt.patient.firstName }} {{ appt.patient.lastName }}</div>
+              <div class="reason">{{ appt.reason }}</div>
+            </div>
+            <mat-chip [color]="getStatusColor(appt.status)" selected>
+              {{ appt.status }}
+            </mat-chip>
+          </div>
+        </div>
+        <ng-template #noTodayAppts>
+          <p class="no-appointments">No appointments scheduled for today.</p>
+        </ng-template>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button routerLink="/doctor/appointments">
+          <mat-icon>calendar_today</mat-icon>
+          View All Appointments
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <!-- Upcoming Appointments -->
+    <mat-card class="dashboard-card">
+      <mat-card-header>
+        <mat-card-title>Upcoming Appointments</mat-card-title>
+        <mat-card-subtitle>{{ upcomingAppointments().length }} scheduled</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="appointments-list" *ngIf="upcomingAppointments().length > 0; else noUpcomingAppts">
+          <div class="appointment-item" *ngFor="let appt of upcomingAppointments() | slice:0:5">
+            <div class="appointment-info">
+              <div class="date">{{ appt.appointmentTime | date:'shortDate' }}</div>
+              <div class="time">{{ appt.appointmentTime | date:'shortTime' }}</div>
+              <div class="patient">{{ appt.patient.firstName }} {{ appt.patient.lastName }}</div>
+            </div>
+            <mat-chip [color]="getStatusColor(appt.status)" selected>
+              {{ appt.status }}
+            </mat-chip>
+          </div>
+        </div>
+        <ng-template #noUpcomingAppts>
+          <p class="no-appointments">No upcoming appointments.</p>
+        </ng-template>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button routerLink="/doctor/appointments">
+          <mat-icon>event</mat-icon>
+          View All Upcoming
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+  </div>
+</main>

@@ -1,0 +1,103 @@
+.appointment-list {
+  display: grid;
+  gap: 1rem;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.appointment-card {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 1rem;
+  padding: 1rem;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.card-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+  color: #333;
+}
+
+.label {
+  font-weight: 600;
+  color: #555;
+}
+
+.status {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.status-scheduled {
+  color: #0b72e3;
+}
+
+.status-completed {
+  color: #1b7a38;
+}
+
+.status-cancelled,
+.status-no_show {
+  color: #b72d2d;
+}
+
+.reason-row {
+  align-items: flex-start;
+}
+
+.medical-record-section {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+
+  h3 {
+    margin: 0 0 0.75rem 0;
+    font-size: 1.1rem;
+    color: #1f2937;
+  }
+
+  .card-row {
+    margin-bottom: 0.5rem;
+  }
+
+  .no-medical-record {
+    margin: 0;
+    color: #6b7280;
+    font-style: italic;
+  }
+}
+
+.empty-state {
+  padding: 2rem;
+  border: 1px dashed rgba(0, 0, 0, 0.12);
+  border-radius: 1rem;
+  text-align: center;
+  color: #666;
+}
+
+.card-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+}

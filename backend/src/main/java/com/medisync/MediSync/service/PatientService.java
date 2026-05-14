@@ -17,6 +17,8 @@ import com.medisync.MediSync.repository.PatientRepository;
 import com.medisync.MediSync.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -74,6 +76,12 @@ public class PatientService {
     public PatientDto getById(Long patientId) {
         return PatientDto.mapToDto(patientRepository.findById(patientId)
                 .orElseThrow(() -> new ResourceNotFoundException("Patient with id=" + patientId + " not found!")));
+    }
+
+    public Page<PatientDto> searchPatients(String search, Pageable pageable) {
+        String normalizedSearch = (search == null || search.trim().isEmpty()) ? null : search.trim();
+        Page<Patient> patientsPage = patientRepository.findActivePatientsWithSearch(normalizedSearch, pageable);
+        return patientsPage.map(PatientDto::mapToDto);
     }
 
     @Transactional

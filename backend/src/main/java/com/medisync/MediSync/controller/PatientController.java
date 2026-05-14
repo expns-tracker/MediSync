@@ -14,6 +14,10 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -57,6 +61,23 @@ public class PatientController {
         return ResponseEntity.ok(patientService.getById(patientId));
     }
 
+    @Operation(
+            summary = "Search and list patients",
+            description = "Retrieves a paginated list of all active patients. Supports optional filtering by first name, last name, or email. Restricted to Doctors and Admins."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved paginated list"),
+            @ApiResponse(responseCode = "403", description = "Forbidden - Requires DOCTOR or ADMIN role", content = @Content)
+    })
+    @GetMapping
+    @PreAuthorize("hasRole('DOCTOR') or hasRole('ADMIN')")
+    public Page<PatientDto> getPatients(
+            @RequestParam(required = false) String search,
+            @PageableDefault(size = 20) Pageable pageable
+    ) {
+        return patientService.searchPatients(search, pageable);
+    }
+
     @PutMapping("/{patientId}/")
     @PreAuthorize("hasRole('PATIENT')")
     @Operation(
@@ -85,9 +106,15 @@ public class PatientController {
             @ApiResponse(responseCode = "403", description = "Forbidden - Not authorized to view this patient's history", content = @Content),
             @ApiResponse(responseCode = "404", description = "Patient not found", content = @Content)
     })
-    public ResponseEntity<List<AppointmentDto>> getAppointmentsByPatientId(@PathVariable Long patientId,
-                                                                           Principal principal) {
-        return ResponseEntity.ok(appointmentService.getPatientAppointments(patientId, principal.getName()));
+    public ResponseEntity<Page<AppointmentDto>> getAppointmentsByPatientId(
+            @PathVariable Long patientId,
+            @RequestParam(defaultValue = "all") String timeframe,
+            @PageableDefault(size = 20, sort = "appointmentDate", direction = Sort.Direction.DESC) Pageable pageable,
+            Principal principal
+                                                                           ) {
+        return ResponseEntity.ok(
+                appointmentService.getPatientAppointments(patientId, principal.getName(), timeframe, pageable)
+        );
     }
 
     @PutMapping("/{patientId}/deactivate")
