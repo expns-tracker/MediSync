@@ -2,12 +2,14 @@ package com.medisync.MediSync.dto;
 
 import com.medisync.MediSync.entity.enums.Gender;
 import jakarta.validation.constraints.*;
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Data
+@Builder
 public class PatientUpdateDto {
     @NotBlank(message = "First name is required")
     private String firstName;

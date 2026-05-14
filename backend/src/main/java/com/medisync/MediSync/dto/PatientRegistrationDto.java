@@ -4,6 +4,7 @@ package com.medisync.MediSync.dto;
 import com.medisync.MediSync.entity.enums.Gender;
 import com.medisync.MediSync.validation.ValueOfEnum;
 import jakarta.validation.constraints.*;
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Data
+@Builder
 public class PatientRegistrationDto {
     @NotBlank(message = "First name is required")
     private String firstName;
