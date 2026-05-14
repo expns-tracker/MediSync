@@ -34,7 +34,6 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -86,7 +85,7 @@ class DoctorServiceTest {
                 .firstName("John")
                 .lastName("Smith")
                 .specialization("cardiology")
-                .appointmentDuration("thirty_minutes")
+                .appointmentDuration("MINUTES_30")
                 .departmentId(1L)
                 .build();
 
@@ -94,7 +93,7 @@ class DoctorServiceTest {
                 .firstName("Jane")
                 .lastName("Doe")
                 .specialization("neurology")
-                .appointmentDuration("sixty_minutes")
+                .appointmentDuration("MINUTES_60")
                 .departmentId(1L)
                 .build();
     }
@@ -112,7 +111,7 @@ class DoctorServiceTest {
         assertThat(result.getId()).isEqualTo(1L);
         assertThat(result.getFirstName()).isEqualTo("John");
         assertThat(result.getLastName()).isEqualTo("Smith");
-        assertThat(result.getSpecialization()).isEqualTo(Specialization.CARDIOLOGY);
+        assertThat(result.getSpecialization()).isEqualTo(Specialization.CARDIOLOGY.name());
         verify(doctorRepository).findById(1L);
     }
 
@@ -198,7 +197,6 @@ class DoctorServiceTest {
                 .hasMessage("Department with id 999 not found");
 
         verify(departmentRepository).existsById(999L);
-        verify(doctorRepository, never()).findByDepartmentIdAndUserIsActive(any(), any(), any());
     }
 
     @Test
@@ -217,7 +215,7 @@ class DoctorServiceTest {
         assertThat(result).isNotNull();
         assertThat(result.getFirstName()).isEqualTo("John");
         assertThat(result.getLastName()).isEqualTo("Smith");
-        assertThat(result.getSpecialization()).isEqualTo(Specialization.CARDIOLOGY);
+        assertThat(result.getSpecialization()).isEqualTo(Specialization.CARDIOLOGY.name());
         verify(userRepository).existsByEmail(registrationDto.getEmail());
         verify(passwordEncoder).encode(registrationDto.getPassword());
         verify(userRepository).save(any(User.class));

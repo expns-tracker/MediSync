@@ -65,7 +65,7 @@ class AdminServiceTest {
         // Then
         assertThat(result).isNotNull();
         assertThat(result.getEmail()).isEqualTo("admin@example.com");
-        assertThat(result.getRole()).isEqualTo(Role.ADMIN);
+        assertThat(result.getRole()).isEqualTo(Role.ADMIN.name());
         verify(userRepository).existsByEmail(registrationDto.getEmail());
         verify(passwordEncoder).encode(registrationDto.getPassword());
         verify(userRepository).save(any(User.class));
@@ -98,7 +98,7 @@ class AdminServiceTest {
         assertThat(result).isNotNull();
         assertThat(result).hasSize(1);
         assertThat(result.get(0).getEmail()).isEqualTo("admin@example.com");
-        assertThat(result.get(0).getRole()).isEqualTo(Role.ADMIN);
+        assertThat(result.get(0).getRole()).isEqualTo(Role.ADMIN.name());
         verify(userRepository).findAllByRole(Role.ADMIN);
     }
 
