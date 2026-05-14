@@ -62,7 +62,7 @@ class UserServiceTest {
         assertThat(result).isNotNull();
         assertThat(result.getId()).isEqualTo(1L);
         assertThat(result.getEmail()).isEqualTo("test@example.com");
-        assertThat(result.getRole()).isEqualTo(Role.PATIENT);
+        assertThat(result.getRole()).isEqualTo(Role.PATIENT.name());
         verify(userRepository).findById(1L);
     }
 

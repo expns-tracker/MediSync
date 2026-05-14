@@ -1,6 +1,7 @@
 package com.medisync.MediSync.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.medisync.MediSync.dto.DoctorDto;
 import com.medisync.MediSync.dto.DoctorRegistrationDto;
 import com.medisync.MediSync.dto.DoctorUpdateDto;
@@ -41,8 +42,7 @@ class DoctorControllerIT {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     @Autowired
     private DoctorRepository doctorRepository;
@@ -102,7 +102,7 @@ class DoctorControllerIT {
                 .firstName("Existing")
                 .lastName("Doctor")
                 .specialization(Specialization.CARDIOLOGY)
-                .appointmentDuration(AppointmentDuration.THIRTY_MINUTES)
+                .appointmentDuration(AppointmentDuration.MINUTES_30)
                 .user(testUser)
                 .department(testDepartment)
                 .build();
@@ -123,7 +123,8 @@ class DoctorControllerIT {
 
         // Verify doctor was created
         assertThat(userRepository.existsByEmail(registrationDto.getEmail())).isTrue();
-        Doctor savedDoctor = doctorRepository.findByUserEmail(registrationDto.getEmail()).orElseThrow();
+        User savedUser = userRepository.findByEmail(registrationDto.getEmail()).orElseThrow();
+        Doctor savedDoctor = doctorRepository.findByUserId(savedUser.getId()).orElseThrow();
         assertThat(savedDoctor.getFirstName()).isEqualTo("Test");
         assertThat(savedDoctor.getSpecialization()).isEqualTo(Specialization.CARDIOLOGY);
     }

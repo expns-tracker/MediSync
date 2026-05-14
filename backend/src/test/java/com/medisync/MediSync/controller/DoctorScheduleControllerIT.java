@@ -1,6 +1,7 @@
 package com.medisync.MediSync.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.medisync.MediSync.dto.DoctorScheduleCreateDto;
 import com.medisync.MediSync.entity.*;
 import com.medisync.MediSync.entity.enums.AppointmentDuration;
@@ -24,6 +25,7 @@ import java.time.LocalTime;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -33,8 +35,7 @@ class DoctorScheduleControllerIT {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     @Autowired
     private DoctorRepository doctorRepository;
@@ -64,7 +65,7 @@ class DoctorScheduleControllerIT {
                 .firstName("Test")
                 .lastName("Doctor")
                 .specialization(Specialization.CARDIOLOGY)
-                .appointmentDuration(AppointmentDuration.THIRTY_MINUTES)
+                .appointmentDuration(AppointmentDuration.MINUTES_30)
                 .user(doctorUser)
                 .build();
         testDoctor = doctorRepository.save(testDoctor);

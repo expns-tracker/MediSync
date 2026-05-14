@@ -73,7 +73,7 @@ class MedicalRecordServiceTest {
                 .firstName("Dr.")
                 .lastName("Smith")
                 .specialization(Specialization.CARDIOLOGY)
-                .appointmentDuration(AppointmentDuration.THIRTY_MINUTES)
+                .appointmentDuration(AppointmentDuration.MINUTES_30)
                 .user(doctorUser)
                 .build();
 
@@ -82,7 +82,7 @@ class MedicalRecordServiceTest {
                 .id(1L)
                 .patient(patient)
                 .doctor(doctor)
-                .appointmentDate(LocalDateTime.of(2024, 1, 1, 10, 0))
+                .appointmentTime(LocalDateTime.of(2024, 1, 1, 10, 0))
                 .status(AppointmentStatus.COMPLETED)
                 .build();
 

@@ -57,7 +57,7 @@ class DoctorScheduleServiceTest {
                 .firstName("John")
                 .lastName("Smith")
                 .specialization(Specialization.CARDIOLOGY)
-                .appointmentDuration(AppointmentDuration.THIRTY_MINUTES)
+                .appointmentDuration(AppointmentDuration.MINUTES_30)
                 .user(user)
                 .build();
 

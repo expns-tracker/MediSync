@@ -1,6 +1,7 @@
 package com.medisync.MediSync.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.medisync.MediSync.dto.DepartmentCreateDto;
 import com.medisync.MediSync.dto.DepartmentDto;
 import com.medisync.MediSync.dto.DepartmentUpdateDto;
@@ -29,8 +30,7 @@ class DepartmentControllerIT {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     @Autowired
     private DepartmentRepository departmentRepository;
