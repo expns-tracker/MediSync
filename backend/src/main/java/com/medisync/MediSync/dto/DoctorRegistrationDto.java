@@ -6,9 +6,11 @@ import com.medisync.MediSync.validation.ValueOfEnum;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class DoctorRegistrationDto {
 
     @NotBlank(message = "First name is required")

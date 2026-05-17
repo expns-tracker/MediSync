@@ -1,9 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { AppointmentBookDto, AppointmentDto } from '../models/appointment.models';
 import { environment } from '../../../environments/environment';
+
+interface PageResponse<T> {
+  content: T[];
+}
 
 export interface MedicalRecordCreateDto {
   diagnosis: string;
@@ -27,8 +31,13 @@ export class AppointmentService {
 
   getPatientAppointments(patientId: number): Observable<AppointmentDto[]> {
     return this.http
-      .get<AppointmentDto[]>(`${this.baseUrl}/patients/${patientId}/appointments`)
-      .pipe(catchError((error) => this.handleError(error)));
+      .get<PageResponse<AppointmentDto> | AppointmentDto[]>(`${this.baseUrl}/patients/${patientId}/appointments`)
+      .pipe(
+        map((response) =>
+          Array.isArray(response) ? response : response.content ?? []
+        ),
+        catchError((error) => this.handleError(error))
+      );
   }
 
   cancelAppointment(appointmentId: number): Observable<AppointmentDto> {
@@ -37,9 +46,27 @@ export class AppointmentService {
       .pipe(catchError((error) => this.handleError(error)));
   }
 
+  markNoShow(appointmentId: number): Observable<AppointmentDto> {
+    return this.http
+      .put<AppointmentDto>(`${this.baseUrl}/appointments/${appointmentId}/no-show`, {})
+      .pipe(catchError((error) => this.handleError(error)));
+  }
+
   completeAppointment(appointmentId: number, medicalRecord: MedicalRecordCreateDto): Observable<any> {
     return this.http
       .post(`${this.baseUrl}/appointments/${appointmentId}/complete`, medicalRecord)
+      .pipe(catchError((error) => this.handleError(error)));
+  }
+
+  updateMedicalRecord(medicalRecordId: number, medicalRecord: MedicalRecordCreateDto): Observable<any> {
+    return this.http
+      .put(`${this.baseUrl}/medical-records/${medicalRecordId}`, medicalRecord)
+      .pipe(catchError((error) => this.handleError(error)));
+  }
+
+  deleteMedicalRecord(medicalRecordId: number): Observable<void> {
+    return this.http
+      .delete<void>(`${this.baseUrl}/medical-records/${medicalRecordId}`)
       .pipe(catchError((error) => this.handleError(error)));
   }
 

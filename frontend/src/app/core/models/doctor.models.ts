@@ -11,6 +11,15 @@ export interface DoctorDto {
   updatedAt?: string;
 }
 
+export interface DoctorScheduleDto {
+  id: number;
+  dayOfWeek: 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY';
+  startTime: string;
+  endTime: string;
+  doctorId?: number;
+  doctorName?: string;
+}
+
 export interface DepartmentDto {
   id: number;
   name: string;
