@@ -1,0 +1,52 @@
+<main class="doctor-profile-page">
+  <mat-card class="profile-card">
+    <mat-card-header>
+      <mat-card-title>Doctor Profile</mat-card-title>
+      <mat-card-subtitle>View your account details</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="loading-state" *ngIf="isLoading()">
+        <mat-progress-spinner mode="indeterminate" diameter="40"></mat-progress-spinner>
+      </div>
+
+      <div class="error-state" *ngIf="!isLoading() && errorMessage()">
+        {{ errorMessage() }}
+      </div>
+
+      <div *ngIf="!isLoading() && !errorMessage() && doctor()" class="profile-details">
+        <div class="profile-row">
+          <span class="label">Name</span>
+          <span>{{ doctor()?.firstName }} {{ doctor()?.lastName }}</span>
+        </div>
+        <div class="profile-row">
+          <span class="label">Specialization</span>
+          <span>{{ doctor()?.specialization }}</span>
+        </div>
+        <div class="profile-row" *ngIf="doctor()?.departmentName">
+          <span class="label">Department</span>
+          <span>{{ doctor()?.departmentName }}</span>
+        </div>
+        <div class="profile-row" *ngIf="doctor()?.appointmentDuration">
+          <span class="label">Appointment Duration</span>
+          <span>{{ doctor()?.appointmentDuration }} min</span>
+        </div>
+        <div class="profile-row" *ngIf="doctor()?.createdAt">
+          <span class="label">Joined</span>
+          <span>{{ doctor()?.createdAt | date:'mediumDate' }}</span>
+        </div>
+        <div class="profile-row" *ngIf="doctor()?.updatedAt">
+          <span class="label">Last Updated</span>
+          <span>{{ doctor()?.updatedAt | date:'mediumDate' }}</span>
+        </div>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button mat-raised-button color="primary" routerLink="/doctor/dashboard">
+        <mat-icon>dashboard</mat-icon>
+        Back to Dashboard
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</main>

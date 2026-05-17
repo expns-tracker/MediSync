@@ -42,7 +42,8 @@ public class SecurityConfig {
                                         "/swagger-ui/**",
                                         "/v3/api-docs/**"
                                         ).permitAll()
-                                .requestMatchers(HttpMethod.POST,"/api/patients").anonymous()
+                                .requestMatchers(HttpMethod.POST,"/api/patients").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/allergies", "/api/departments", "/api/doctors/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

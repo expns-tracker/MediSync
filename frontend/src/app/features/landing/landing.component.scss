@@ -39,6 +39,22 @@
   line-height: 1.8;
 }
 
+.hero-icon-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1rem 0 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 999px;
+  background: rgba(99, 102, 241, 0.08);
+  color: #4338ca;
+  font-weight: 600;
+}
+
+.hero-icon-row mat-icon {
+  font-size: 1.3rem;
+}
+
 .hero-buttons {
   display: flex;
   flex-wrap: wrap;
@@ -88,6 +104,49 @@
     radial-gradient(circle at bottom right, rgba(168, 85, 247, 0.2), transparent 30%),
     linear-gradient(180deg, #eef2ff 0%, #f5f3ff 100%);
   box-shadow: 0 35px 90px rgba(15, 23, 42, 0.12);
+  display: grid;
+  place-items: center;
+}
+
+.illustration-card {
+  width: min(100%, 280px);
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(99, 102, 241, 0.16);
+  border-radius: 2rem;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 28px 60px rgba(99, 102, 241, 0.1);
+  display: grid;
+  gap: 1rem;
+  justify-items: center;
+}
+
+.illustration-icon {
+  width: 120px;
+  height: 120px;
+  display: grid;
+  place-items: center;
+  border-radius: 2rem;
+  background: linear-gradient(180deg, rgba(99, 102, 241, 0.12), rgba(99, 102, 241, 0.04));
+  color: #4338ca;
+}
+
+.illustration-icon svg {
+  width: 72px;
+  height: 72px;
+}
+
+.illustration-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.illustration-note {
+  margin: 0;
+  color: #4b5563;
+  line-height: 1.75;
+  font-size: 0.96rem;
 }
 
 .features {

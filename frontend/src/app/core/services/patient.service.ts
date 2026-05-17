@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { PatientDto, PatientUpdateDto } from '../models/patient.models';
 import { environment } from '../../../environments/environment';
 
@@ -26,10 +26,15 @@ export class PatientService {
   }
 
   searchPatients(search?: string): Observable<PatientDto[]> {
+    interface PageResponse<T> { content: T[] }
+
     const params = search ? { params: { search } } : {};
     return this.http
-      .get<PatientDto[]>(`${this.baseUrl}/patients`, params)
-      .pipe(catchError((error) => this.handleError(error)));
+      .get<PageResponse<PatientDto> | PatientDto[]>(`${this.baseUrl}/patients`, params)
+      .pipe(
+        map((res) => Array.isArray(res) ? res : (res.content ?? [])),
+        catchError((error) => this.handleError(error))
+      );
   }
 
   private handleError(error: HttpErrorResponse) {

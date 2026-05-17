@@ -89,7 +89,7 @@ class DoctorScheduleControllerIT {
     // SCENARIO 1: Success Flow (Create + Read)
     @Test
     void getFullSchedule_Success() throws Exception {
-        mockMvc.perform(get("/doctors/{doctorId}/schedules", testDoctor.getId()))
+        mockMvc.perform(get("/api/doctors/{doctorId}/schedules", testDoctor.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(greaterThanOrEqualTo(1))))
                 .andExpect(jsonPath("$[0].dayOfWeek", is("MONDAY")));
@@ -97,7 +97,7 @@ class DoctorScheduleControllerIT {
 
     @Test
     void getSchedule_Success() throws Exception {
-        mockMvc.perform(get("/doctors/{doctorId}/schedules/{scheduleId}", testDoctor.getId(), testSchedule.getId()))
+        mockMvc.perform(get("/api/doctors/{doctorId}/schedules/{scheduleId}", testDoctor.getId(), testSchedule.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(testSchedule.getId().intValue())))
                 .andExpect(jsonPath("$.dayOfWeek", is("MONDAY")))
@@ -108,7 +108,7 @@ class DoctorScheduleControllerIT {
     @Test
     @WithMockUser(roles = "ADMIN")
     void createSchedule_Success() throws Exception {
-        mockMvc.perform(post("/doctors/{doctorId}/schedules", testDoctor.getId())
+        mockMvc.perform(post("/api/doctors/{doctorId}/schedules", testDoctor.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createDto)))
                 .andExpect(status().isCreated())
@@ -135,7 +135,7 @@ class DoctorScheduleControllerIT {
                 .endTime(LocalTime.of(18, 0))
                 .build();
 
-        mockMvc.perform(put("/doctors/{doctorId}/schedules/{scheduleId}", testDoctor.getId(), testSchedule.getId())
+        mockMvc.perform(put("/api/doctors/{doctorId}/schedules/{scheduleId}", testDoctor.getId(), testSchedule.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateDto)))
                 .andExpect(status().isOk())
@@ -151,7 +151,7 @@ class DoctorScheduleControllerIT {
     @Test
     @WithMockUser(roles = "ADMIN")
     void deleteSchedule_Success() throws Exception {
-        mockMvc.perform(delete("/doctors/{doctorId}/schedules/{scheduleId}", testDoctor.getId(), testSchedule.getId()))
+        mockMvc.perform(delete("/api/doctors/{doctorId}/schedules/{scheduleId}", testDoctor.getId(), testSchedule.getId()))
                 .andExpect(status().isNoContent());
 
         // Verify schedule was deleted
@@ -161,21 +161,21 @@ class DoctorScheduleControllerIT {
     // SCENARIO 3: Error/Validation Flow
     @Test
     void getFullSchedule_DoctorNotFound() throws Exception {
-        mockMvc.perform(get("/doctors/{doctorId}/schedules", 999L))
+        mockMvc.perform(get("/api/doctors/{doctorId}/schedules", 999L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(0)));
     }
 
     @Test
     void getSchedule_NotFound() throws Exception {
-        mockMvc.perform(get("/doctors/{doctorId}/schedules/{scheduleId}", testDoctor.getId(), 999L))
+        mockMvc.perform(get("/api/doctors/{doctorId}/schedules/{scheduleId}", testDoctor.getId(), 999L))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     @WithMockUser(roles = "ADMIN")
     void createSchedule_DoctorNotFound() throws Exception {
-        mockMvc.perform(post("/doctors/{doctorId}/schedules", 999L)
+        mockMvc.perform(post("/api/doctors/{doctorId}/schedules", 999L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createDto)))
                 .andExpect(status().isNotFound());
@@ -189,7 +189,7 @@ class DoctorScheduleControllerIT {
                 .endTime(LocalTime.of(16, 0))
                 .build();
 
-        mockMvc.perform(post("/doctors/{doctorId}/schedules", testDoctor.getId())
+        mockMvc.perform(post("/api/doctors/{doctorId}/schedules", testDoctor.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidDto)))
                 .andExpect(status().isBadRequest());
@@ -213,7 +213,7 @@ class DoctorScheduleControllerIT {
     @Test
     @WithMockUser(roles = "ADMIN")
     void updateSchedule_NotFound() throws Exception {
-        mockMvc.perform(put("/doctors/{doctorId}/schedules/{scheduleId}", testDoctor.getId(), 999L)
+        mockMvc.perform(put("/api/doctors/{doctorId}/schedules/{scheduleId}", testDoctor.getId(), 999L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createDto)))
                 .andExpect(status().isNotFound());
@@ -222,13 +222,13 @@ class DoctorScheduleControllerIT {
     @Test
     @WithMockUser(roles = "ADMIN")
     void deleteSchedule_NotFound() throws Exception {
-        mockMvc.perform(delete("/doctors/{doctorId}/schedules/{scheduleId}", testDoctor.getId(), 999L))
+        mockMvc.perform(delete("/api/doctors/{doctorId}/schedules/{scheduleId}", testDoctor.getId(), 999L))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     void createSchedule_ForbiddenNoAdminRole() throws Exception {
-        mockMvc.perform(post("/doctors/{doctorId}/schedules", testDoctor.getId())
+        mockMvc.perform(post("/api/doctors/{doctorId}/schedules", testDoctor.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createDto)))
                 .andExpect(status().isForbidden());
@@ -236,7 +236,7 @@ class DoctorScheduleControllerIT {
 
     @Test
     void updateSchedule_ForbiddenNoAdminRole() throws Exception {
-        mockMvc.perform(put("/doctors/{doctorId}/schedules/{scheduleId}", testDoctor.getId(), testSchedule.getId())
+        mockMvc.perform(put("/api/doctors/{doctorId}/schedules/{scheduleId}", testDoctor.getId(), testSchedule.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createDto)))
                 .andExpect(status().isForbidden());
@@ -244,7 +244,7 @@ class DoctorScheduleControllerIT {
 
     @Test
     void deleteSchedule_ForbiddenNoAdminRole() throws Exception {
-        mockMvc.perform(delete("/doctors/{doctorId}/schedules/{scheduleId}", testDoctor.getId(), testSchedule.getId()))
+        mockMvc.perform(delete("/api/doctors/{doctorId}/schedules/{scheduleId}", testDoctor.getId(), testSchedule.getId()))
                 .andExpect(status().isForbidden());
     }
 }

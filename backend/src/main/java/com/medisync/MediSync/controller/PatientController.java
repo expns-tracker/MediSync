@@ -109,7 +109,7 @@ public class PatientController {
     public ResponseEntity<Page<AppointmentDto>> getAppointmentsByPatientId(
             @PathVariable Long patientId,
             @RequestParam(defaultValue = "all") String timeframe,
-            @PageableDefault(size = 20, sort = "appointmentDate", direction = Sort.Direction.DESC) Pageable pageable,
+            @PageableDefault(size = 20, sort = "appointmentTime", direction = Sort.Direction.DESC) Pageable pageable,
             Principal principal
                                                                            ) {
         return ResponseEntity.ok(
