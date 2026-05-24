@@ -4,7 +4,7 @@
       <p class="eyebrow">Admin console</p>
       <h1>Welcome back, {{ welcomeSubject() }}</h1>
       <p class="description">
-        Manage the MediSync platform, review operational workflows, and prepare administrative actions for your team.
+        Manage the MediSync platform, review operational workflows, and maintain administrator access from one secure panel.
       </p>
     </div>
 
@@ -15,38 +15,88 @@
   </div>
 
   <div class="dashboard-grid">
-    <mat-card class="dashboard-card overview-card">
-      <mat-card-title>Platform overview</mat-card-title>
+    <mat-card class="dashboard-card summary-card">
+      <mat-card-title>Admin accounts</mat-card-title>
       <mat-card-content>
-        <p>
-          This workspace gives you a central view of system operations and helps you access administrative tools when they are ready.
-        </p>
-        <ul>
-          <li>Review provider assignments and department configuration.</li>
-          <li>Monitor patient account activity and appointment workflows.</li>
-          <li>Configure team access and authorization settings.</li>
-        </ul>
-      </mat-card-content>
-    </mat-card>
-
-    <mat-card class="dashboard-card actions-card">
-      <mat-card-title>Quick actions</mat-card-title>
-      <mat-card-content>
-        <div class="actions-list">
-          <div class="action-item" *ngFor="let action of quickActions">
-            <div>
-              <div class="action-title">
-                <mat-icon aria-hidden="true">{{ action.icon }}</mat-icon>
-                {{ action.title }}
-              </div>
-              <p>{{ action.subtitle }}</p>
-            </div>
-            <button mat-flat-button color="primary" [disabled]="action.disabled">
-              Coming soon
-            </button>
-          </div>
+        <div class="summary-metric">
+          <p class="metric-label">Active admin users</p>
+          <h2>{{ adminCount() }}</h2>
+          <p class="metric-description">Admins can manage system access, provider configuration, and global workflows.</p>
+          <p *ngIf="error()" class="error-message">{{ error() }}</p>
         </div>
       </mat-card-content>
     </mat-card>
   </div>
+
+  <div class="management-grid">
+    <mat-card class="dashboard-card admin-list-card">
+      <div class="card-heading">
+        <div>
+          <mat-card-title>Admin team</mat-card-title>
+          <p class="card-subtitle">Create and manage administrator accounts from a dedicated workflow.</p>
+        </div>
+
+        <button mat-flat-button color="primary" routerLink="/admin/create">
+          <mat-icon>add</mat-icon>
+          Create admin
+        </button>
+      </div>
+
+      <mat-card-content>
+        <div *ngIf="isLoading(); else loadedAdmins" class="loading-state">
+          Loading administrator accounts...
+        </div>
+
+        <ng-template #loadedAdmins>
+          <div *ngIf="admins().length > 0; else noAdmins">
+            <div class="admin-item" *ngFor="let admin of admins()">
+              <div>
+                <div class="admin-email">{{ admin.email }}</div>
+                <div class="admin-meta">
+                  Role: {{ admin.role }}
+                  <span *ngIf="admin.id === currentUser()?.id">(You)</span>
+                </div>
+              </div>
+
+              <div class="admin-actions">
+                <button
+                  mat-icon-button
+                  color="warn"
+                  aria-label="Delete admin"
+                  (click)="deleteAdmin(admin)"
+                  [disabled]="admin.id === currentUser()?.id"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <ng-template #noAdmins>
+            <p>No admin accounts were found.</p>
+          </ng-template>
+        </ng-template>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <mat-card class="dashboard-card actions-card">
+    <mat-card-title>Quick actions</mat-card-title>
+    <mat-card-content>
+      <div class="actions-list">
+        <div class="action-item" *ngFor="let action of quickActions">
+          <div>
+            <div class="action-title">
+              <mat-icon aria-hidden="true">{{ action.icon }}</mat-icon>
+              {{ action.title }}
+            </div>
+            <p>{{ action.subtitle }}</p>
+          </div>
+          <button mat-flat-button color="primary" [disabled]="action.disabled">
+            Coming soon
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
 </main>

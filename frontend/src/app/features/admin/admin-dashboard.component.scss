@@ -1,6 +1,6 @@
 .admin-dashboard {
   padding: 2rem;
-  max-width: 1160px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -46,26 +46,106 @@
 
 .dashboard-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.management-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .dashboard-card {
   padding: 1.5rem;
   border-radius: 1rem;
-  min-height: 280px;
+  min-height: auto;
 }
 
-.overview-card {
+.summary-card,
+.admin-form-card,
+.admin-list-card,
+.actions-card {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-.actions-card {
+.summary-card {
+  justify-content: center;
+}
+
+.summary-metric {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.metric-label {
+  margin: 0;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.8rem;
+}
+
+.metric-description {
+  margin: 0.75rem 0 0;
+  color: #475569;
+  line-height: 1.6;
+}
+
+.admin-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-radius: 0.85rem;
+  background: #f8fafc;
+  margin-bottom: 0.75rem;
+}
+
+.admin-item:last-child {
+  margin-bottom: 0;
+}
+
+.admin-email {
+  font-weight: 700;
+  color: #111827;
+}
+
+.admin-meta {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.admin-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.admin-list-card mat-card-content {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  gap: 1rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.loading-state,
+.error-message {
+  color: #475569;
+  padding: 1rem 0 0;
+}
+
+.error-message {
+  color: #b91c1c;
 }
 
 .actions-list {
@@ -82,6 +162,20 @@
   padding: 1rem;
   border-radius: 1rem;
   background: #f8fafc;
+}
+
+.card-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.card-subtitle {
+  margin: 0.5rem 0 0;
+  color: #475569;
+  line-height: 1.6;
 }
 
 .action-title {
@@ -109,7 +203,8 @@ button[disabled] {
 }
 
 @media (max-width: 900px) {
-  .dashboard-grid {
+  .dashboard-grid,
+  .management-grid {
     grid-template-columns: 1fr;
   }
 }

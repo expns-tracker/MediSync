@@ -1,6 +1,7 @@
 package com.medisync.MediSync.service;
 
 import com.medisync.MediSync.dto.AdminRegistrationDto;
+import com.medisync.MediSync.dto.AdminUpdateDto;
 import com.medisync.MediSync.dto.UserDto;
 import com.medisync.MediSync.entity.enums.Role;
 import com.medisync.MediSync.entity.User;
@@ -41,6 +42,28 @@ public class AdminService {
         return userRepository.findAllByRole(Role.ADMIN).stream()
                 .map(UserDto::mapToDto)
                 .collect(Collectors.toList());
+    }
+
+    public UserDto updateAdmin(Long adminId, AdminUpdateDto updateDto) {
+        User admin = userRepository.findById(adminId)
+                .orElseThrow(() -> new ResourceNotFoundException("Admin not found"));
+
+        if (admin.getRole() != Role.ADMIN) {
+            throw new IllegalStateException("User is not an admin");
+        }
+
+        if (updateDto.getEmail() != null && !updateDto.getEmail().isBlank()) {
+            if (!admin.getEmail().equals(updateDto.getEmail()) && userRepository.existsByEmail(updateDto.getEmail())) {
+                throw new IllegalStateException("There is already an account associated with this email: " + updateDto.getEmail());
+            }
+            admin.setEmail(updateDto.getEmail());
+        }
+
+        if (updateDto.getPassword() != null && !updateDto.getPassword().isBlank()) {
+            admin.setPassword(passwordEncoder.encode(updateDto.getPassword()));
+        }
+
+        return UserDto.mapToDto(userRepository.save(admin));
     }
 
     public void deleteAdmin(Long adminId, Long currentUserId) throws BadRequestException {
