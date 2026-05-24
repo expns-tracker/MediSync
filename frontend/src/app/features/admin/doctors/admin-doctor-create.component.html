@@ -1,0 +1,138 @@
+<main class="admin-page">
+  <div class="page-header">
+    <div>
+      <p class="eyebrow">Admin console</p>
+      <h1>Add new doctor</h1>
+      <p class="description">
+        Create a new doctor profile and user account to grant access to the provider platform.
+      </p>
+    </div>
+
+    <button mat-button color="primary" routerLink="/admin/doctors">
+      <mat-icon>arrow_back</mat-icon>
+      Back to directory
+    </button>
+  </div>
+
+  <mat-card class="form-card">
+    <mat-card-title>Doctor Registration</mat-card-title>
+    <mat-card-content>
+      <form [formGroup]="doctorForm" (ngSubmit)="onSubmit()" novalidate>
+        <section class="form-section">
+          <h3>User Account</h3>
+          <div class="form-row">
+            <mat-form-field appearance="fill">
+              <mat-label>Email Address</mat-label>
+              <input matInput formControlName="email" type="email" autocomplete="email" />
+              @if (doctorForm.get('email')?.hasError('required')) {
+                <mat-error>Email is required</mat-error>
+              }
+              @if (doctorForm.get('email')?.hasError('email')) {
+                <mat-error>Enter a valid email address</mat-error>
+              }
+              @if (doctorForm.get('email')?.hasError('serverError')) {
+                <mat-error>{{ doctorForm.get('email')?.getError('serverError') }}</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Temporary Password</mat-label>
+              <input matInput formControlName="password" type="password" autocomplete="new-password" />
+              @if (doctorForm.get('password')?.hasError('required')) {
+                <mat-error>Password is required</mat-error>
+              }
+              @if (doctorForm.get('password')?.hasError('minlength')) {
+                <mat-error>Password must be at least 8 characters</mat-error>
+              }
+              @if (doctorForm.get('password')?.hasError('serverError')) {
+                <mat-error>{{ doctorForm.get('password')?.getError('serverError') }}</mat-error>
+              }
+            </mat-form-field>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <h3>Professional Details</h3>
+          <div class="form-row">
+            <mat-form-field appearance="fill">
+              <mat-label>First Name</mat-label>
+              <input matInput formControlName="firstName" />
+              @if (doctorForm.get('firstName')?.hasError('required')) {
+                <mat-error>First name is required</mat-error>
+              }
+              @if (doctorForm.get('firstName')?.hasError('serverError')) {
+                <mat-error>{{ doctorForm.get('firstName')?.getError('serverError') }}</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Last Name</mat-label>
+              <input matInput formControlName="lastName" />
+              @if (doctorForm.get('lastName')?.hasError('required')) {
+                <mat-error>Last name is required</mat-error>
+              }
+              @if (doctorForm.get('lastName')?.hasError('serverError')) {
+                <mat-error>{{ doctorForm.get('lastName')?.getError('serverError') }}</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="fill">
+              <mat-label>Specialization</mat-label>
+              <mat-select formControlName="specialization">
+                @for (spec of specializations; track spec.value) {
+                  <mat-option [value]="spec.value">{{ spec.label }}</mat-option>
+                }
+              </mat-select>
+              @if (doctorForm.get('specialization')?.hasError('required')) {
+                <mat-error>Specialization is required</mat-error>
+              }
+              @if (doctorForm.get('specialization')?.hasError('serverError')) {
+                <mat-error>{{ doctorForm.get('specialization')?.getError('serverError') }}</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Department</mat-label>
+              <mat-select formControlName="departmentId">
+                @for (dept of departments(); track dept.id) {
+                  <mat-option [value]="dept.id">{{ dept.name }}</mat-option>
+                }
+              </mat-select>
+              @if (doctorForm.get('departmentId')?.hasError('required')) {
+                <mat-error>Department is required</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Standard Appointment Duration</mat-label>
+            <mat-select formControlName="appointmentDuration">
+              @for (duration of durations; track duration.value) {
+                <mat-option [value]="duration.value">{{ duration.label }}</mat-option>
+              }
+            </mat-select>
+            <mat-hint>Expected timeframe for this doctor's standard consultations.</mat-hint>
+            @if (doctorForm.get('appointmentDuration')?.hasError('required')) {
+              <mat-error>Duration is required</mat-error>
+            }
+          </mat-form-field>
+        </section>
+
+        <div class="form-actions">
+          <button mat-flat-button color="primary" type="submit" [disabled]="isSaving() || doctorForm.invalid">
+            {{ isSaving() ? 'Creating...' : 'Register Doctor' }}
+          </button>
+          <button mat-button type="button" routerLink="/admin/doctors" [disabled]="isSaving()">
+            Cancel
+          </button>
+        </div>
+
+        @if (error()) {
+          <p class="error-message">{{ error() }}</p>
+        }
+      </form>
+    </mat-card-content>
+  </mat-card>
+</main>

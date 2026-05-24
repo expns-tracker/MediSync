@@ -43,39 +43,63 @@
       </div>
 
       <mat-card-content>
-        <div *ngIf="isLoading(); else loadedAdmins" class="loading-state">
-          Loading administrator accounts...
-        </div>
+        @if (isLoading()) {
+          <div class="loading-state">
+            Loading administrator accounts...
+          </div>
+        } @else {
+          @if (admins().length > 0) {
+            @for (admin of admins(); track admin.id) {
+              <div class="admin-item">
+                <div>
+                  <div class="admin-email">{{ admin.email }}</div>
+                  <div class="admin-meta">
+                    Role: {{ admin.role }}
+                    @if (admin.id === currentUser()?.id) {
+                      <span>(You)</span>
+                    }
+                  </div>
+                </div>
 
-        <ng-template #loadedAdmins>
-          <div *ngIf="admins().length > 0; else noAdmins">
-            <div class="admin-item" *ngFor="let admin of admins()">
-              <div>
-                <div class="admin-email">{{ admin.email }}</div>
-                <div class="admin-meta">
-                  Role: {{ admin.role }}
-                  <span *ngIf="admin.id === currentUser()?.id">(You)</span>
+                <div class="admin-actions">
+                  <button
+                    mat-icon-button
+                    color="warn"
+                    aria-label="Delete admin"
+                    (click)="deleteAdmin(admin)"
+                    [disabled]="admin.id === currentUser()?.id"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
                 </div>
               </div>
-
-              <div class="admin-actions">
-                <button
-                  mat-icon-button
-                  color="warn"
-                  aria-label="Delete admin"
-                  (click)="deleteAdmin(admin)"
-                  [disabled]="admin.id === currentUser()?.id"
-                >
-                  <mat-icon>delete</mat-icon>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <ng-template #noAdmins>
+            }
+          } @else {
             <p>No admin accounts were found.</p>
-          </ng-template>
-        </ng-template>
+          }
+        }
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="dashboard-card doctor-mgmt-card">
+      <div class="card-heading">
+        <div>
+          <mat-card-title>Doctor Management</mat-card-title>
+          <p class="card-subtitle">Review provider accounts, specialties, and department assignments.</p>
+        </div>
+
+        <button mat-flat-button color="primary" routerLink="/admin/doctors">
+          <mat-icon>medical_services</mat-icon>
+          Manage Doctors
+        </button>
+      </div>
+
+      <mat-card-content>
+        <div class="summary-metric">
+          <p class="metric-label">Active Doctors</p>
+          <h2>{{ doctorCount() }}</h2>
+          <p class="metric-description">Providers currently active on the platform and available for bookings.</p>
+        </div>
       </mat-card-content>
     </mat-card>
   </div>
@@ -84,18 +108,20 @@
     <mat-card-title>Quick actions</mat-card-title>
     <mat-card-content>
       <div class="actions-list">
-        <div class="action-item" *ngFor="let action of quickActions">
-          <div>
-            <div class="action-title">
-              <mat-icon aria-hidden="true">{{ action.icon }}</mat-icon>
-              {{ action.title }}
+        @for (action of quickActions; track action.title) {
+          <div class="action-item">
+            <div>
+              <div class="action-title">
+                <mat-icon aria-hidden="true">{{ action.icon }}</mat-icon>
+                {{ action.title }}
+              </div>
+              <p>{{ action.subtitle }}</p>
             </div>
-            <p>{{ action.subtitle }}</p>
+            <button mat-flat-button color="primary" [disabled]="action.disabled" [routerLink]="action.route">
+              {{ action.disabled ? 'Coming soon' : 'Manage' }}
+            </button>
           </div>
-          <button mat-flat-button color="primary" [disabled]="action.disabled">
-            Coming soon
-          </button>
-        </div>
+        }
       </div>
     </mat-card-content>
   </mat-card>

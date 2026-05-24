@@ -1,0 +1,25 @@
+.form-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+
+  mat-form-field {
+    flex: 1;
+    min-width: 200px;
+  }
+}
+
+.full-width {
+  width: 100%;
+}
+
+.error-message {
+  margin-top: 1rem;
+  color: #b91c1c;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+mat-dialog-content {
+  padding-top: 1rem !important;
+}

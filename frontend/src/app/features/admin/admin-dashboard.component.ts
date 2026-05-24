@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthService } from '../../core/services/auth.service';
 import { AdminService } from '../../core/services/admin.service';
+import { DoctorService } from '../../core/services/doctor.service';
 import { UserDto } from '../../core/models/auth.models';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -27,45 +28,53 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class AdminDashboardComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly adminService = inject(AdminService);
+  private readonly doctorService = inject(DoctorService);
   private readonly snackBar = inject(MatSnackBar);
 
   readonly currentUser = signal<UserDto | null>(this.authService.getCurrentUser());
   readonly admins = signal<UserDto[]>([]);
+  readonly doctorCount = signal(0);
   readonly isLoading = signal(false);
   readonly isSaving = signal(false);
   readonly error = signal<string | null>(null);
+
   readonly welcomeSubject = computed(() => this.currentUser()?.email ?? 'Administrator');
   readonly adminCount = computed(() => this.admins().length);
 
   readonly quickActions = [
     {
-      title: 'Doctors',
-      subtitle: 'Review provider accounts, specialties, and department assignments',
-      icon: 'medical_services',
-      disabled: true,
-    },
-    {
       title: 'Patients',
       subtitle: 'Manage patient records, care plans, and appointment access',
       icon: 'people',
       disabled: true,
+      route: '',
     },
     {
       title: 'Departments',
       subtitle: 'Configure specialties, clinical teams, and care units',
       icon: 'business',
       disabled: true,
+      route: '',
     },
     {
       title: 'System Health',
       subtitle: 'Monitor active users, appointments, and pending actions',
       icon: 'insights',
       disabled: true,
+      route: '',
     },
   ];
 
   ngOnInit(): void {
     this.loadAdmins();
+    this.loadDoctorStats();
+  }
+
+  private loadDoctorStats(): void {
+    this.doctorService.getDoctors(undefined, false, { page: 0, size: 1 }).subscribe({
+      next: (res) => this.doctorCount.set(res.totalElements),
+      error: () => this.doctorCount.set(0)
+    });
   }
 
   deleteAdmin(admin: UserDto): void {

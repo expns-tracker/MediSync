@@ -7,6 +7,8 @@ import { DoctorListComponent } from './features/doctors/doctor-list.component';
 import { DoctorDashboardComponent } from './features/doctors/dashboard/doctor-dashboard.component';
 import { AdminDashboardComponent } from './features/admin/admin-dashboard.component';
 import { AdminCreateComponent } from './features/admin/admin-create.component';
+import { AdminDoctorListComponent } from './features/admin/doctors/admin-doctor-list.component';
+import { AdminDoctorCreateComponent } from './features/admin/doctors/admin-doctor-create.component';
 import { DoctorAppointmentsComponent } from './features/doctors/appointments/doctor-appointments.component';
 import { DoctorPatientListComponent } from './features/doctors/patients/doctor-patient-list.component';
 import { DoctorPatientDetailComponent } from './features/doctors/patients/doctor-patient-detail.component';
@@ -31,7 +33,10 @@ export const routes: Routes = [
   {
     path: 'doctors',
     component: DoctorListComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, RoleGuard],
+    data: {
+      roles: ['PATIENT'],
+    },
   },
   {
     path: 'doctor/dashboard',
@@ -52,6 +57,22 @@ export const routes: Routes = [
   {
     path: 'admin/create',
     component: AdminCreateComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: {
+      roles: ['ADMIN'],
+    },
+  },
+  {
+    path: 'admin/doctors',
+    component: AdminDoctorListComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: {
+      roles: ['ADMIN'],
+    },
+  },
+  {
+    path: 'admin/doctors/create',
+    component: AdminDoctorCreateComponent,
     canActivate: [AuthGuard, RoleGuard],
     data: {
       roles: ['ADMIN'],

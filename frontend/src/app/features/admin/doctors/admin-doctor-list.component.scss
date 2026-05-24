@@ -1,0 +1,145 @@
+.admin-page {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.header-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.eyebrow {
+  margin: 0 0 0.75rem;
+  font-size: 0.875rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #6366f1;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: clamp(2rem, 2.5vw, 2.75rem);
+  color: #111827;
+}
+
+.description {
+  margin: 1rem 0 0;
+  max-width: 680px;
+  color: #475569;
+  line-height: 1.75;
+}
+
+.filter-bar {
+  margin-bottom: 1.5rem;
+}
+
+.filter-card {
+  border-radius: 1rem;
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.list-card {
+  border-radius: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.7);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.doctor-table {
+  width: 100%;
+}
+
+.doctor-name-cell {
+  display: flex;
+  flex-direction: column;
+}
+
+.doctor-full-name {
+  font-weight: 700;
+  color: #111827;
+}
+
+.doctor-id {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.specialization-chip {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.status-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #cbd5e1;
+}
+
+.status-indicator.active {
+  background: #10b981;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.no-data-cell {
+  padding: 3rem !important;
+  text-align: center;
+  color: #6b7280;
+}
+
+.error-message {
+  margin-top: 1rem;
+  color: #b91c1c;
+  font-weight: 500;
+}
+
+mat-form-field {
+  min-width: 280px;
+}

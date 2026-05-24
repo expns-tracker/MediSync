@@ -69,9 +69,9 @@ export class DoctorListComponent implements OnInit {
     this.isLoading.set(true);
     this.errorMessage.set('');
 
-    this.doctorService.getDoctors(departmentId ?? undefined).subscribe({
-      next: (doctors) => {
-        this.doctors.set(doctors);
+    this.doctorService.getDoctors(departmentId ?? undefined, false, { page: 0, size: 100 }).subscribe({
+      next: (response) => {
+        this.doctors.set(response.content);
         this.isLoading.set(false);
       },
       error: (error: Error) => {
