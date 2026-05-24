@@ -1,0 +1,52 @@
+<main class="admin-dashboard">
+  <div class="dashboard-header">
+    <div>
+      <p class="eyebrow">Admin console</p>
+      <h1>Welcome back, {{ welcomeSubject() }}</h1>
+      <p class="description">
+        Manage the MediSync platform, review operational workflows, and prepare administrative actions for your team.
+      </p>
+    </div>
+
+    <div class="status-chip">
+      <mat-icon>verified_user</mat-icon>
+      ADMIN
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+    <mat-card class="dashboard-card overview-card">
+      <mat-card-title>Platform overview</mat-card-title>
+      <mat-card-content>
+        <p>
+          This workspace gives you a central view of system operations and helps you access administrative tools when they are ready.
+        </p>
+        <ul>
+          <li>Review provider assignments and department configuration.</li>
+          <li>Monitor patient account activity and appointment workflows.</li>
+          <li>Configure team access and authorization settings.</li>
+        </ul>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="dashboard-card actions-card">
+      <mat-card-title>Quick actions</mat-card-title>
+      <mat-card-content>
+        <div class="actions-list">
+          <div class="action-item" *ngFor="let action of quickActions">
+            <div>
+              <div class="action-title">
+                <mat-icon aria-hidden="true">{{ action.icon }}</mat-icon>
+                {{ action.title }}
+              </div>
+              <p>{{ action.subtitle }}</p>
+            </div>
+            <button mat-flat-button color="primary" [disabled]="action.disabled">
+              Coming soon
+            </button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</main>
