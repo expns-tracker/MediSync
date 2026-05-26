@@ -1,0 +1,84 @@
+<main class="admin-page">
+  <div class="page-header">
+    <div>
+      <p class="eyebrow">Admin console</p>
+      <h1>Allergy Catalog</h1>
+      <p class="description">
+        Manage the standardized list of allergies available for patient profiles and medical records.
+      </p>
+    </div>
+
+    <div class="header-actions">
+      <button mat-flat-button color="primary" (click)="openEditDialog()">
+        <mat-icon>add</mat-icon>
+        Add Allergy
+      </button>
+      <button mat-button color="primary" routerLink="/admin/dashboard">
+        <mat-icon>arrow_back</mat-icon>
+        Dashboard
+      </button>
+    </div>
+  </div>
+
+  <mat-card class="table-card">
+    @if (isLoading()) {
+      <div class="loading-overlay">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+    }
+
+    <div class="table-container">
+      <table mat-table [dataSource]="allergies()">
+        <!-- Code Column -->
+        <ng-container matColumnDef="code">
+          <th mat-header-cell *matHeaderCellDef>Code</th>
+          <td mat-cell *matCellDef="let allergy" class="code-cell">
+            <code>{{ allergy.code }}</code>
+          </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Allergy Name</th>
+          <td mat-cell *matCellDef="let allergy" class="name-cell">{{ allergy.name }}</td>
+        </ng-container>
+
+        <!-- Category Column -->
+        <ng-container matColumnDef="category">
+          <th mat-header-cell *matHeaderCellDef>Category</th>
+          <td mat-cell *matCellDef="let allergy">
+            <mat-chip-set>
+              <mat-chip [style.background-color]="getCategoryColor(allergy.category)" class="category-chip">
+                {{ allergy.category }}
+              </mat-chip>
+            </mat-chip-set>
+          </td>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let allergy">
+            <button mat-icon-button color="primary" matTooltip="Edit Allergy" (click)="openEditDialog(allergy)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" matTooltip="Delete Allergy" (click)="deleteAllergy(allergy)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell no-data-cell" [attr.colspan]="displayedColumns.length">
+            @if (!isLoading()) {
+              No allergies found in the catalog.
+            }
+          </td>
+        </tr>
+      </table>
+    </div>
+  </mat-card>
+</main>

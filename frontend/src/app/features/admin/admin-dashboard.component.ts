@@ -66,6 +66,13 @@ export class AdminDashboardComponent implements OnInit {
       disabled: true,
       route: '',
     },
+    {
+      title: 'Allergies Catalog',
+      subtitle: 'Manage the standardized list of medical and food allergies',
+      icon: 'list_alt',
+      disabled: false,
+      route: '/admin/allergies',
+    },
   ];
 
   ngOnInit(): void {

@@ -11,6 +11,7 @@ import { AdminDoctorListComponent } from './features/admin/doctors/admin-doctor-
 import { AdminDoctorCreateComponent } from './features/admin/doctors/admin-doctor-create.component';
 import { AdminPatientListComponent } from './features/admin/patients/admin-patient-list.component';
 import { AdminDepartmentListComponent } from './features/admin/departments/admin-department-list.component';
+import { AdminAllergyListComponent } from './features/admin/allergies/admin-allergy-list.component';
 import { DoctorAppointmentsComponent } from './features/doctors/appointments/doctor-appointments.component';
 import { DoctorPatientListComponent } from './features/doctors/patients/doctor-patient-list.component';
 import { DoctorPatientDetailComponent } from './features/doctors/patients/doctor-patient-detail.component';
@@ -91,6 +92,14 @@ export const routes: Routes = [
   {
     path: 'admin/departments',
     component: AdminDepartmentListComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: {
+      roles: ['ADMIN'],
+    },
+  },
+  {
+    path: 'admin/allergies',
+    component: AdminAllergyListComponent,
     canActivate: [AuthGuard, RoleGuard],
     data: {
       roles: ['ADMIN'],
