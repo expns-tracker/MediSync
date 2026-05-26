@@ -29,7 +29,7 @@ export class HomeComponent implements OnInit {
           this.router.navigate(['/doctor/dashboard']);
           break;
         case 'ADMIN':
-          // TODO: Admin dashboard
+          this.router.navigate(['/admin/dashboard']);
           break;
         default:
           this.router.navigate(['/unauthorized']);

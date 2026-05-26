@@ -1,0 +1,138 @@
+<main class="container page-shell">
+  <div class="flex-between mb-8">
+    <div>
+      <p class="eyebrow">Admin console</p>
+      <h1 class="section-title">Global Appointment Log</h1>
+      <p class="section-description">
+        Monitor system-wide medical appointments, manage attendance, and intervene in scheduling conflicts.
+      </p>
+    </div>
+
+    <button mat-button color="primary" routerLink="/admin/dashboard">
+      <mat-icon>arrow_back</mat-icon>
+      Dashboard
+    </button>
+  </div>
+
+  <mat-card class="filter-card">
+    <div class="filters">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Search Patient or Doctor</mat-label>
+        <input matInput [formControl]="searchControl" placeholder="Name..." />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="status-field">
+        <mat-label>Status</mat-label>
+        <mat-select [formControl]="statusControl">
+          @for (option of statusOptions; track option.value) {
+            <mat-option [value]="option.value">{{ option.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </mat-card>
+
+  <mat-card class="table-card">
+    @if (isLoading()) {
+      <div class="loading-overlay">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+    }
+
+    <div class="table-container">
+      <table mat-table [dataSource]="appointments()">
+        <!-- Time Column -->
+        <ng-container matColumnDef="time">
+          <th mat-header-cell *matHeaderCellDef>Appointment Time</th>
+          <td mat-cell *matCellDef="let appt">
+            <div class="time-cell">
+              <span class="date">{{ appt.appointmentTime | date:'mediumDate' }}</span>
+              <span class="hour">{{ appt.appointmentTime | date:'shortTime' }}</span>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Patient Column -->
+        <ng-container matColumnDef="patient">
+          <th mat-header-cell *matHeaderCellDef>Patient</th>
+          <td mat-cell *matCellDef="let appt">
+            <div class="user-cell">
+              <span class="name">{{ appt.patientFirstName }} {{ appt.patientLastName }}</span>
+              <span class="id">ID: #{{ appt.patientId }}</span>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Doctor Column -->
+        <ng-container matColumnDef="doctor">
+          <th mat-header-cell *matHeaderCellDef>Doctor</th>
+          <td mat-cell *matCellDef="let appt">
+            <div class="user-cell">
+              <span class="name">Dr. {{ appt.doctorFirstName }} {{ appt.doctorLastName }}</span>
+              <span class="dept">{{ appt.departmentName }}</span>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Reason Column -->
+        <ng-container matColumnDef="reason">
+          <th mat-header-cell *matHeaderCellDef>Reason</th>
+          <td mat-cell *matCellDef="let appt" class="reason-cell">
+            {{ appt.reason || 'Not specified' }}
+          </td>
+        </ng-container>
+
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let appt">
+            <mat-chip-set>
+              <mat-chip [style.background-color]="getStatusColor(appt.status)" class="status-chip">
+                {{ appt.status }}
+              </mat-chip>
+            </mat-chip-set>
+          </td>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let appt">
+            @if (appt.status === 'SCHEDULED') {
+              <div class="action-buttons">
+                <button mat-icon-button color="warn" matTooltip="Cancel Appointment" (click)="cancelAppointment(appt)">
+                  <mat-icon>cancel</mat-icon>
+                </button>
+                <button mat-icon-button color="primary" matTooltip="Mark No-Show" (click)="markNoShow(appt)">
+                  <mat-icon>person_remove</mat-icon>
+                </button>
+              </div>
+            }
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+        <!-- No data row -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell no-data-cell" [attr.colspan]="displayedColumns.length">
+            @if (!isLoading()) {
+              No appointments found matching your criteria.
+            }
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <mat-paginator
+      [length]="totalElements()"
+      [pageSize]="pageSize()"
+      [pageSizeOptions]="[10, 20, 50, 100]"
+      (page)="onPageChange($event)"
+      aria-label="Select page of appointments"
+    >
+    </mat-paginator>
+  </mat-card>
+</main>

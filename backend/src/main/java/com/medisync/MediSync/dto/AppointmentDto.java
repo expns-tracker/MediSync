@@ -17,6 +17,16 @@ public class AppointmentDto {
     private AppointmentStatus status;
     private DoctorDto doctor;
     private PatientDto patient;
+    
+    // Flattened fields for UI robustness
+    private String patientFirstName;
+    private String patientLastName;
+    private Long patientId;
+    private String doctorFirstName;
+    private String doctorLastName;
+    private Long doctorId;
+    private String departmentName;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private MedicalRecordDto medicalRecord;
@@ -29,6 +39,13 @@ public class AppointmentDto {
                 .status(appointment.getStatus())
                 .doctor(DoctorDto.mapToDto(appointment.getDoctor()))
                 .patient(PatientDto.mapToDto(appointment.getPatient()))
+                .patientFirstName(appointment.getPatient().getFirstName())
+                .patientLastName(appointment.getPatient().getLastName())
+                .patientId(appointment.getPatient().getId())
+                .doctorFirstName(appointment.getDoctor().getFirstName())
+                .doctorLastName(appointment.getDoctor().getLastName())
+                .doctorId(appointment.getDoctor().getId())
+                .departmentName(appointment.getDoctor().getDepartment().getName())
                 .createdAt(appointment.getCreatedAt())
                 .updatedAt(appointment.getUpdatedAt())
                 .medicalRecord(

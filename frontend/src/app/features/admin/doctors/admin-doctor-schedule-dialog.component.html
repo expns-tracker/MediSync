@@ -1,0 +1,55 @@
+<h2 mat-dialog-title>{{ isEdit ? 'Edit Shift' : 'Add New Shift' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="scheduleForm" class="schedule-form">
+    <mat-form-field appearance="outline">
+      <mat-label>Day of Week</mat-label>
+      <mat-select formControlName="dayOfWeek">
+        @for (day of days; track day) {
+          <mat-option [value]="day">{{ day }}</mat-option>
+        }
+      </mat-select>
+      <mat-error *ngIf="scheduleForm.get('dayOfWeek')?.hasError('required')">
+        Day is required
+      </mat-error>
+    </mat-form-field>
+
+    <div class="time-inputs">
+      <mat-form-field appearance="outline">
+        <mat-label>Start Time</mat-label>
+        <input matInput type="time" formControlName="startTime" />
+        <mat-error *ngIf="scheduleForm.get('startTime')?.hasError('required')">
+          Start time is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>End Time</mat-label>
+        <input matInput type="time" formControlName="endTime" />
+        <mat-error *ngIf="scheduleForm.get('endTime')?.hasError('required')">
+          End time is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    @if (errorMessage()) {
+      <p class="error-message">{{ errorMessage() }}</p>
+    }
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()" [disabled]="isSaving()">Cancel</button>
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="onSubmit()"
+    [disabled]="scheduleForm.invalid || isSaving()"
+  >
+    @if (isSaving()) {
+      <mat-spinner diameter="20"></mat-spinner>
+    } @else {
+      {{ isEdit ? 'Update Shift' : 'Add Shift' }}
+    }
+  </button>
+</mat-dialog-actions>

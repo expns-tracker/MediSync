@@ -1,22 +1,45 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { AllergyDto } from '../models/allergy.models';
+import { AllergyDto, AllergyCreateDto } from '../models/allergy.models';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AllergyService {
-  private readonly baseUrl = environment.apiUrl;
-
-  constructor(private http: HttpClient) {}
+  private readonly http = inject(HttpClient);
+  private readonly baseUrl = `${environment.apiUrl}/allergies`;
 
   getAllergies(): Observable<AllergyDto[]> {
     return this.http
-      .get<AllergyDto[]>(`${this.baseUrl}/allergies`)
-      .pipe(catchError((error) => this.handleError(error)));
+      .get<AllergyDto[]>(this.baseUrl)
+      .pipe(catchError(this.handleError));
+  }
+
+  getAllergyById(id: number): Observable<AllergyDto> {
+    return this.http
+      .get<AllergyDto>(`${this.baseUrl}/${id}`)
+      .pipe(catchError(this.handleError));
+  }
+
+  createAllergy(allergy: AllergyCreateDto): Observable<AllergyDto> {
+    return this.http
+      .post<AllergyDto>(this.baseUrl, allergy)
+      .pipe(catchError(this.handleError));
+  }
+
+  updateAllergy(id: number, allergy: AllergyCreateDto): Observable<AllergyDto> {
+    return this.http
+      .put<AllergyDto>(`${this.baseUrl}/${id}`, allergy)
+      .pipe(catchError(this.handleError));
+  }
+
+  deleteAllergy(id: number): Observable<void> {
+    return this.http
+      .delete<void>(`${this.baseUrl}/${id}`)
+      .pipe(catchError(this.handleError));
   }
 
   private handleError(error: HttpErrorResponse) {

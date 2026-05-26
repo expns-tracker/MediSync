@@ -12,11 +12,11 @@
       </div>
       <div class="card-row">
         <span class="label">Doctor</span>
-        <span>{{ appointment.doctor.firstName }} {{ appointment.doctor.lastName }}</span>
+        <span>Dr. {{ appointment.doctorFirstName }} {{ appointment.doctorLastName }}</span>
       </div>
       <div class="card-row">
         <span class="label">Department</span>
-        <span>{{ appointment.doctor.departmentName || appointment.doctor.specialization }}</span>
+        <span>{{ appointment.departmentName }}</span>
       </div>
       <div class="card-row">
         <span class="label">Status</span>

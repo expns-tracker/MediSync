@@ -19,11 +19,10 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
 
     @Query("""
         SELECT p FROM Patient p 
-        WHERE p.user.isActive = true 
-        AND (:search IS NULL 
-             OR LOWER(p.firstName) LIKE LOWER(CONCAT('%', :search, '%')) 
-             OR LOWER(p.lastName) LIKE LOWER(CONCAT('%', :search, '%')) 
-             OR LOWER(p.user.email) LIKE LOWER(CONCAT('%', :search, '%')))
+        WHERE (:search IS NULL 
+             OR LOWER(p.firstName) LIKE LOWER(CONCAT('%', CAST(:search AS string), '%')) 
+             OR LOWER(p.lastName) LIKE LOWER(CONCAT('%', CAST(:search AS string), '%')) 
+             OR LOWER(p.user.email) LIKE LOWER(CONCAT('%', CAST(:search AS string), '%')))
     """)
-    Page<Patient> findActivePatientsWithSearch(@Param("search") String search, Pageable pageable);
+    Page<Patient> findAllPatientsWithSearch(@Param("search") String search, Pageable pageable);
 }

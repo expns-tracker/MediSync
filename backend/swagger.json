@@ -1770,6 +1770,53 @@
                         "description": "Admin not found"
                     }
                 }
+            },
+            "patch": {
+                "tags": [
+                    "Admin Management"
+                ],
+                "summary": "Update admin",
+                "description": "Updates the email or password for an admin account.",
+                "operationId": "updateAdmin",
+                "parameters": [
+                    {
+                        "name": "adminId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AdminUpdateDto"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Admin updated successfully",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserDto"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input or email already exists"
+                    },
+                    "404": {
+                        "description": "Admin not found"
+                    }
+                }
             }
         }
     },
@@ -1945,6 +1992,9 @@
                             "format": "int64"
                         }
                     },
+                    "active": {
+                        "type": "boolean"
+                    },
                     "createdAt": {
                         "type": "string",
                         "format": "date-time"
@@ -2082,6 +2132,9 @@
                     "appointmentDuration": {
                         "type": "integer",
                         "format": "int32"
+                    },
+                    "active": {
+                        "type": "boolean"
                     },
                     "createdAt": {
                         "type": "string",
@@ -2406,6 +2459,19 @@
                     "email",
                     "password"
                 ]
+            },
+            "AdminUpdateDto": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "password": {
+                        "type": "string",
+                        "minLength": 8
+                    }
+                }
             },
             "UserDto": {
                 "type": "object",

@@ -26,6 +26,7 @@ public class PatientDto {
     private String county;
     private String country;
     private List<Long> allergyIds;
+    private boolean isActive;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -43,6 +44,7 @@ public class PatientDto {
                 .county(patient.getCounty())
                 .country(patient.getCountry())
                 .allergyIds(patient.getAllergies() != null ? patient.getAllergies().stream().map(allergy -> allergy.getId()).collect(Collectors.toList()) : null)
+                .isActive(patient.getUser().getIsActive())
                 .createdAt(patient.getCreatedAt())
                 .updatedAt(patient.getUpdatedAt())
                 .build();

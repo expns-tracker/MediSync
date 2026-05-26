@@ -80,7 +80,7 @@ public class PatientService {
 
     public Page<PatientDto> searchPatients(String search, Pageable pageable) {
         String normalizedSearch = (search == null || search.trim().isEmpty()) ? null : search.trim();
-        Page<Patient> patientsPage = patientRepository.findActivePatientsWithSearch(normalizedSearch, pageable);
+        Page<Patient> patientsPage = patientRepository.findAllPatientsWithSearch(normalizedSearch, pageable);
         return patientsPage.map(PatientDto::mapToDto);
     }
 

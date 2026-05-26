@@ -17,6 +17,7 @@ public class DoctorDto {
     private Long departmentId;
     private String departmentName;
     private Integer appointmentDuration;
+    private boolean isActive;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -30,6 +31,7 @@ public class DoctorDto {
                 .departmentId(doctor.getDepartment().getId())
                 .departmentName(doctor.getDepartment().getName())
                 .appointmentDuration(doctor.getAppointmentDuration().getMinutes())
+                .isActive(doctor.getUser().getIsActive())
                 .createdAt(doctor.getCreatedAt())
                 .updatedAt(doctor.getUpdatedAt())
                 .build();

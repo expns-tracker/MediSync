@@ -1,0 +1,108 @@
+<main class="container page-shell">
+  <div class="flex-between mb-8">
+    <div>
+      <p class="eyebrow">Admin console</p>
+      <h1 class="section-title">System Insights</h1>
+      <p class="section-description">
+        Real-time analytics and operational metrics for the MediSync platform.
+      </p>
+    </div>
+
+    <button mat-button color="primary" routerLink="/admin/dashboard">
+      <mat-icon>arrow_back</mat-icon>
+      Dashboard
+    </button>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-state">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>Aggregating system data...</p>
+    </div>
+  } @else if (stats()) {
+    <div class="metrics-grid">
+      <!-- High-Level Stats -->
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon patient-icon">
+            <mat-icon>people</mat-icon>
+          </div>
+          <div class="stat-value">{{ stats()?.totalPatients }}</div>
+          <div class="stat-label">Total Patients</div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon doctor-icon">
+            <mat-icon>medical_services</mat-icon>
+          </div>
+          <div class="stat-value">{{ stats()?.totalDoctors }}</div>
+          <div class="stat-label">Total Doctors</div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon appt-icon">
+            <mat-icon>event_available</mat-icon>
+          </div>
+          <div class="stat-value">{{ stats()?.totalAppointments }}</div>
+          <div class="stat-label">Total Appointments</div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon dept-icon">
+            <mat-icon>business</mat-icon>
+          </div>
+          <div class="stat-value">{{ stats()?.totalDepartments }}</div>
+          <div class="stat-label">Clinical Departments</div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Breakdown Charts -->
+      <mat-card class="breakdown-card">
+        <mat-card-header>
+          <mat-card-title>Appointment Distribution</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="breakdown-list">
+            @for (item of statusBreakdown(); track item.status) {
+              <div class="breakdown-item">
+                <div class="item-info">
+                  <span class="item-label">{{ item.status }}</span>
+                  <span class="item-value">{{ item.count }}</span>
+                </div>
+                <mat-progress-bar mode="determinate" [value]="item.percentage" [color]="getStatusColor(item.status)"></mat-progress-bar>
+              </div>
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="breakdown-card">
+        <mat-card-header>
+          <mat-card-title>Staffing by Department</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="breakdown-list">
+            @for (item of deptBreakdown(); track item.name) {
+              <div class="breakdown-item">
+                <div class="item-info">
+                  <span class="item-label">{{ item.name }}</span>
+                  <span class="item-value">{{ item.count }} Doctors</span>
+                </div>
+                <mat-progress-bar mode="determinate" [value]="item.percentage"></mat-progress-bar>
+              </div>
+            }
+            @if (deptBreakdown().length === 0) {
+              <p class="empty-state">No departmental data available.</p>
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  }
+</main>

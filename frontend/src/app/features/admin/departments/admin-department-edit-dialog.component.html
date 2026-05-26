@@ -1,0 +1,61 @@
+<h2 mat-dialog-title>{{ isEdit ? 'Edit Department' : 'Create New Department' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="departmentForm" class="department-form">
+    <mat-form-field appearance="outline">
+      <mat-label>Department Name</mat-label>
+      <input matInput formControlName="name" placeholder="e.g., Cardiology" />
+      <mat-error *ngIf="departmentForm.get('name')?.hasError('required')">
+        Name is required
+      </mat-error>
+      <mat-error *ngIf="departmentForm.get('name')?.hasError('minlength')">
+        Name must be at least 2 characters
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Description</mat-label>
+      <textarea
+        matInput
+        formControlName="description"
+        placeholder="Brief overview of the department's focus..."
+        rows="3"
+      ></textarea>
+    </mat-form-field>
+
+    @if (isEdit) {
+      <mat-form-field appearance="outline">
+        <mat-label>Department Head</mat-label>
+        <mat-select formControlName="departmentHeadId">
+          <mat-option [value]="null">No Head Assigned</mat-option>
+          @for (doctor of doctors(); track doctor.id) {
+            <mat-option [value]="doctor.id">
+              Dr. {{ doctor.firstName }} {{ doctor.lastName }}
+            </mat-option>
+          }
+        </mat-select>
+        @if (isLoading()) {
+          <mat-hint>Loading department doctors...</mat-hint>
+        } @else if (doctors().length === 0) {
+          <mat-hint>No active doctors found in this department.</mat-hint>
+        }
+      </mat-form-field>
+    }
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()" [disabled]="isSaving()">Cancel</button>
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="onSubmit()"
+    [disabled]="departmentForm.invalid || isSaving()"
+  >
+    @if (isSaving()) {
+      <mat-spinner diameter="20"></mat-spinner>
+    } @else {
+      {{ isEdit ? 'Update' : 'Create' }}
+    }
+  </button>
+</mat-dialog-actions>

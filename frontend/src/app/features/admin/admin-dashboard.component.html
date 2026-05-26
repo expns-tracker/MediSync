@@ -1,0 +1,125 @@
+<main class="container page-shell">
+  <div class="flex-between mb-8">
+    <div>
+      <p class="eyebrow">Administrative control center</p>
+      <h1 class="section-title">Welcome back, {{ welcomeSubject() }}</h1>
+      <p class="section-description">
+        Manage the MediSync platform, monitor hospital operations, and configure provider clinical workflows.
+      </p>
+    </div>
+  </div>
+
+  <div class="dashboard-grid mb-8">
+    <mat-card class="dashboard-card summary-card">
+      <mat-card-header>
+        <mat-card-title>Admin Accounts</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="summary-metric">
+          <p class="metric-label">Active admin users</p>
+          <h2>{{ adminCount() }}</h2>
+          <p class="metric-description">Admins manage system access and global hospital configurations.</p>
+          <p *ngIf="error()" class="error-message">{{ error() }}</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="dashboard-card summary-card">
+      <mat-card-header>
+        <mat-card-title>Patient Base</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="summary-metric">
+          <p class="metric-label">Registered Patients</p>
+          <h2>{{ patientCount() }}</h2>
+          <p class="metric-description">Total number of patients currently registered in the system.</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="dashboard-card summary-card">
+      <mat-card-header>
+        <mat-card-title>Clinical Staff</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="summary-metric">
+          <p class="metric-label">Active Doctors</p>
+          <h2>{{ doctorCount() }}</h2>
+          <p class="metric-description">Providers currently available for clinical appointments.</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <section class="management-section">
+    <h2 class="mb-6" style="font-weight: 700; color: #1e293b;">Operational Management</h2>
+    <div class="management-grid">
+      @for (action of quickActions; track action.title) {
+        <mat-card class="action-card" [class.disabled]="action.disabled">
+          <mat-card-content>
+            <div class="action-header">
+              <div class="action-icon">
+                <mat-icon>{{ action.icon }}</mat-icon>
+              </div>
+              <div class="action-info">
+                <h3>{{ action.title }}</h3>
+                <p>{{ action.subtitle }}</p>
+              </div>
+            </div>
+          </mat-card-content>
+          <mat-card-actions align="end">
+            <button mat-flat-button color="primary" [disabled]="action.disabled" [routerLink]="action.route">
+              {{ action.disabled ? 'Coming soon' : 'Manage' }}
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      }
+    </div>
+  </section>
+
+  <section class="admins-list mt-8">
+    <mat-card class="list-card">
+      <div class="card-heading flex-between p-6">
+        <div>
+          <mat-card-title>Administrative Team</mat-card-title>
+          <p class="card-subtitle" style="color: #64748b; margin: 0;">Manage users with high-level system access.</p>
+        </div>
+        <button mat-flat-button color="primary" routerLink="/admin/create">
+          <mat-icon>add</mat-icon>
+          Create Admin
+        </button>
+      </div>
+      <mat-card-content>
+        @if (isLoading()) {
+          <div class="loading-state p-6">
+            <mat-spinner diameter="40"></mat-spinner>
+          </div>
+        } @else {
+          <div class="admin-items-list">
+            @for (admin of admins(); track admin.id) {
+              <div class="admin-item-row flex-between">
+                <div class="admin-info">
+                  <div class="admin-email">{{ admin.email }}</div>
+                  <div class="admin-role">
+                    Role: {{ admin.role }}
+                    @if (admin.id === currentUser()?.id) {
+                      <span class="self-tag">(You)</span>
+                    }
+                  </div>
+                </div>
+                <div class="admin-actions">
+                  <button mat-icon-button color="warn" 
+                          [disabled]="admin.id === currentUser()?.id"
+                          (click)="deleteAdmin(admin)"
+                          matTooltip="Remove Admin Access">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
+  </section>
+</main>

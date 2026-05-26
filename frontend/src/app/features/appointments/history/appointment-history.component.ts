@@ -37,11 +37,11 @@ export class AppointmentHistoryComponent implements OnInit {
     this.isLoading.set(true);
     this.errorMessage.set('');
 
-    this.appointmentService.getPatientAppointments(patientId).subscribe({
-      next: (appointments) => {
+    this.appointmentService.getPatientAppointments(patientId, 'past').subscribe({
+      next: (response) => {
         const now = new Date();
         this.appointments.set(
-          appointments
+          response.content
             .filter((appointment) =>
               appointment.status !== 'SCHEDULED' ||
               new Date(appointment.appointmentTime) < now

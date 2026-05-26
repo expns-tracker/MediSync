@@ -1,0 +1,84 @@
+<h2 mat-dialog-title>Edit Doctor Profile</h2>
+<mat-dialog-content>
+  <form [formGroup]="doctorForm" (ngSubmit)="onSubmit()" id="doctorEditForm" novalidate>
+    <div class="form-row">
+      <mat-form-field appearance="fill">
+        <mat-label>First Name</mat-label>
+        <input matInput formControlName="firstName" />
+        @if (doctorForm.get('firstName')?.hasError('required')) {
+          <mat-error>First name is required</mat-error>
+        }
+        @if (doctorForm.get('firstName')?.hasError('serverError')) {
+          <mat-error>
+            {{ doctorForm.get('firstName')?.getError('serverError') }}
+          </mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Last Name</mat-label>
+        <input matInput formControlName="lastName" />
+        @if (doctorForm.get('lastName')?.hasError('required')) {
+          <mat-error>Last name is required</mat-error>
+        }
+        @if (doctorForm.get('lastName')?.hasError('serverError')) {
+          <mat-error>
+            {{ doctorForm.get('lastName')?.getError('serverError') }}
+          </mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Specialization</mat-label>
+      <mat-select formControlName="specialization">
+        @for (spec of specializations; track spec.value) {
+          <mat-option [value]="spec.value">{{ spec.label }}</mat-option>
+        }
+      </mat-select>
+      @if (doctorForm.get('specialization')?.hasError('required')) {
+        <mat-error>Specialization is required</mat-error>
+      }
+      @if (doctorForm.get('specialization')?.hasError('serverError')) {
+        <mat-error>
+          {{ doctorForm.get('specialization')?.getError('serverError') }}
+        </mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Department</mat-label>
+      <mat-select formControlName="departmentId">
+        @for (dept of data.departments; track dept.id) {
+          <mat-option [value]="dept.id">{{ dept.name }}</mat-option>
+        }
+      </mat-select>
+      @if (doctorForm.get('departmentId')?.hasError('required')) {
+        <mat-error>Department is required</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Appointment Duration</mat-label>
+      <mat-select formControlName="appointmentDuration">
+        @for (duration of durations; track duration.value) {
+          <mat-option [value]="duration.value">{{ duration.label }}</mat-option>
+        }
+      </mat-select>
+      <mat-hint>Standard duration for this doctor's appointments.</mat-hint>
+      @if (doctorForm.get('appointmentDuration')?.hasError('required')) {
+        <mat-error>Duration is required</mat-error>
+      }
+    </mat-form-field>
+
+    @if (error()) {
+      <p class="error-message">{{ error() }}</p>
+    }
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()" [disabled]="isSaving()">Cancel</button>
+  <button mat-flat-button color="primary" type="submit" form="doctorEditForm" [disabled]="isSaving() || doctorForm.invalid">
+    {{ isSaving() ? 'Saving...' : 'Save Changes' }}
+  </button>
+</mat-dialog-actions>

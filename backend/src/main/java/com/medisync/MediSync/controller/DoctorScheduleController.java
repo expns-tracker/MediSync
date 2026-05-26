@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/doctors/{doctorId}/schedules")
+@RequestMapping("/api/doctors/{doctorId}/schedules")
 @RequiredArgsConstructor
 @Tag(name = "Doctor Schedules", description = "Management of doctor working hours and recurring weekly shifts.")
 public class DoctorScheduleController {

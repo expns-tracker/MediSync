@@ -56,6 +56,20 @@ public class AppointmentService {
         return AppointmentDto.mapToDto(appointment);
     }
 
+    public Page<AppointmentDto> getAllAppointments(String status, String search, Pageable pageable) {
+        AppointmentStatus appointmentStatus = null;
+        if (status != null && !status.trim().isEmpty()) {
+            try {
+                appointmentStatus = AppointmentStatus.valueOf(status.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                // Ignore invalid status
+            }
+        }
+        String normalizedSearch = (search == null || search.trim().isEmpty()) ? null : search.trim();
+        return appointmentRepository.findAllWithFilters(appointmentStatus, normalizedSearch, pageable)
+                .map(AppointmentDto::mapToDto);
+    }
+
     public Page<AppointmentDto> getPatientAppointments(Long patientId, String currentUserEmail, String timeframe, Pageable pageable) {
         Patient patient = patientRepository.findById(patientId)
                 .orElseThrow(() -> new ResourceNotFoundException("Patient with id=" + patientId + " not found."));

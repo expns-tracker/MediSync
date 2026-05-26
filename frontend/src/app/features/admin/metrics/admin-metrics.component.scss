@@ -1,0 +1,147 @@
+.admin-page {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+
+    .eyebrow {
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: #64748b;
+      margin-bottom: 0.25rem;
+    }
+
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 700;
+      margin: 0 0 0.5rem;
+      color: #1e293b;
+    }
+
+    .description {
+      color: #64748b;
+      margin: 0;
+      max-width: 600px;
+    }
+  }
+
+  .loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 5rem 0;
+    color: #64748b;
+
+    p {
+      margin-top: 1rem;
+    }
+  }
+
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+
+    .stat-card {
+      text-align: center;
+      padding: 1.5rem;
+
+      .stat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+
+        mat-icon {
+          font-size: 28px;
+          width: 28px;
+          height: 28px;
+        }
+
+        &.patient-icon { background: #e0e7ff; color: #4338ca; }
+        &.doctor-icon { background: #dcfce7; color: #15803d; }
+        &.appt-icon { background: #fef3c7; color: #b45309; }
+        &.dept-icon { background: #fae8ff; color: #a21caf; }
+      }
+
+      .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 0.25rem;
+      }
+
+      .stat-label {
+        font-size: 0.875rem;
+        color: #64748b;
+        font-weight: 500;
+      }
+    }
+
+    .breakdown-card {
+      grid-column: span 2;
+
+      .breakdown-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        padding-top: 1rem;
+
+        .breakdown-item {
+          .item-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+
+            .item-label {
+              font-weight: 600;
+              color: #475569;
+              font-size: 0.875rem;
+            }
+
+            .item-value {
+              font-weight: 700;
+              color: #1e293b;
+            }
+          }
+
+          mat-progress-bar {
+            height: 8px;
+            border-radius: 4px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 1024px) {
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+    
+    .breakdown-card {
+      grid-column: span 2;
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .metrics-grid {
+    grid-template-columns: 1fr;
+    
+    .breakdown-card {
+      grid-column: span 1;
+    }
+  }
+}

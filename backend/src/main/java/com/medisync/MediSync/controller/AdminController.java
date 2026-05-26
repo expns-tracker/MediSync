@@ -1,6 +1,7 @@
 package com.medisync.MediSync.controller;
 
 import com.medisync.MediSync.dto.AdminRegistrationDto;
+import com.medisync.MediSync.dto.AdminUpdateDto;
 import com.medisync.MediSync.dto.UserDto;
 import com.medisync.MediSync.entity.User;
 import com.medisync.MediSync.service.AdminService;
@@ -58,5 +59,19 @@ public class AdminController {
     ) throws BadRequestException {
         adminService.deleteAdmin(adminId, currentUser.getId());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @Operation(summary = "Update admin", description = "Updates the email or password for an admin account.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Admin updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input or email already exists", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Admin not found", content = @Content)
+    })
+    @PatchMapping("/{adminId}")
+    public ResponseEntity<UserDto> updateAdmin(
+            @PathVariable Long adminId,
+            @Valid @RequestBody AdminUpdateDto updateDto
+    ) {
+        return ResponseEntity.ok(adminService.updateAdmin(adminId, updateDto));
     }
 }
