@@ -9,6 +9,7 @@ import { AdminDashboardComponent } from './features/admin/admin-dashboard.compon
 import { AdminCreateComponent } from './features/admin/admin-create.component';
 import { AdminDoctorListComponent } from './features/admin/doctors/admin-doctor-list.component';
 import { AdminDoctorCreateComponent } from './features/admin/doctors/admin-doctor-create.component';
+import { AdminPatientListComponent } from './features/admin/patients/admin-patient-list.component';
 import { DoctorAppointmentsComponent } from './features/doctors/appointments/doctor-appointments.component';
 import { DoctorPatientListComponent } from './features/doctors/patients/doctor-patient-list.component';
 import { DoctorPatientDetailComponent } from './features/doctors/patients/doctor-patient-detail.component';
@@ -73,6 +74,14 @@ export const routes: Routes = [
   {
     path: 'admin/doctors/create',
     component: AdminDoctorCreateComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: {
+      roles: ['ADMIN'],
+    },
+  },
+  {
+    path: 'admin/patients',
+    component: AdminPatientListComponent,
     canActivate: [AuthGuard, RoleGuard],
     data: {
       roles: ['ADMIN'],

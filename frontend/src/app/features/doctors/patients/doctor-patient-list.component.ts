@@ -55,9 +55,9 @@ export class DoctorPatientListComponent implements OnInit {
     this.isLoading.set(true);
     this.errorMessage.set('');
 
-    this.patientService.searchPatients(searchQuery).subscribe({
-      next: (patients) => {
-        this.patients.set(patients);
+    this.patientService.getPatients(searchQuery).subscribe({
+      next: (response) => {
+        this.patients.set(response.content);
         this.isLoading.set(false);
       },
       error: (error: Error) => {

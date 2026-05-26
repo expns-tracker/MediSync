@@ -8,6 +8,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthService } from '../../core/services/auth.service';
 import { AdminService } from '../../core/services/admin.service';
 import { DoctorService } from '../../core/services/doctor.service';
+import { PatientService } from '../../core/services/patient.service';
 import { UserDto } from '../../core/models/auth.models';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -29,11 +30,13 @@ export class AdminDashboardComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly adminService = inject(AdminService);
   private readonly doctorService = inject(DoctorService);
+  private readonly patientService = inject(PatientService);
   private readonly snackBar = inject(MatSnackBar);
 
   readonly currentUser = signal<UserDto | null>(this.authService.getCurrentUser());
   readonly admins = signal<UserDto[]>([]);
   readonly doctorCount = signal(0);
+  readonly patientCount = signal(0);
   readonly isLoading = signal(false);
   readonly isSaving = signal(false);
   readonly error = signal<string | null>(null);
@@ -44,10 +47,10 @@ export class AdminDashboardComponent implements OnInit {
   readonly quickActions = [
     {
       title: 'Patients',
-      subtitle: 'Manage patient records, care plans, and appointment access',
+      subtitle: 'Manage patient records, account status, and registration details',
       icon: 'people',
-      disabled: true,
-      route: '',
+      disabled: false,
+      route: '/admin/patients',
     },
     {
       title: 'Departments',
@@ -68,12 +71,20 @@ export class AdminDashboardComponent implements OnInit {
   ngOnInit(): void {
     this.loadAdmins();
     this.loadDoctorStats();
+    this.loadPatientStats();
   }
 
   private loadDoctorStats(): void {
     this.doctorService.getDoctors(undefined, false, { page: 0, size: 1 }).subscribe({
       next: (res) => this.doctorCount.set(res.totalElements),
       error: () => this.doctorCount.set(0)
+    });
+  }
+
+  private loadPatientStats(): void {
+    this.patientService.getPatients(undefined, { page: 0, size: 1 }).subscribe({
+      next: (res) => this.patientCount.set(res.totalElements),
+      error: () => this.patientCount.set(0)
     });
   }
 

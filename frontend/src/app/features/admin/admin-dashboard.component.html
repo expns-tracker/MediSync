@@ -26,6 +26,17 @@
         </div>
       </mat-card-content>
     </mat-card>
+
+    <mat-card class="dashboard-card summary-card">
+      <mat-card-title>Patient Base</mat-card-title>
+      <mat-card-content>
+        <div class="summary-metric">
+          <p class="metric-label">Registered Patients</p>
+          <h2>{{ patientCount() }}</h2>
+          <p class="metric-description">Total number of patients currently registered on the MediSync platform.</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
   </div>
 
   <div class="management-grid">

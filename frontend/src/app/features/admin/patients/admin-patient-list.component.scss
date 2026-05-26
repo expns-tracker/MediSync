@@ -1,0 +1,85 @@
+.admin-page {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+
+    .eyebrow {
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: #64748b;
+      margin-bottom: 0.25rem;
+    }
+
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 700;
+      margin: 0 0 0.5rem;
+      color: #1e293b;
+    }
+
+    .description {
+      color: #64748b;
+      margin: 0;
+      max-width: 600px;
+    }
+  }
+
+  .filter-card {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+
+    .search-field {
+      width: 100%;
+      max-width: 400px;
+    }
+  }
+
+  .table-card {
+    padding: 0;
+    overflow: hidden;
+
+    .table-container {
+      overflow-x: auto;
+      min-height: 400px;
+    }
+
+    table {
+      width: 100%;
+    }
+
+    .no-data-cell {
+      text-align: center;
+      padding: 3rem !important;
+      color: #64748b;
+      font-style: italic;
+    }
+
+    .active-chip {
+      background-color: #dcfce7 !important;
+      color: #166534 !important;
+    }
+
+    .inactive-chip {
+      background-color: #fee2e2 !important;
+      color: #991b1b !important;
+    }
+  }
+}
+
+// Global utility classes for mat-table consistency
+.mat-column-actions {
+  width: 80px;
+  text-align: center;
+}
+
+.mat-column-status {
+  width: 120px;
+}

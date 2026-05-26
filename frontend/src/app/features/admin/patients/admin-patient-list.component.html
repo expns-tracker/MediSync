@@ -1,0 +1,107 @@
+<main class="admin-page">
+  <div class="page-header">
+    <div>
+      <p class="eyebrow">Admin console</p>
+      <h1>Patient Directory</h1>
+      <p class="description">
+        Manage patient accounts, monitor status, and search the global patient registry.
+      </p>
+    </div>
+
+    <button mat-button color="primary" routerLink="/admin/dashboard">
+      <mat-icon>arrow_back</mat-icon>
+      Back to dashboard
+    </button>
+  </div>
+
+  <mat-card class="filter-card">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search patients</mat-label>
+      <input matInput [formControl]="searchControl" placeholder="Name or email..." />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </mat-card>
+
+  <mat-card class="table-card">
+    <div class="table-container">
+      <table mat-table [dataSource]="patients()">
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let patient">
+            {{ patient.firstName }} {{ patient.lastName }}
+          </td>
+        </ng-container>
+
+        <!-- Email Column -->
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef>Email</th>
+          <td mat-cell *matCellDef="let patient">{{ patient.email }}</td>
+        </ng-container>
+
+        <!-- Phone Column -->
+        <ng-container matColumnDef="phoneNumber">
+          <th mat-header-cell *matHeaderCellDef>Phone</th>
+          <td mat-cell *matCellDef="let patient">{{ patient.phoneNumber || 'N/A' }}</td>
+        </ng-container>
+
+        <!-- DOB Column -->
+        <ng-container matColumnDef="dateOfBirth">
+          <th mat-header-cell *matHeaderCellDef>Date of Birth</th>
+          <td mat-cell *matCellDef="let patient">{{ patient.dateOfBirth | date }}</td>
+        </ng-container>
+
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let patient">
+            <mat-chip-set>
+              <mat-chip [class.active-chip]="patient.active" [class.inactive-chip]="!patient.active">
+                {{ patient.active ? 'Active' : 'Inactive' }}
+              </mat-chip>
+            </mat-chip-set>
+          </td>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let patient">
+            <button
+              mat-icon-button
+              [color]="patient.active ? 'warn' : 'primary'"
+              [matTooltip]="patient.active ? 'Deactivate Account' : 'Activate Account'"
+              (click)="toggleStatus(patient)"
+            >
+              <mat-icon>{{ patient.active ? 'person_off' : 'person_add' }}</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+        <!-- No data row -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell no-data-cell" [attr.colspan]="displayedColumns.length">
+            @if (isLoading()) {
+              Loading patients...
+            } @else {
+              No patients found matching the search criteria.
+            }
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <mat-paginator
+      [length]="totalElements()"
+      [pageSize]="pageSize()"
+      [pageIndex]="pageIndex()"
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      (page)="onPageChange($event)"
+      aria-label="Select page of patients"
+    >
+    </mat-paginator>
+  </mat-card>
+</main>
