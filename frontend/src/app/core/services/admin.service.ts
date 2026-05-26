@@ -4,7 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { UserDto } from '../models/auth.models';
-import { AdminRegistrationDto } from '../models/admin.models';
+import { AdminRegistrationDto, AdminUpdateDto } from '../models/admin.models';
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +22,12 @@ export class AdminService {
   registerAdmin(registration: AdminRegistrationDto): Observable<UserDto> {
     return this.http
       .post<UserDto>(`${this.baseUrl}/admins`, registration)
+      .pipe(catchError((error) => this.handleError(error)));
+  }
+
+  updateAdmin(adminId: number, dto: AdminUpdateDto): Observable<UserDto> {
+    return this.http
+      .patch<UserDto>(`${this.baseUrl}/admins/${adminId}`, dto)
       .pipe(catchError((error) => this.handleError(error)));
   }
 

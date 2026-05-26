@@ -63,8 +63,15 @@ export class AdminDashboardComponent implements OnInit {
       title: 'System Health',
       subtitle: 'Monitor active users, appointments, and pending actions',
       icon: 'insights',
-      disabled: true,
-      route: '',
+      disabled: false,
+      route: '/admin/metrics',
+    },
+    {
+      title: 'Global Appointments',
+      subtitle: 'Monitor all hospital bookings, manage attendance, and intervene',
+      icon: 'event_note',
+      disabled: false,
+      route: '/admin/appointments',
     },
     {
       title: 'Allergies Catalog',
@@ -72,6 +79,13 @@ export class AdminDashboardComponent implements OnInit {
       icon: 'list_alt',
       disabled: false,
       route: '/admin/allergies',
+    },
+    {
+      title: 'Account Settings',
+      subtitle: 'Update your administrative email and security credentials',
+      icon: 'settings',
+      disabled: false,
+      route: '/admin/settings',
     },
   ];
 

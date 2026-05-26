@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/allergies")
+@RequestMapping("/api/allergies")
 @RequiredArgsConstructor
 @Tag(name = "Allergies", description = "Allergy catalog management. Viewing is authenticated; modification requires ADMIN role.")
 public class AllergyController {

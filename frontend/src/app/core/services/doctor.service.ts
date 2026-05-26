@@ -39,6 +39,12 @@ export class DoctorService {
       .pipe(catchError((error) => this.handleError(error)));
   }
 
+  getDoctorById(doctorId: number): Observable<DoctorDto> {
+    return this.http
+      .get<DoctorDto>(`${this.baseUrl}/doctors/${doctorId}`)
+      .pipe(catchError((error) => this.handleError(error)));
+  }
+
   getDepartments(): Observable<DepartmentDto[]> {
     return this.http
       .get<DepartmentDto[]>(`${this.baseUrl}/departments`)

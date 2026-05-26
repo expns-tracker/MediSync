@@ -9,9 +9,13 @@ import { AdminDashboardComponent } from './features/admin/admin-dashboard.compon
 import { AdminCreateComponent } from './features/admin/admin-create.component';
 import { AdminDoctorListComponent } from './features/admin/doctors/admin-doctor-list.component';
 import { AdminDoctorCreateComponent } from './features/admin/doctors/admin-doctor-create.component';
+import { AdminDoctorScheduleComponent } from './features/admin/doctors/admin-doctor-schedule.component';
 import { AdminPatientListComponent } from './features/admin/patients/admin-patient-list.component';
 import { AdminDepartmentListComponent } from './features/admin/departments/admin-department-list.component';
 import { AdminAllergyListComponent } from './features/admin/allergies/admin-allergy-list.component';
+import { AdminAppointmentListComponent } from './features/admin/appointments/admin-appointment-list.component';
+import { AdminSettingsComponent } from './features/admin/settings/admin-settings.component';
+import { AdminMetricsComponent } from './features/admin/metrics/admin-metrics.component';
 import { DoctorAppointmentsComponent } from './features/doctors/appointments/doctor-appointments.component';
 import { DoctorPatientListComponent } from './features/doctors/patients/doctor-patient-list.component';
 import { DoctorPatientDetailComponent } from './features/doctors/patients/doctor-patient-detail.component';
@@ -82,6 +86,14 @@ export const routes: Routes = [
     },
   },
   {
+    path: 'admin/doctors/:doctorId/schedule',
+    component: AdminDoctorScheduleComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: {
+      roles: ['ADMIN'],
+    },
+  },
+  {
     path: 'admin/patients',
     component: AdminPatientListComponent,
     canActivate: [AuthGuard, RoleGuard],
@@ -100,6 +112,30 @@ export const routes: Routes = [
   {
     path: 'admin/allergies',
     component: AdminAllergyListComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: {
+      roles: ['ADMIN'],
+    },
+  },
+  {
+    path: 'admin/appointments',
+    component: AdminAppointmentListComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: {
+      roles: ['ADMIN'],
+    },
+  },
+  {
+    path: 'admin/settings',
+    component: AdminSettingsComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: {
+      roles: ['ADMIN'],
+    },
+  },
+  {
+    path: 'admin/metrics',
+    component: AdminMetricsComponent,
     canActivate: [AuthGuard, RoleGuard],
     data: {
       roles: ['ADMIN'],

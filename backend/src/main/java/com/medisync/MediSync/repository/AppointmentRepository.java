@@ -60,4 +60,26 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     List<Appointment> findAllByPatientIdAndStatus(Long patientId, AppointmentStatus status);
 
     List<Appointment> findAllByDoctorIdAndStatus(Long doctorId, AppointmentStatus status);
+
+    long countByStatus(AppointmentStatus status);
+
+    @Query("""
+        SELECT a FROM Appointment a 
+        JOIN FETCH a.patient p
+        JOIN FETCH p.user pu
+        JOIN FETCH a.doctor d
+        JOIN FETCH d.user du
+        JOIN FETCH d.department dept
+        WHERE (:status IS NULL OR a.status = :status)
+        AND (:search IS NULL 
+             OR LOWER(p.firstName) LIKE LOWER(CONCAT('%', CAST(:search AS string), '%')) 
+             OR LOWER(p.lastName) LIKE LOWER(CONCAT('%', CAST(:search AS string), '%'))
+             OR LOWER(d.firstName) LIKE LOWER(CONCAT('%', CAST(:search AS string), '%'))
+             OR LOWER(d.lastName) LIKE LOWER(CONCAT('%', CAST(:search AS string), '%')))
+    """)
+    Page<Appointment> findAllWithFilters(
+            @Param("status") AppointmentStatus status,
+            @Param("search") String search,
+            Pageable pageable
+    );
 }

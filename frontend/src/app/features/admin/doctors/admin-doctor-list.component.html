@@ -104,6 +104,9 @@
                 <button mat-icon-button (click)="openEditDialog(doctor)" matTooltip="Edit Profile">
                   <mat-icon>edit</mat-icon>
                 </button>
+                <button mat-icon-button [routerLink]="['/admin/doctors', doctor.id, 'schedule']" matTooltip="Manage Schedule">
+                  <mat-icon>schedule</mat-icon>
+                </button>
                 <button
                   mat-icon-button
                   [color]="doctor.active ? 'warn' : 'primary'"

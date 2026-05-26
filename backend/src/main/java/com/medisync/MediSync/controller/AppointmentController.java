@@ -27,6 +27,17 @@ public class AppointmentController {
 
     private final AppointmentService appointmentService;
 
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "List all appointments", description = "Retrieves a paginated list of all appointments in the system. Requires ADMIN role.")
+    public ResponseEntity<org.springframework.data.domain.Page<AppointmentDto>> getAppointments(
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String search,
+            @org.springframework.data.web.PageableDefault(size = 20) org.springframework.data.domain.Pageable pageable
+    ) {
+        return ResponseEntity.ok(appointmentService.getAllAppointments(status, search, pageable));
+    }
+
     @GetMapping("/{appointmentId}")
     @Operation(
             summary = "Get appointment details",
