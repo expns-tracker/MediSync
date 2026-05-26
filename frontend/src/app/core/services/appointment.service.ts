@@ -46,9 +46,18 @@ export class AppointmentService {
       .pipe(catchError((error) => this.handleError(error)));
   }
 
-  getPatientAppointments(patientId: number): Observable<AppointmentDto[]> {
+  getPatientAppointments(
+    patientId: number,
+    timeframe: string = 'all',
+    pageable: PageRequest = { page: 0, size: 50 }
+  ): Observable<PageResponse<AppointmentDto>> {
+    const params = new HttpParams()
+      .set('timeframe', timeframe)
+      .set('page', pageable.page.toString())
+      .set('size', pageable.size.toString());
+
     return this.http
-      .get<AppointmentDto[]>(`${this.baseUrl}/patients/${patientId}/appointments`)
+      .get<PageResponse<AppointmentDto>>(`${this.baseUrl}/patients/${patientId}/appointments`, { params })
       .pipe(catchError((error) => this.handleError(error)));
   }
 

@@ -19,6 +19,9 @@ import java.util.List;
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
     @Query("""
         SELECT a FROM Appointment a 
+        JOIN FETCH a.doctor d
+        JOIN FETCH d.user du
+        JOIN FETCH d.department dept
         WHERE a.patient.id = :patientId 
         AND (:timeframe = 'all' 
              OR (:timeframe = 'past' AND a.appointmentTime < :now) 
@@ -33,6 +36,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     @Query("""
         SELECT a FROM Appointment a 
+        JOIN FETCH a.patient p
+        JOIN FETCH p.user pu
         WHERE a.doctor.id = :doctorId 
         AND (:timeframe = 'all' 
              OR (:timeframe = 'past' AND a.appointmentTime < :now) 

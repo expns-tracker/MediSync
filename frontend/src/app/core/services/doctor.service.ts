@@ -4,7 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { DoctorDto, DepartmentDto, PageDoctorDto, DoctorUpdateDto, DoctorRegistrationDto } from '../models/doctor.models';
 import { AppointmentDto } from '../models/appointment.models';
-import { PageRequest } from '../models/pagination.models';
+import { PageRequest, PageResponse } from '../models/pagination.models';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -58,9 +58,18 @@ export class DoctorService {
       .pipe(catchError((error) => this.handleError(error)));
   }
 
-  getDoctorAppointments(doctorId: number): Observable<AppointmentDto[]> {
+  getDoctorAppointments(
+    doctorId: number,
+    timeframe: string = 'all',
+    pageable: PageRequest = { page: 0, size: 50 }
+  ): Observable<PageResponse<AppointmentDto>> {
+    const params = new HttpParams()
+      .set('timeframe', timeframe)
+      .set('page', pageable.page.toString())
+      .set('size', pageable.size.toString());
+
     return this.http
-      .get<AppointmentDto[]>(`${this.baseUrl}/doctors/${doctorId}/appointments`)
+      .get<PageResponse<AppointmentDto>>(`${this.baseUrl}/doctors/${doctorId}/appointments`, { params })
       .pipe(catchError((error) => this.handleError(error)));
   }
 

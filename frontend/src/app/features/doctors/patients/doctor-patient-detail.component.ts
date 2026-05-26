@@ -62,9 +62,9 @@ export class DoctorPatientDetailComponent implements OnInit {
 
   private loadAppointments(patientId: number): void {
     this.appointmentService.getPatientAppointments(patientId).subscribe({
-      next: (appointments) => {
+      next: (response) => {
         this.appointments.set(
-          appointments.sort((a, b) => new Date(b.appointmentTime).getTime() - new Date(a.appointmentTime).getTime())
+          response.content.sort((a, b) => new Date(b.appointmentTime).getTime() - new Date(a.appointmentTime).getTime())
         );
       },
       error: (error: Error) => {

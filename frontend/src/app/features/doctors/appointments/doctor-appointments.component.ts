@@ -49,9 +49,9 @@ export class DoctorAppointmentsComponent implements OnInit {
     }
 
     this.doctorService.getDoctorAppointments(doctorId).subscribe({
-      next: (appointments) => {
-        this.appointments.set(appointments);
-        this.categorizeAppointments(appointments);
+      next: (response) => {
+        this.appointments.set(response.content);
+        this.categorizeAppointments(response.content);
       },
       error: (error) => {
         console.error('Failed to load appointments:', error);

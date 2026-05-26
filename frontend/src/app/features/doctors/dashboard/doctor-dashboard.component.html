@@ -16,7 +16,7 @@
           <div class="appointment-item" *ngFor="let appt of todayAppointments()">
             <div class="appointment-info">
               <div class="time">{{ appt.appointmentTime | date:'shortTime' }}</div>
-              <div class="patient">{{ appt.patient.firstName }} {{ appt.patient.lastName }}</div>
+              <div class="patient">{{ appt.patientFirstName }} {{ appt.patientLastName }}</div>
               <div class="reason">{{ appt.reason }}</div>
             </div>
             <mat-chip [color]="getStatusColor(appt.status)" selected>
@@ -48,7 +48,7 @@
             <div class="appointment-info">
               <div class="date">{{ appt.appointmentTime | date:'shortDate' }}</div>
               <div class="time">{{ appt.appointmentTime | date:'shortTime' }}</div>
-              <div class="patient">{{ appt.patient.firstName }} {{ appt.patient.lastName }}</div>
+              <div class="patient">{{ appt.patientFirstName }} {{ appt.patientLastName }}</div>
             </div>
             <mat-chip [color]="getStatusColor(appt.status)" selected>
               {{ appt.status }}
