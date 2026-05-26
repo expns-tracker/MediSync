@@ -56,8 +56,8 @@ export class AdminDashboardComponent implements OnInit {
       title: 'Departments',
       subtitle: 'Configure specialties, clinical teams, and care units',
       icon: 'business',
-      disabled: true,
-      route: '',
+      disabled: false,
+      route: '/admin/departments',
     },
     {
       title: 'System Health',
