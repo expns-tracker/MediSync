@@ -1,24 +1,25 @@
-<main class="admin-page">
-  <div class="page-header">
+<main class="container page-shell">
+  <div class="flex-between mb-8">
     <div>
       <p class="eyebrow">Admin console</p>
-      <h1>Doctor Management</h1>
-      <p class="description">
-        Manage provider accounts, update clinical specializations, and control system access.
+      <h1 class="section-title">Doctor Management</h1>
+      <p class="section-description">
+        Manage provider accounts, update clinical specializations, and configure hospital department assignments.
       </p>
     </div>
 
     <div class="header-actions">
       <button mat-flat-button color="primary" routerLink="/admin/doctors/create">
         <mat-icon>person_add</mat-icon>
-        Add new doctor
+        Add Doctor
       </button>
       <button mat-button color="primary" routerLink="/admin/dashboard">
         <mat-icon>arrow_back</mat-icon>
-        Back to dashboard
+        Dashboard
       </button>
     </div>
   </div>
+
 
   <div class="filter-bar">
     <mat-card class="filter-card">
