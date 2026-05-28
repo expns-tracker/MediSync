@@ -4,6 +4,10 @@ server:
 spring:
   application:
     name: reporting-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/medisync
+    username: ${PSQL_USERNAME:postgres}
+    password: ${PSQL_PASSWORD:postgres}
 
 core-service:
   url: ${CORE_SERVICE_URL:http://localhost:8080}

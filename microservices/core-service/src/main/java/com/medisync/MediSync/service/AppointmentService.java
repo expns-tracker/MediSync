@@ -1,6 +1,8 @@
 package com.medisync.MediSync.service;
 
-import com.medisync.MediSync.client.NotificationServiceClient;
+import com.medisync.MediSync.event.AppointmentBookedEvent;
+import org.springframework.context.ApplicationEventPublisher;
+import com.medisync.MediSync.dto.NotificationRequest;
 import com.medisync.MediSync.dto.AppointmentBookDto;
 import com.medisync.MediSync.dto.AppointmentDto;
 import com.medisync.MediSync.dto.MedicalRecordCreateDto;
@@ -38,7 +40,7 @@ public class AppointmentService {
     private final DoctorScheduleRepository doctorScheduleRepository;
     private final MedicalRecordRepository medicalRecordRepository;
     private final UserRepository userRepository;
-    private final NotificationServiceClient notificationServiceClient;
+    private final ApplicationEventPublisher eventPublisher;
 
     public AppointmentDto findById(Long id, String currentUserEmail) {
         Appointment appointment = appointmentRepository.findById(id)
@@ -231,10 +233,16 @@ public class AppointmentService {
         Appointment savedAppointment = appointmentRepository.save(appointment);
 
         try {
-            notificationServiceClient.sendNotification("New appointment booked for patient "
-                    + patient.getFirstName() + " at " + savedAppointment.getAppointmentTime());
+            NotificationRequest request = NotificationRequest.builder()
+                    .to(patient.getUser().getEmail())
+                    .subject("MediSync: Appointment Confirmation")
+                    .body("Dear " + patient.getFirstName() + ",\n\nYour appointment with Dr. " +
+                          doctor.getFirstName() + " " + doctor.getLastName() + " is confirmed for " +
+                          savedAppointment.getAppointmentTime() + ".\n\nReason: " + appointment.getReason())
+                    .build();
+            eventPublisher.publishEvent(new AppointmentBookedEvent(this, request));
         } catch (Exception e) {
-            log.error("Failed to send notification: {}", e.getMessage());
+            log.error("Failed to publish appointment booked event: {}", e.getMessage());
         }
 
         return AppointmentDto.mapToDto(savedAppointment);

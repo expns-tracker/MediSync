@@ -6,8 +6,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { StatisticsService } from '../../../core/services/statistics.service';
+import { ReportingService } from '../../../core/services/reporting.service';
 import { StatisticsDto } from '../../../core/models/statistics.models';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-admin-metrics',
@@ -25,9 +26,13 @@ import { StatisticsDto } from '../../../core/models/statistics.models';
   styleUrls: ['./admin-metrics.component.scss'],
 })
 export class AdminMetricsComponent implements OnInit {
-  private readonly statsService = inject(StatisticsService);
+  private readonly reportingService = inject(ReportingService);
 
   stats = signal<StatisticsDto | null>(null);
+  workload = signal<any[]>([]);
+  trends = signal<any[]>([]);
+  distribution = signal<any[]>([]);
+  
   isLoading = signal(false);
 
   // Helper to convert object keys to array for templates
@@ -41,14 +46,10 @@ export class AdminMetricsComponent implements OnInit {
     }));
   });
 
-  deptBreakdown = computed(() => {
-    const s = this.stats();
-    if (!s) return [];
-    return Object.entries(s.doctorsByDepartment).map(([name, count]) => ({
-      name,
-      count,
-      percentage: (count / (s.totalDoctors || 1)) * 100
-    }));
+  maxWorkload = computed(() => {
+    const wl = this.workload();
+    if (!wl || wl.length === 0) return 1;
+    return Math.max(...wl.map(w => w.total_appointments));
   });
 
   ngOnInit(): void {
@@ -57,9 +58,18 @@ export class AdminMetricsComponent implements OnInit {
 
   loadStats(): void {
     this.isLoading.set(true);
-    this.statsService.getStatistics().subscribe({
+    
+    forkJoin({
+      summary: this.reportingService.getPublicStats(),
+      workload: this.reportingService.getDoctorWorkload(),
+      trends: this.reportingService.getMonthlyTrends(),
+      dist: this.reportingService.getDepartmentDistribution()
+    }).subscribe({
       next: (data) => {
-        this.stats.set(data);
+        this.stats.set(data.summary);
+        this.workload.set(data.workload);
+        this.trends.set(data.trends);
+        this.distribution.set(data.dist);
         this.isLoading.set(false);
       },
       error: () => {

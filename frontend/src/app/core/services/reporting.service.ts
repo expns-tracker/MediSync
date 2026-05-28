@@ -15,4 +15,16 @@ export class ReportingService {
   getPublicStats(): Observable<StatisticsDto> {
     return this.http.get<StatisticsDto>(`${this.apiUrl}/summary`);
   }
+
+  getDoctorWorkload(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/workload`);
+  }
+
+  getMonthlyTrends(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/trends`);
+  }
+
+  getDepartmentDistribution(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/distribution`);
+  }
 }
