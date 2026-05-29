@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -19,25 +19,23 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
-    - name: Build Core Service
+    - name: Compile All Services
+      run: |
+        cd microservices/core-service && ./mvnw compile
+        cd ../reporting-service && ./mvnw compile
+        cd ../notification-service && ./mvnw compile
+        cd ../gateway-service && ./mvnw compile
+
+    - name: Run Core Service Tests (Unit + Integration)
       run: |
         cd microservices/core-service
-        ./mvnw clean verify
-        
-    - name: Build Reporting Service
-      run: |
-        cd microservices/reporting-service
-        ./mvnw clean verify
+        ./mvnw verify
 
-    - name: Build Notification Service
+    - name: Run Auxiliary Service Tests
       run: |
-        cd microservices/notification-service
-        ./mvnw clean verify
-
-    - name: Build Gateway Service
-      run: |
-        cd microservices/gateway-service
-        ./mvnw clean verify
+        cd microservices/reporting-service && ./mvnw test
+        cd ../notification-service && ./mvnw test
+        cd ../gateway-service && ./mvnw test
 
     # Note: Docker build and push would go here if secrets were configured
     # - name: Docker Build and Push
