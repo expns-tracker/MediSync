@@ -22,22 +22,22 @@ jobs:
     - name: Build Core Service
       run: |
         cd microservices/core-service
-        ./mvnw verify
+        ./mvnw clean verify
         
     - name: Build Reporting Service
       run: |
         cd microservices/reporting-service
-        ./mvnw verify
+        ./mvnw clean verify
 
     - name: Build Notification Service
       run: |
         cd microservices/notification-service
-        ./mvnw verify
+        ./mvnw clean verify
 
     - name: Build Gateway Service
       run: |
         cd microservices/gateway-service
-        ./mvnw verify
+        ./mvnw clean verify
 
     # Note: Docker build and push would go here if secrets were configured
     # - name: Docker Build and Push
