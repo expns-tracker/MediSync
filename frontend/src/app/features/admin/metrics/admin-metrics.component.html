@@ -1,108 +1,146 @@
-<main class="container page-shell">
-  <div class="flex-between mb-8">
-    <div>
-      <p class="eyebrow">Admin console</p>
-      <h1 class="section-title">System Insights</h1>
-      <p class="section-description">
-        Real-time analytics and operational metrics for the MediSync platform.
-      </p>
+<div class="admin-page-container">
+  <header class="metrics-header">
+    <div class="header-text">
+      <p class="eyebrow">Enterprise Intelligence</p>
+      <h1>System Analytics</h1>
+      <p>Independent reporting microservice providing real-time clinical insights.</p>
     </div>
-
-    <button mat-button color="primary" routerLink="/admin/dashboard">
-      <mat-icon>arrow_back</mat-icon>
-      Dashboard
+    <button mat-flat-button color="primary" routerLink="/admin/dashboard" style="border-radius: 12px; padding: 0 1.5rem;">
+      <mat-icon>dashboard</mat-icon>
+      Return to Control Center
     </button>
-  </div>
+  </header>
 
   @if (isLoading()) {
-    <div class="loading-state">
-      <mat-spinner diameter="50"></mat-spinner>
-      <p>Aggregating system data...</p>
+    <div class="loading-state" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10rem 0;">
+      <mat-spinner diameter="60" color="primary"></mat-spinner>
+      <p style="margin-top: 1.5rem; color: #64748b; font-weight: 500;">Fetching microservice data...</p>
     </div>
   } @else if (stats()) {
-    <div class="metrics-grid">
-      <!-- High-Level Stats -->
-      <mat-card class="stat-card">
-        <mat-card-content>
-          <div class="stat-icon patient-icon">
-            <mat-icon>people</mat-icon>
-          </div>
-          <div class="stat-value">{{ stats()?.totalPatients }}</div>
-          <div class="stat-label">Total Patients</div>
-        </mat-card-content>
-      </mat-card>
+    
+    <!-- Top Row: High-Impact KPIs -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-icon blue"><mat-icon>people</mat-icon></div>
+        <div class="kpi-value">{{ stats()?.totalPatients }}</div>
+        <div class="kpi-label">Registered Patients</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon green"><mat-icon>medical_services</mat-icon></div>
+        <div class="kpi-value">{{ stats()?.totalDoctors }}</div>
+        <div class="kpi-label">Medical Staff</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon amber"><mat-icon>event_available</mat-icon></div>
+        <div class="kpi-value">{{ stats()?.totalAppointments }}</div>
+        <div class="kpi-label">Total Care Sessions</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon purple"><mat-icon>business</mat-icon></div>
+        <div class="kpi-value">{{ stats()?.totalDepartments }}</div>
+        <div class="kpi-label">Active Specialties</div>
+      </div>
+    </div>
 
-      <mat-card class="stat-card">
-        <mat-card-content>
-          <div class="stat-icon doctor-icon">
-            <mat-icon>medical_services</mat-icon>
-          </div>
-          <div class="stat-value">{{ stats()?.totalDoctors }}</div>
-          <div class="stat-label">Total Doctors</div>
-        </mat-card-content>
-      </mat-card>
-
-      <mat-card class="stat-card">
-        <mat-card-content>
-          <div class="stat-icon appt-icon">
-            <mat-icon>event_available</mat-icon>
-          </div>
-          <div class="stat-value">{{ stats()?.totalAppointments }}</div>
-          <div class="stat-label">Total Appointments</div>
-        </mat-card-content>
-      </mat-card>
-
-      <mat-card class="stat-card">
-        <mat-card-content>
-          <div class="stat-icon dept-icon">
-            <mat-icon>business</mat-icon>
-          </div>
-          <div class="stat-value">{{ stats()?.totalDepartments }}</div>
-          <div class="stat-label">Clinical Departments</div>
-        </mat-card-content>
-      </mat-card>
-
-      <!-- Breakdown Charts -->
-      <mat-card class="breakdown-card">
-        <mat-card-header>
-          <mat-card-title>Appointment Distribution</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="breakdown-list">
+    <!-- Main Analytics Grid -->
+    <div class="charts-main-grid">
+      
+      <!-- Appointment Status Breakdown -->
+      <div class="chart-container-card">
+        <div class="chart-header">
+          <h3>Operational Status</h3>
+          <span class="chart-tag">Core Metrics</span>
+        </div>
+        <div class="chart-body">
+          <div class="analytics-bar-list">
             @for (item of statusBreakdown(); track item.status) {
-              <div class="breakdown-item">
-                <div class="item-info">
-                  <span class="item-label">{{ item.status }}</span>
-                  <span class="item-value">{{ item.count }}</span>
+              <div class="bar-item">
+                <div class="bar-info">
+                  <span class="label">{{ item.status }}</span>
+                  <span class="value">{{ item.count }}</span>
                 </div>
-                <mat-progress-bar mode="determinate" [value]="item.percentage" [color]="getStatusColor(item.status)"></mat-progress-bar>
+                <div class="bar-track">
+                  <div class="bar-progress" 
+                       [style.width.%]="item.percentage"
+                       [class.warn]="item.status === 'CANCELLED' || item.status === 'NO_SHOW'">
+                  </div>
+                </div>
               </div>
             }
           </div>
-        </mat-card-content>
-      </mat-card>
+        </div>
+      </div>
 
-      <mat-card class="breakdown-card">
-        <mat-card-header>
-          <mat-card-title>Staffing by Department</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="breakdown-list">
-            @for (item of deptBreakdown(); track item.name) {
-              <div class="breakdown-item">
-                <div class="item-info">
-                  <span class="item-label">{{ item.name }}</span>
-                  <span class="item-value">{{ item.count }} Doctors</span>
+      <!-- Department Distribution -->
+      <div class="chart-container-card">
+        <div class="chart-header">
+          <h3>Activity by Specialty</h3>
+          <span class="chart-tag">Distribution</span>
+        </div>
+        <div class="chart-body">
+          <div class="analytics-bar-list">
+            @for (item of distribution(); track item.department_name) {
+              <div class="bar-item">
+                <div class="bar-info">
+                  <span class="label">{{ item.department_name || 'General' }}</span>
+                  <span class="value">{{ item.appointment_count }}</span>
                 </div>
-                <mat-progress-bar mode="determinate" [value]="item.percentage"></mat-progress-bar>
+                <div class="bar-track">
+                  <div class="bar-progress accent" 
+                       [style.width.%]="(item.appointment_count / (stats()?.totalAppointments || 1)) * 100">
+                  </div>
+                </div>
               </div>
             }
-            @if (deptBreakdown().length === 0) {
-              <p class="empty-state">No departmental data available.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Doctor Workload Ranking -->
+      <div class="chart-container-card full-width">
+        <div class="chart-header">
+          <h3>Provider Performance Ranking</h3>
+          <span class="chart-tag">Workload Analytics</span>
+        </div>
+        <div class="chart-body">
+          <div class="workload-visual">
+            @for (doc of workload(); track doc.doctor_id) {
+              <div class="doctor-row">
+                <div class="doctor-meta">
+                  <span class="name">Dr. {{ doc.first_name }} {{ doc.last_name }}</span>
+                  <span class="dept">{{ doc.department_name }}</span>
+                </div>
+                <div class="rank-bar-container">
+                  <div class="rank-bar-fill" [style.width.%]="(doc.total_appointments / maxWorkload()) * 100">
+                    <span class="count">{{ doc.total_appointments }} Appts</span>
+                  </div>
+                </div>
+              </div>
             }
           </div>
-        </mat-card-content>
-      </mat-card>
+        </div>
+      </div>
+
+      <!-- Monthly Trend Histogram -->
+      <div class="chart-container-card full-width">
+        <div class="chart-header">
+          <h3>Monthly Appointment Trends</h3>
+          <span class="chart-tag">Growth Trend</span>
+        </div>
+        <div class="chart-body">
+          <div class="trend-visual">
+            @for (month of trends(); track month.month) {
+              <div class="trend-col">
+                <div class="col-bar" [style.height.%]="(month.total_appointments / (stats()?.totalAppointments || 1)) * 100 + 15">
+                  <span class="col-val">{{ month.total_appointments }}</span>
+                </div>
+                <span class="col-label">{{ month.month }}</span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
     </div>
   }
-</main>
+</div>

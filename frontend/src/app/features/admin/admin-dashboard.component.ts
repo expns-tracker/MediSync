@@ -64,9 +64,9 @@ export class AdminDashboardComponent implements OnInit {
       route: '/admin/departments',
     },
     {
-      title: 'System Health',
-      subtitle: 'Monitor active users, appointments, and pending actions',
-      icon: 'insights',
+      title: 'System Intelligence',
+      subtitle: 'Monitor workload, trends, and clinical distribution metrics',
+      icon: 'analytics',
       disabled: false,
       route: '/admin/metrics',
     },

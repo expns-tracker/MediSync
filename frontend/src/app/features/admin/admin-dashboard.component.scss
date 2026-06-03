@@ -8,6 +8,61 @@
   text-align: center;
   padding: 1rem;
 
+  &.clickable {
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  &.insights-card {
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: #ffffff;
+
+    mat-card-title {
+      color: #64748b;
+    }
+
+    .metric-label {
+      color: #1e293b;
+      font-weight: 700;
+      margin-top: 0.5rem;
+    }
+
+    .metric-description {
+      color: #64748b;
+      font-size: 0.8rem;
+    }
+
+    .insight-icon-container {
+      background: #f5f3ff;
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+
+      mat-icon {
+        font-size: 32px;
+        width: 32px;
+        height: 32px;
+        color: #6366f1;
+      }
+    }
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      border-color: #6366f1;
+
+      .insight-icon-container {
+        background: #6366f1;
+        mat-icon { color: white; }
+      }
+    }
+  }
+
   mat-card-title {
     font-size: 0.875rem;
     font-weight: 600;

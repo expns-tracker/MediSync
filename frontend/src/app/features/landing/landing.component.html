@@ -12,7 +12,30 @@
       </div>
     </div>
     <div class="hero-image">
-      <div class="hero-illustration"></div>
+      <div class="hero-illustration">
+        <span class="material-icons hero-icon">health_and_safety</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="stats-banner" *ngIf="stats">
+    <div class="stats-container">
+      <div class="stat-item">
+        <span class="stat-value">{{stats.totalPatients}}</span>
+        <span class="stat-label">Trusted Patients</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value">{{stats.totalDoctors}}</span>
+        <span class="stat-label">Specialist Doctors</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value">{{stats.totalAppointments}}</span>
+        <span class="stat-label">Care Sessions Delivered</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value">{{stats.totalDepartments}}</span>
+        <span class="stat-label">Specialized Departments</span>
+      </div>
     </div>
   </section>
 

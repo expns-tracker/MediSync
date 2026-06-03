@@ -11,7 +11,6 @@
       <a routerLink="/doctor/dashboard" class="nav-link" *ngIf="isAuthenticated && currentUser?.role === 'DOCTOR'">Dashboard</a>
       <a routerLink="/doctor/patients" class="nav-link" *ngIf="isAuthenticated && currentUser?.role === 'DOCTOR'">Patients</a>
       <a routerLink="/doctor/appointments" class="nav-link" *ngIf="isAuthenticated && currentUser?.role === 'DOCTOR'">My Appointments</a>
-      <a routerLink="/admin/dashboard" class="nav-link" *ngIf="isAuthenticated && currentUser?.role === 'ADMIN'">Dashboard</a>
       <div class="nav-buttons" *ngIf="!isAuthenticated">
         <a routerLink="/login" class="btn-secondary">Sign In</a>
         <a routerLink="/register" class="btn-primary-nav">Register</a>
