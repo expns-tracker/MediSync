@@ -1,0 +1,95 @@
+<main class="admin-page">
+  <div class="page-header">
+    <div>
+      <p class="eyebrow">Admin console</p>
+      <h1>Account Settings</h1>
+      <p class="description">
+        Manage your administrative credentials and security preferences.
+      </p>
+    </div>
+
+    <button mat-button color="primary" routerLink="/admin/dashboard">
+      <mat-icon>arrow_back</mat-icon>
+      Back to dashboard
+    </button>
+  </div>
+
+  <div class="settings-grid">
+    <!-- Email Settings -->
+    <mat-card class="settings-card">
+      <mat-card-header>
+        <mat-card-title>Update Login Email</mat-card-title>
+        <mat-card-subtitle>Change the email address used for administrative access.</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <form [formGroup]="emailForm" class="settings-form">
+          <mat-form-field appearance="outline">
+            <mat-label>Administrative Email</mat-label>
+            <input matInput formControlName="email" type="email" placeholder="admin@medisync.com" />
+            <mat-icon matPrefix>email</mat-icon>
+            <mat-error *ngIf="emailForm.get('email')?.hasError('required')">Email is required</mat-error>
+            <mat-error *ngIf="emailForm.get('email')?.hasError('email')">Invalid email format</mat-error>
+          </mat-form-field>
+
+          <div class="form-actions">
+            <button
+              mat-flat-button
+              color="primary"
+              (click)="updateEmail()"
+              [disabled]="emailForm.invalid || isSavingEmail()"
+            >
+              @if (isSavingEmail()) {
+                <mat-spinner diameter="20"></mat-spinner>
+              } @else {
+                Update Email
+              }
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Password Settings -->
+    <mat-card class="settings-card">
+      <mat-card-header>
+        <mat-card-title>Security & Password</mat-card-title>
+        <mat-card-subtitle>Ensure your account remains secure with a strong password.</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <form [formGroup]="passwordForm" class="settings-form">
+          <mat-form-field appearance="outline">
+            <mat-label>New Password</mat-label>
+            <input matInput formControlName="password" type="password" />
+            <mat-icon matPrefix>lock</mat-icon>
+            <mat-error *ngIf="passwordForm.get('password')?.hasError('required')">Password is required</mat-error>
+            <mat-error *ngIf="passwordForm.get('password')?.hasError('minlength')">Minimum 8 characters</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Confirm New Password</mat-label>
+            <input matInput formControlName="confirmPassword" type="password" />
+            <mat-icon matPrefix>lock_reset</mat-icon>
+            <mat-error *ngIf="passwordForm.hasError('mismatch')">Passwords do not match</mat-error>
+          </mat-form-field>
+
+          <div class="form-actions">
+            <button
+              mat-flat-button
+              color="primary"
+              (click)="updatePassword()"
+              [disabled]="passwordForm.invalid || isSavingPassword()"
+            >
+              @if (isSavingPassword()) {
+                <mat-spinner diameter="20"></mat-spinner>
+              } @else {
+                Change Password
+              }
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</main>

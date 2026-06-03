@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../core/services/auth.service';
+import { ReportingService } from '../../core/services/reporting.service';
+import { StatisticsDto } from '../../core/models/statistics.models';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -14,9 +16,11 @@ import { Subscription } from 'rxjs';
 })
 export class LandingComponent implements OnInit, OnDestroy {
   private authSubscription?: Subscription;
+  stats?: StatisticsDto;
 
   constructor(
     private authService: AuthService,
+    private reportingService: ReportingService,
     private router: Router
   ) {}
 
@@ -28,6 +32,15 @@ export class LandingComponent implements OnInit, OnDestroy {
         }
       }
     );
+
+    this.loadStats();
+  }
+
+  loadStats(): void {
+    this.reportingService.getPublicStats().subscribe({
+      next: (data) => this.stats = data,
+      error: (err) => console.error('Failed to load stats', err)
+    });
   }
 
   ngOnDestroy(): void {

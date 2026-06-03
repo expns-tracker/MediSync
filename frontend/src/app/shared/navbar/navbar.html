@@ -4,7 +4,7 @@
       <h2>MediSync</h2>
     </a>
     <nav class="nav-links">
-      <a routerLink="/doctors" class="nav-link" *ngIf="isAuthenticated">Doctors</a>
+      <a routerLink="/doctors" class="nav-link" *ngIf="isAuthenticated && currentUser?.role === 'PATIENT'">Doctors</a>
       <a routerLink="/profile" class="nav-link" *ngIf="isAuthenticated && currentUser?.role === 'PATIENT'">Profile</a>
       <a routerLink="/appointments/upcoming" class="nav-link" *ngIf="isAuthenticated && currentUser?.role === 'PATIENT'">My Appointments</a>
       <a routerLink="/appointments/history" class="nav-link" *ngIf="isAuthenticated && currentUser?.role === 'PATIENT'">History</a>

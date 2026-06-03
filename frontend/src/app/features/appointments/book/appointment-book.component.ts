@@ -106,8 +106,8 @@ export class AppointmentBookComponent implements OnInit {
   }
 
   private loadDoctors(): void {
-    this.doctorService.getDoctors().subscribe({
-      next: (doctors) => this.doctors.set(doctors),
+    this.doctorService.getDoctors(undefined, false, { page: 0, size: 100 }).subscribe({
+      next: (response) => this.doctors.set(response.content),
       error: (error: Error) => this.errorMessage.set(error.message),
     });
   }

@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { PatientDto, PatientUpdateDto } from '../models/patient.models';
+import { PageRequest, PageResponse } from '../models/pagination.models';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -19,22 +20,45 @@ export class PatientService {
       .pipe(catchError((error) => this.handleError(error)));
   }
 
+  getPatients(
+    search?: string,
+    pageable: PageRequest = { page: 0, size: 10 }
+  ): Observable<PageResponse<PatientDto>> {
+    let params = new HttpParams()
+      .set('page', pageable.page.toString())
+      .set('size', pageable.size.toString());
+
+    if (search) {
+      params = params.set('search', search);
+    }
+
+    if (pageable.sort) {
+      pageable.sort.forEach((s) => {
+        params = params.append('sort', s);
+      });
+    }
+
+    return this.http
+      .get<PageResponse<PatientDto>>(`${this.baseUrl}/patients`, { params })
+      .pipe(catchError((error) => this.handleError(error)));
+  }
+
   updatePatient(patientId: number, profile: PatientUpdateDto): Observable<PatientDto> {
     return this.http
       .put<PatientDto>(`${this.baseUrl}/patients/${patientId}/`, profile)
       .pipe(catchError((error) => this.handleError(error)));
   }
 
-  searchPatients(search?: string): Observable<PatientDto[]> {
-    interface PageResponse<T> { content: T[] }
-
-    const params = search ? { params: { search } } : {};
+  activatePatient(patientId: number): Observable<void> {
     return this.http
-      .get<PageResponse<PatientDto> | PatientDto[]>(`${this.baseUrl}/patients`, params)
-      .pipe(
-        map((res) => Array.isArray(res) ? res : (res.content ?? [])),
-        catchError((error) => this.handleError(error))
-      );
+      .put<void>(`${this.baseUrl}/patients/${patientId}/activate`, {})
+      .pipe(catchError((error) => this.handleError(error)));
+  }
+
+  deactivatePatient(patientId: number): Observable<void> {
+    return this.http
+      .put<void>(`${this.baseUrl}/patients/${patientId}/deactivate`, {})
+      .pipe(catchError((error) => this.handleError(error)));
   }
 
   private handleError(error: HttpErrorResponse) {

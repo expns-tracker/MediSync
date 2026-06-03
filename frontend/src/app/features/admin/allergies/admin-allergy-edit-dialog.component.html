@@ -1,0 +1,52 @@
+<h2 mat-dialog-title>{{ isEdit ? 'Edit Allergy' : 'Add New Allergy' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="allergyForm" class="allergy-form">
+    <mat-form-field appearance="outline">
+      <mat-label>Allergy Code</mat-label>
+      <input matInput formControlName="code" placeholder="e.g., AL-PEN" />
+      <mat-error *ngIf="allergyForm.get('code')?.hasError('required')">
+        Code is required
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Allergy Name</mat-label>
+      <input matInput formControlName="name" placeholder="e.g., Penicillin" />
+      <mat-error *ngIf="allergyForm.get('name')?.hasError('required')">
+        Name is required
+      </mat-error>
+      <mat-error *ngIf="allergyForm.get('name')?.hasError('minlength')">
+        Name must be at least 2 characters
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Category</mat-label>
+      <mat-select formControlName="category">
+        @for (cat of categories; track cat) {
+          <mat-option [value]="cat">{{ cat }}</mat-option>
+        }
+      </mat-select>
+      <mat-error *ngIf="allergyForm.get('category')?.hasError('required')">
+        Category is required
+      </mat-error>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()" [disabled]="isSaving()">Cancel</button>
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="onSubmit()"
+    [disabled]="allergyForm.invalid || isSaving()"
+  >
+    @if (isSaving()) {
+      <mat-spinner diameter="20"></mat-spinner>
+    } @else {
+      {{ isEdit ? 'Update' : 'Add' }}
+    }
+  </button>
+</mat-dialog-actions>

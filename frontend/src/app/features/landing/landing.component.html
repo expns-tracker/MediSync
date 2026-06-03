@@ -3,16 +3,38 @@
     <div class="hero-content">
       <p class="eyebrow">Patient-first healthcare</p>
       <h1>Your healthcare, streamlined.</h1>
-      <div class="hero-icon-row">
-        <mat-icon aria-hidden="true">medical_services</mat-icon>
-        <span>Trusted care for every patient</span>
-      </div>
       <p class="hero-subtitle">
         Manage appointments, records, and care teams with a clean digital experience.
       </p>
       <div class="hero-buttons">
         <a routerLink="/doctors" class="btn-primary">Browse Doctors</a>
         <a routerLink="/register" class="btn-secondary">Create Patient Account</a>
+      </div>
+    </div>
+    <div class="hero-image">
+      <div class="hero-illustration">
+        <span class="material-icons hero-icon">health_and_safety</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="stats-banner" *ngIf="stats">
+    <div class="stats-container">
+      <div class="stat-item">
+        <span class="stat-value">{{stats.totalPatients}}</span>
+        <span class="stat-label">Trusted Patients</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value">{{stats.totalDoctors}}</span>
+        <span class="stat-label">Specialist Doctors</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value">{{stats.totalAppointments}}</span>
+        <span class="stat-label">Care Sessions Delivered</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value">{{stats.totalDepartments}}</span>
+        <span class="stat-label">Specialized Departments</span>
       </div>
     </div>
   </section>

@@ -20,24 +20,20 @@ export class HomeComponent implements OnInit {
 
   private redirectToDashboard() {
     const user = this.authService.getCurrentUser();
-    if (!user) {
-      this.authService.logout();
-      return;
-    }
-
-    switch (user.role) {
-      case 'PATIENT':
-        this.router.navigate(['/appointments/history']);
-        break;
-      case 'DOCTOR':
-        this.router.navigate(['/doctor/dashboard']);
-        break;
-      case 'ADMIN':
-        // TODO: Admin dashboard
-        this.authService.logout();
-        break;
-      default:
-        this.authService.logout();
+    if (user) {
+      switch (user.role) {
+        case 'PATIENT':
+          this.router.navigate(['/appointments/history']);
+          break;
+        case 'DOCTOR':
+          this.router.navigate(['/doctor/dashboard']);
+          break;
+        case 'ADMIN':
+          this.router.navigate(['/admin/dashboard']);
+          break;
+        default:
+          this.router.navigate(['/unauthorized']);
+      }
     }
   }
 }

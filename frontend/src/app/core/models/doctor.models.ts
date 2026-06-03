@@ -1,3 +1,5 @@
+import { PageResponse } from './pagination.models';
+
 export interface DoctorDto {
   id: number;
   firstName: string;
@@ -7,18 +9,25 @@ export interface DoctorDto {
   departmentId?: number;
   departmentName?: string;
   appointmentDuration?: number;
+  active: boolean;
   createdAt?: string;
   updatedAt?: string;
 }
 
-export interface DoctorScheduleDto {
-  id: number;
-  dayOfWeek: 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY';
-  startTime: string;
-  endTime: string;
-  doctorId?: number;
-  doctorName?: string;
+export interface DoctorUpdateDto {
+  firstName: string;
+  lastName: string;
+  specialization: string;
+  departmentId: number;
+  appointmentDuration: string;
 }
+
+export interface DoctorRegistrationDto extends DoctorUpdateDto {
+  email: string;
+  password: string;
+}
+
+export type PageDoctorDto = PageResponse<DoctorDto>;
 
 export interface DepartmentDto {
   id: number;

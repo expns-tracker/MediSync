@@ -7,6 +7,7 @@ export interface PatientDto {
   dateOfBirth?: string;
   gender?: 'MALE' | 'FEMALE' | 'OTHER';
   allergyIds?: number[];
+  active: boolean;
   address?: string;
   city?: string;
   county?: string;

@@ -1,0 +1,154 @@
+.admin-page {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+
+    .eyebrow {
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: #64748b;
+      margin-bottom: 0.25rem;
+    }
+
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 700;
+      margin: 0 0 0.5rem;
+      color: #1e293b;
+    }
+
+    .description {
+      color: #64748b;
+      margin: 0;
+      max-width: 600px;
+    }
+  }
+
+  .filter-card {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+
+    .filters {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+
+      .search-field {
+        flex-grow: 1;
+      }
+
+      .status-field {
+        width: 200px;
+      }
+
+      mat-form-field {
+        width: 100%;
+      }
+    }
+  }
+
+  .table-card {
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+
+    .loading-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2;
+    }
+
+    .table-container {
+      overflow-x: auto;
+      min-height: 400px;
+    }
+
+    table {
+      width: 100%;
+    }
+
+    .time-cell {
+      display: flex;
+      flex-direction: column;
+      
+      .date {
+        font-weight: 600;
+        color: #1e293b;
+      }
+
+      .hour {
+        font-size: 0.875rem;
+        color: #64748b;
+      }
+    }
+
+    .user-cell {
+      display: flex;
+      flex-direction: column;
+
+      .name {
+        font-weight: 600;
+        color: #1e293b;
+      }
+
+      .id, .dept {
+        font-size: 0.75rem;
+        color: #64748b;
+      }
+    }
+
+    .reason-cell {
+      color: #475569;
+      max-width: 250px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .status-chip {
+      color: white !important;
+      font-weight: 600;
+      font-size: 11px;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .no-data-cell {
+      text-align: center;
+      padding: 3rem !important;
+      color: #64748b;
+      font-style: italic;
+    }
+  }
+}
+
+.mat-column-actions {
+  width: 100px;
+  text-align: center;
+}
+
+.mat-column-status {
+  width: 140px;
+}
+
+.mat-column-time {
+  width: 180px;
+}

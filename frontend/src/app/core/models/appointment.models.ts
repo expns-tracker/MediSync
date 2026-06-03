@@ -30,6 +30,16 @@ export interface AppointmentDto {
   status: 'SCHEDULED' | 'COMPLETED' | 'CANCELLED' | 'NO_SHOW';
   doctor: DoctorDto;
   patient: PatientDto;
+  
+  // Flattened fields for UI robustness
+  patientFirstName: string;
+  patientLastName: string;
+  patientId: number;
+  doctorFirstName: string;
+  doctorLastName: string;
+  doctorId: number;
+  departmentName: string;
+
   createdAt?: string;
   updatedAt?: string;
   medicalRecord?: MedicalRecordDto;

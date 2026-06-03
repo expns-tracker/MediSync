@@ -1,0 +1,44 @@
+name: Java CI/CD with Docker and K8s
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Compile All Services
+      run: |
+        cd microservices/core-service && ./mvnw compile
+        cd ../reporting-service && ./mvnw compile
+        cd ../notification-service && ./mvnw compile
+        cd ../gateway-service && ./mvnw compile
+
+    - name: Run Core Service Tests (Unit + Integration)
+      run: |
+        cd microservices/core-service
+        ./mvnw verify
+
+    - name: Run Auxiliary Service Tests
+      run: |
+        cd microservices/reporting-service && ./mvnw test
+        cd ../notification-service && ./mvnw test
+        cd ../gateway-service && ./mvnw test
+
+    # Note: Docker build and push would go here if secrets were configured
+    # - name: Docker Build and Push
+    #   run: |
+    #     docker build -t medisync/core-service:latest microservices/core-service
+    #     docker push medisync/core-service:latest

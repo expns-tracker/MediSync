@@ -1,0 +1,146 @@
+<div class="admin-page-container">
+  <header class="metrics-header">
+    <div class="header-text">
+      <p class="eyebrow">Enterprise Intelligence</p>
+      <h1>System Analytics</h1>
+      <p>Independent reporting microservice providing real-time clinical insights.</p>
+    </div>
+    <button mat-flat-button color="primary" routerLink="/admin/dashboard" style="border-radius: 12px; padding: 0 1.5rem;">
+      <mat-icon>dashboard</mat-icon>
+      Return to Control Center
+    </button>
+  </header>
+
+  @if (isLoading()) {
+    <div class="loading-state" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10rem 0;">
+      <mat-spinner diameter="60" color="primary"></mat-spinner>
+      <p style="margin-top: 1.5rem; color: #64748b; font-weight: 500;">Fetching microservice data...</p>
+    </div>
+  } @else if (stats()) {
+    
+    <!-- Top Row: High-Impact KPIs -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-icon blue"><mat-icon>people</mat-icon></div>
+        <div class="kpi-value">{{ stats()?.totalPatients }}</div>
+        <div class="kpi-label">Registered Patients</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon green"><mat-icon>medical_services</mat-icon></div>
+        <div class="kpi-value">{{ stats()?.totalDoctors }}</div>
+        <div class="kpi-label">Medical Staff</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon amber"><mat-icon>event_available</mat-icon></div>
+        <div class="kpi-value">{{ stats()?.totalAppointments }}</div>
+        <div class="kpi-label">Total Care Sessions</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon purple"><mat-icon>business</mat-icon></div>
+        <div class="kpi-value">{{ stats()?.totalDepartments }}</div>
+        <div class="kpi-label">Active Specialties</div>
+      </div>
+    </div>
+
+    <!-- Main Analytics Grid -->
+    <div class="charts-main-grid">
+      
+      <!-- Appointment Status Breakdown -->
+      <div class="chart-container-card">
+        <div class="chart-header">
+          <h3>Operational Status</h3>
+          <span class="chart-tag">Core Metrics</span>
+        </div>
+        <div class="chart-body">
+          <div class="analytics-bar-list">
+            @for (item of statusBreakdown(); track item.status) {
+              <div class="bar-item">
+                <div class="bar-info">
+                  <span class="label">{{ item.status }}</span>
+                  <span class="value">{{ item.count }}</span>
+                </div>
+                <div class="bar-track">
+                  <div class="bar-progress" 
+                       [style.width.%]="item.percentage"
+                       [class.warn]="item.status === 'CANCELLED' || item.status === 'NO_SHOW'">
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Department Distribution -->
+      <div class="chart-container-card">
+        <div class="chart-header">
+          <h3>Activity by Specialty</h3>
+          <span class="chart-tag">Distribution</span>
+        </div>
+        <div class="chart-body">
+          <div class="analytics-bar-list">
+            @for (item of distribution(); track item.department_name) {
+              <div class="bar-item">
+                <div class="bar-info">
+                  <span class="label">{{ item.department_name || 'General' }}</span>
+                  <span class="value">{{ item.appointment_count }}</span>
+                </div>
+                <div class="bar-track">
+                  <div class="bar-progress accent" 
+                       [style.width.%]="(item.appointment_count / (stats()?.totalAppointments || 1)) * 100">
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Doctor Workload Ranking -->
+      <div class="chart-container-card full-width">
+        <div class="chart-header">
+          <h3>Provider Performance Ranking</h3>
+          <span class="chart-tag">Workload Analytics</span>
+        </div>
+        <div class="chart-body">
+          <div class="workload-visual">
+            @for (doc of workload(); track doc.doctor_id) {
+              <div class="doctor-row">
+                <div class="doctor-meta">
+                  <span class="name">Dr. {{ doc.first_name }} {{ doc.last_name }}</span>
+                  <span class="dept">{{ doc.department_name }}</span>
+                </div>
+                <div class="rank-bar-container">
+                  <div class="rank-bar-fill" [style.width.%]="(doc.total_appointments / maxWorkload()) * 100">
+                    <span class="count">{{ doc.total_appointments }} Appts</span>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Monthly Trend Histogram -->
+      <div class="chart-container-card full-width">
+        <div class="chart-header">
+          <h3>Monthly Appointment Trends</h3>
+          <span class="chart-tag">Growth Trend</span>
+        </div>
+        <div class="chart-body">
+          <div class="trend-visual">
+            @for (month of trends(); track month.month) {
+              <div class="trend-col">
+                <div class="col-bar" [style.height.%]="(month.total_appointments / (stats()?.totalAppointments || 1)) * 100 + 15">
+                  <span class="col-val">{{ month.total_appointments }}</span>
+                </div>
+                <span class="col-label">{{ month.month }}</span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+    </div>
+  }
+</div>

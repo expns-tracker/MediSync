@@ -37,11 +37,11 @@ export class UpcomingAppointmentsComponent implements OnInit {
     this.isLoading.set(true);
     this.errorMessage.set('');
 
-    this.appointmentService.getPatientAppointments(patientId).subscribe({
-      next: (appointments) => {
+    this.appointmentService.getPatientAppointments(patientId, 'upcoming').subscribe({
+      next: (response) => {
         const now = new Date();
         this.appointments.set(
-          appointments
+          response.content
             .filter((appointment) => appointment.status === 'SCHEDULED')
             .filter((appointment) => new Date(appointment.appointmentTime) >= now)
             .sort((a, b) => new Date(a.appointmentTime).getTime() - new Date(b.appointmentTime).getTime())
