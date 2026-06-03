@@ -6,6 +6,8 @@ import lombok.Data;
 
 @Data
 @Builder
+@lombok.NoArgsConstructor
+@lombok.AllArgsConstructor
 public class DepartmentUpdateDto {
 
     @NotBlank(message = "Name is required")
@@ -16,3 +18,4 @@ public class DepartmentUpdateDto {
     private Long departmentHeadId;
 
 }
+

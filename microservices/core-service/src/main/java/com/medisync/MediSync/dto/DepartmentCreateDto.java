@@ -6,6 +6,8 @@ import lombok.Data;
 
 @Data
 @Builder
+@lombok.NoArgsConstructor
+@lombok.AllArgsConstructor
 public class DepartmentCreateDto {
 
     @NotBlank(message = "Name is required")
@@ -14,3 +16,4 @@ public class DepartmentCreateDto {
     private String description;
 
 }
+

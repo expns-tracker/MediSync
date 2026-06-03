@@ -14,6 +14,8 @@ import java.util.stream.Stream;
 
 @Data
 @Builder
+@lombok.NoArgsConstructor
+@lombok.AllArgsConstructor
 public class PatientRegistrationDto {
     @NotBlank(message = "First name is required")
     private String firstName;
@@ -51,3 +53,4 @@ public class PatientRegistrationDto {
     private String country;
 
 }
+

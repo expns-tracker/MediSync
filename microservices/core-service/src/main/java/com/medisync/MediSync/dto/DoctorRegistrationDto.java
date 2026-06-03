@@ -11,6 +11,8 @@ import lombok.Data;
 
 @Data
 @Builder
+@lombok.NoArgsConstructor
+@lombok.AllArgsConstructor
 public class DoctorRegistrationDto {
 
     @NotBlank(message = "First name is required")
@@ -57,3 +59,4 @@ public class DoctorRegistrationDto {
     private String appointmentDuration;
 
 }
+

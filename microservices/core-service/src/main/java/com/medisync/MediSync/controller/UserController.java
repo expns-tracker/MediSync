@@ -46,9 +46,10 @@ public class UserController {
     })
     public ResponseEntity<Void> changePassword(
             @RequestBody @Valid ChangePasswordDto request,
-            @AuthenticationPrincipal User currentUser
+            Principal principal
     ) {
-        userService.changePassword(request, currentUser.getId());
+        User user = userService.getUserByEmail(principal.getName());
+        userService.changePassword(request, user.getId());
         return ResponseEntity.ok().build();
     }
 }

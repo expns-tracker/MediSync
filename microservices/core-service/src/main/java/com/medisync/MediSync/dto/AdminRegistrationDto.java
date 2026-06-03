@@ -8,6 +8,8 @@ import lombok.Data;
 
 @Data
 @Builder
+@lombok.NoArgsConstructor
+@lombok.AllArgsConstructor
 public class AdminRegistrationDto {
 
     @Email(message = "Invalid email format")
@@ -21,3 +23,4 @@ public class AdminRegistrationDto {
     )
     private String password;
 }
+

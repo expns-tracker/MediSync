@@ -7,6 +7,8 @@ import lombok.Data;
 
 @Data
 @Builder
+@lombok.NoArgsConstructor
+@lombok.AllArgsConstructor
 public class ChangePasswordDto {
     @NotBlank
     private String currentPassword;
@@ -18,3 +20,4 @@ public class ChangePasswordDto {
     )
     private String newPassword;
 }
+

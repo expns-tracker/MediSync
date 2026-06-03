@@ -10,6 +10,8 @@ import java.util.List;
 
 @Data
 @Builder
+@lombok.NoArgsConstructor
+@lombok.AllArgsConstructor
 public class PatientUpdateDto {
     @NotBlank(message = "First name is required")
     private String firstName;
@@ -34,3 +36,4 @@ public class PatientUpdateDto {
     private String county;
     private String country;
 }
+

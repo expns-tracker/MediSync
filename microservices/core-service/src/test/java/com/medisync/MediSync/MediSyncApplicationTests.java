@@ -7,9 +7,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootTest
 class MediSyncApplicationTests {
+    @org.springframework.test.context.bean.override.mockito.MockitoBean
+    private org.springframework.data.redis.core.StringRedisTemplate redisTemplate;
+
 
 	@Test
 	void contextLoads() {
 	}
 
 }
+
+
