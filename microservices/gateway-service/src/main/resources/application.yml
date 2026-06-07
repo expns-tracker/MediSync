@@ -11,21 +11,21 @@ spring:
           routes:
             # 1. Reporting Service
             - id: reporting-route
-              uri: http://localhost:8082
+              uri: ${REPORTING_SERVICE_URL:http://localhost:8082}
               order: 1
               predicates:
                 - Path=/api/reports/**
 
             # 2. Notification Service
             - id: notification-route
-              uri: http://localhost:8081
+              uri: ${NOTIFICATION_SERVICE_URL:http://localhost:8081}
               order: 2
               predicates:
                 - Path=/api/notifications/**
 
             # 3. Core Service (The Catch-all)
             - id: core-route
-              uri: http://localhost:8080
+              uri: ${CORE_SERVICE_URL:http://localhost:8080}
               order: 10
               predicates:
                 - Path=/api/**
@@ -33,5 +33,6 @@ spring:
 management:
   endpoints:
     web:
+      base-path: /api/actuator
       exposure:
         include: "*"

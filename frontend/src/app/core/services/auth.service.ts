@@ -215,10 +215,14 @@ export class AuthService {
   private decodeToken(token: string): DecodedToken {
     const parts = token.split('.');
     if (parts.length !== 3) {
-      throw new Error('Invalid token');
+      throw new Error('Invalid token format');
     }
 
-    const payload = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+    let payload = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+    while (payload.length % 4 !== 0) {
+      payload += '=';
+    }
+
     const decodedPayload =
       typeof atob === 'function'
         ? atob(payload)
@@ -227,7 +231,7 @@ export class AuthService {
     try {
       return JSON.parse(decodedPayload);
     } catch (error) {
-      throw new Error('Invalid token payload');
+      throw new Error('Invalid token payload JSON');
     }
   }
 

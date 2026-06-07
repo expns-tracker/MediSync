@@ -35,7 +35,8 @@ public class SecurityConfig {
                                         "/swagger-ui/**",
                                         "/v3/api-docs/**",
                                         "/api/statistics",
-                                        "/api/statistics/**"
+                                        "/api/statistics/**",
+                                        "/api/actuator/**"
                                         ).permitAll()
                                 .requestMatchers(HttpMethod.POST,"/api/patients").anonymous()
                                 .anyRequest().authenticated()

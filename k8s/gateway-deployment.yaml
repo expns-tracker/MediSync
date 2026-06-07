@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: gateway-service
-          image: medisync/gateway-service:latest
+          image: acrmedisyncvlad2.azurecr.io/gateway-service:latest
           ports:
             - containerPort: 8000
           env:
@@ -28,7 +28,7 @@ spec:
               value: "http://reporting-service:8082"
           livenessProbe:
             httpGet:
-              path: /actuator/health
+              path: /api/actuator/health
               port: 8000
             initialDelaySeconds: 45
             periodSeconds: 15

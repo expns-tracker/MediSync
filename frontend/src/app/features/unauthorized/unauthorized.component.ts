@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-unauthorized',
@@ -10,6 +11,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./unauthorized.component.scss'],
 })
 export class UnauthorizedComponent {
+  authService = inject(AuthService);
   constructor(private router: Router) {}
 
   goHome(): void {

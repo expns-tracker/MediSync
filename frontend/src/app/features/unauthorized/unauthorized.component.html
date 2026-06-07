@@ -1,7 +1,12 @@
 <section class="unauthorized-page">
   <div class="card">
     <h1>Access denied</h1>
-    <p>You do not have permission to view this page. Please sign in with a patient account or return to the landing page.</p>
+    <p>You do not have permission to view this page.</p>
+    <div *ngIf="authService.currentUser$ | async as user" style="margin: 20px 0; font-family: monospace; background: #f5f5f5; padding: 10px; border-radius: 4px;">
+       Current User: {{ user.email }}<br>
+       Current Role: {{ user.role }}
+    </div>
+    <p>Please sign in with an authorized account or return to the landing page.</p>
     <button class="btn-primary" (click)="goHome()">Return home</button>
   </div>
 </section>

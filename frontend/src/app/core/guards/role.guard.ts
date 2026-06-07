@@ -21,24 +21,29 @@ export class RoleGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): boolean {
+  ): Observable<boolean> {
     const requiredRoles = route.data['roles'] as string[];
 
-    if (!this.authService.isAuthenticated()) {
-      this.router.navigate(['/login']);
-      return false;
-    }
+    return this.authService.currentRole$.pipe(
+      take(1),
+      map(userRole => {
+        if (!userRole) {
+          console.warn('RoleGuard: No role found, redirecting to login');
+          this.router.navigate(['/login']);
+          return false;
+        }
 
-    const userRole = this.authService.getRole();
+        if (requiredRoles && requiredRoles.length > 0) {
+          if (!requiredRoles.includes(userRole)) {
+            console.warn(`RoleGuard: Access denied. Required: ${requiredRoles}, Actual: ${userRole}`);
+            this.router.navigate(['/unauthorized']);
+            return false;
+          }
+        }
 
-    if (requiredRoles && requiredRoles.length > 0) {
-      if (!userRole || !requiredRoles.includes(userRole)) {
-        this.router.navigate(['/unauthorized']);
-        return false;
-      }
-    }
-
-    return true;
+        return true;
+      })
+    );
   }
 }
 

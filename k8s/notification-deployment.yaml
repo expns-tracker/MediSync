@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: notification-service
-          image: medisync/notification-service:latest
+          image: acrmedisyncvlad2.azurecr.io/notification-service:latest
           ports:
             - containerPort: 8081
           env:
@@ -42,7 +42,18 @@ spec:
                   key: smtp-password
           livenessProbe:
             httpGet:
-              path: /actuator/health
+              path: /api/actuator/health
               port: 8081
             initialDelaySeconds: 45
             periodSeconds: 15
+          volumeMounts:
+            - name: secrets-store-inline
+              mountPath: "/mnt/secrets-store"
+              readOnly: true
+      volumes:
+        - name: secrets-store-inline
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "azure-kv-medisync"

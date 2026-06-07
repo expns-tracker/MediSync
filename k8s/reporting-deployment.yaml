@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: reporting-service
-          image: medisync/reporting-service:latest
+          image: acrmedisyncvlad2.azurecr.io/reporting-service:latest
           ports:
             - containerPort: 8082
           env:
@@ -39,7 +39,18 @@ spec:
               value: "http://core-service:8080"
           livenessProbe:
             httpGet:
-              path: /actuator/health
+              path: /api/actuator/health
               port: 8082
             initialDelaySeconds: 45
             periodSeconds: 15
+          volumeMounts:
+            - name: secrets-store-inline
+              mountPath: "/mnt/secrets-store"
+              readOnly: true
+      volumes:
+        - name: secrets-store-inline
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "azure-kv-medisync"
