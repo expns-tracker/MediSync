@@ -1,5 +1,5 @@
 # MediSync
-A comprehensive Hospital Management System for managing patients, doctors, and appointments.
+Hospital Management System for managing patients, doctors, and appointments.
 
 ## 1. Business Requirements
 The following list outlines the core functional requirements of the MediSync system:
@@ -37,7 +37,7 @@ Admins can onboard new medical staff, assign them to specific departments (e.g.,
 Only Doctors with a SCHEDULED appointment can mark it as COMPLETED and create a MedicalRecord. This links the diagnosis and prescription directly to the specific visit, creating a permanent, queryable history for the patient.
 
 ### Feature 5: Allergy Tracking
-To support clinical decision-making, the system includes a robust Allergy Catalog. Admins can define global allergens (e.g., "Penicillin", "Peanuts"), and these can be linked to specific Patient profiles. This ensures doctors have immediate visibility into patient sensitivities during appointments.
+To support clinical decision-making, the system includes an Allergy Catalog. Admins can define global allergens (e.g., "Penicillin", "Peanuts"), and these can be linked to specific Patient profiles. This ensures doctors have immediate visibility into patient sensitivities during appointments.
 
 ---
 
@@ -114,14 +114,33 @@ The backend is built with Spring Boot 4 and Java 21 using a layered architecture
 * Allergy catalog CRUD and patient allergy tracking.
 * Soft activation/deactivation for patients and doctors.
 
-### Security and roles
-* `PATIENT` – book appointments, update own profile, view own appointment history.
-* `DOCTOR` – view assigned appointments, complete consultations, manage medical records.
-* `ADMIN` – manage doctors, departments, schedules, allergies, and activate/deactivate accounts.
+### Security & JWT Authentication
+The system utilizes JSON Web Token (JWT) based authentication and authorization.
+* **Stateless Security**: Upon successful login, the server issues a JWT containing the user's ID and role (`PATIENT`, `DOCTOR`, or `ADMIN`), ensuring stateless and scalable authentication.
+* **Role-Based Access Control (RBAC)**: Controllers are guarded with Spring Security annotations (e.g., `@PreAuthorize("hasRole('ADMIN')")`) to prevent unauthorized access to sensitive endpoints.
+* **Method-Level Security**: Service layers implement custom ownership checks to ensure users can only access their own data (e.g., a patient cannot access another patient's medical records).
+* **Roles**:
+  * `PATIENT` – book appointments, update own profile, view own appointment history.
+  * `DOCTOR` – view assigned appointments, complete consultations, manage medical records.
+  * `ADMIN` – manage doctors, departments, schedules, allergies, and activate/deactivate accounts.
+
+### Data Validation
+The `core-service` extensively uses Jakarta Bean Validation (Hibernate Validator) to ensure data integrity before it reaches the database:
+* **DTO Validation**: Incoming REST requests are strictly validated using annotations like `@NotBlank`, `@Email`, `@Size`, and `@Future` on Data Transfer Objects.
+* **Custom Validators**: Complex business rules (such as ensuring an appointment is booked within a doctor's valid schedule) are handled via custom logic in the service layer, throwing specific domain exceptions.
+* **Global Exception Handling**: A centralized `@RestControllerAdvice` intercepts validation errors (`MethodArgumentNotValidException`) and domain exceptions, returning consistent, user-friendly JSON error responses to the frontend.
+
+### Testing & Code Coverage
+Quality assurance is a priority in the backend development lifecycle. The `core-service` includes a suite of unit and integration tests written with JUnit 5 and Mockito. 
+* **Service Layer Testing**: Business logic is tested using mock repositories.
+* **Controller Testing**: Web layer tests use `MockMvc` to validate endpoint responses, status codes, and JSON serialization.
+
+As seen below, the core logic maintains test coverage:
+![Test Coverage](/screenshots/test%20coverage.png)
 
 ## 5. Frontend Implementation
 
-The frontend of MediSync is a modern, responsive Single Page Application (SPA) built using the latest web technologies to ensure a seamless experience for patients, doctors, and administrators. 
+The frontend of MediSync is a Single Page Application (SPA) built for patients, doctors, and administrators. 
 
 ### Technologies Used
 * **Framework**: Angular 21 (with Angular SSR for Server-Side Rendering)
@@ -131,16 +150,16 @@ The frontend of MediSync is a modern, responsive Single Page Application (SPA) b
 
 ### User Interface Showcase
 
-Below is a walkthrough of the MediSync user interface, highlighting the tailored experiences for different roles within the system:
+Below is a walkthrough of the MediSync user interface:
 
 #### 1. Landing Page & Authentication
 * **Landing Page**: The public-facing entry point of the application, providing an overview of hospital services and a call-to-action for new patients to register or log in.
   ![Landing Page](/screenshots/landing%20page.png)
-* **Login**: A secure authentication portal utilizing JWTs. Based on their credentials, the system automatically routes the user to their designated dashboard (Admin, Doctor, or Patient).
+* **Login**: An authentication portal utilizing JWTs. Based on their credentials, the system automatically routes the user to their designated dashboard (Admin, Doctor, or Patient).
   ![Login](/screenshots/login.png)
 
 #### 2. Admin Experience
-Administrators have a bird's-eye view of the hospital's operations and full control over master data.
+Administrators have an overview of the hospital's operations and control over master data.
 * **Admin Dashboard**: The central hub for administrators, offering quick links to manage different entities like departments, schedules, and staff.
   ![Admin Dashboard](/screenshots/admin%20dashboard.png)
 * **Admin Analytics**: Visualizations and key metrics generated by the reporting microservice, allowing administrators to monitor hospital activity and appointment trends.
@@ -151,16 +170,16 @@ Administrators have a bird's-eye view of the hospital's operations and full cont
   ![Allergy Catalog Management](/screenshots/allergy%20catalog%20management.png)
 
 #### 3. Doctor Experience
-Doctors have a specialized workflow focused on clinical tasks and daily scheduling.
-* **Doctor Dashboard**: Displays the doctor's agenda for the day, allowing them to instantly see upcoming, scheduled, and completed appointments.
+Doctors have a workflow for clinical tasks and daily scheduling.
+* **Doctor Dashboard**: Displays the doctor's agenda for the day, allowing them to see upcoming, scheduled, and completed appointments.
   ![Doctor Dashboard](/screenshots/doctor%20dashboard.png)
-* **Patient History (Doctor View)**: When reviewing a patient, doctors have a comprehensive view of past medical records, diagnoses, and known allergies to inform their treatment plan.
+* **Patient History (Doctor View)**: When reviewing a patient, doctors have a view of past medical records, diagnoses, and known allergies to inform their treatment plan.
   ![Patient History (Doctor View)](/screenshots/patient%20history%20(doctor%20view).png)
 * **Complete Appointment**: The clinical data entry screen where a doctor concludes a visit by entering a formal diagnosis, prescribing medication, and outlining a treatment plan.
   ![Complete Appointment](/screenshots/complete%20appointment.png)
 
 #### 4. Patient Experience
-Patients have a user-friendly portal designed for self-service scheduling and personal health tracking.
+Patients have a portal for scheduling and health tracking.
 * **Patient Profile**: Displays the patient's personal information, contact details, and a summary of their registered allergies.
   ![Patient Profile](/screenshots/patient%20profile.png)
 * **Patient History**: A secure timeline of the patient's past appointments and the corresponding medical records and prescriptions provided by their doctors.
@@ -353,7 +372,7 @@ Redis is deployed to facilitate asynchronous communication between microservices
 * **Caching**: Redis is also used by the **core-service** to cache frequently accessed but rarely changing data, such as Hospital Departments (via Spring's `@Cacheable`), significantly improving read performance and reducing database load.
 
 ### Prometheus & Grafana (Monitoring & Observability)
-A robust observability stack is integrated for centralized metrics scraping and monitoring (`monitoring.yaml`).
+An observability stack is integrated for centralized metrics scraping and monitoring (`monitoring.yaml`).
 * **Metrics Exposure**: Each Spring Boot microservice is equipped with the Micrometer Prometheus registry (`micrometer-registry-prometheus`), exposing detailed JVM and application metrics via the `/actuator/prometheus` endpoint.
 * **Prometheus**: A dedicated Prometheus deployment runs inside the cluster. It is configured via a `ConfigMap` to continuously scrape the endpoints of the `core-service`, `gateway-service`, `reporting-service`, and `notification-service` every 15 seconds.
 * **Grafana**: A Grafana deployment is spun up alongside Prometheus to provide a visual dashboard for analyzing the scraped metrics and monitoring the overall health of the system.
