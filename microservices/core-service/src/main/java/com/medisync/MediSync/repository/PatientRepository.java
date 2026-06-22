@@ -17,12 +17,15 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
     List<Patient> findAllByAllergiesContaining(Allergy allergy);
     Optional<Patient> findByUserId(Long userId);
 
-    @Query("""
-        SELECT p FROM Patient p 
-        WHERE (:search IS NULL 
-             OR LOWER(p.firstName) LIKE LOWER(CONCAT('%', CAST(:search AS string), '%')) 
-             OR LOWER(p.lastName) LIKE LOWER(CONCAT('%', CAST(:search AS string), '%')) 
-             OR LOWER(p.user.email) LIKE LOWER(CONCAT('%', CAST(:search AS string), '%')))
-    """)
-    Page<Patient> findAllPatientsWithSearch(@Param("search") String search, Pageable pageable);
+    @Query(value = """
+        SELECT p.*
+        FROM patients p
+        JOIN users u ON u.id = p.user_id
+        WHERE u.is_active = true
+          AND (:search IS NULL
+               OR lower(p.first_name::text) LIKE lower('%' || CAST(:search AS text) || '%')
+               OR lower(p.last_name::text) LIKE lower('%' || CAST(:search AS text) || '%')
+               OR lower(u.email::text) LIKE lower('%' || CAST(:search AS text) || '%'))
+        """, nativeQuery = true)
+    Page<Patient> findActivePatientsWithSearch(@Param("search") String search, Pageable pageable);
 }

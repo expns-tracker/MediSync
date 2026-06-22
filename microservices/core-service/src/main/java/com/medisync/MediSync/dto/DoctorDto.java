@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
+@lombok.NoArgsConstructor
+@lombok.AllArgsConstructor
 public class DoctorDto {
     private Long id;
     private String firstName;
@@ -37,3 +39,4 @@ public class DoctorDto {
                 .build();
     }
 }
+

@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
+@lombok.NoArgsConstructor
+@lombok.AllArgsConstructor
 public class AppointmentDto {
     private Long id;
     private LocalDateTime appointmentTime;
@@ -56,3 +58,4 @@ public class AppointmentDto {
                 .build();
     }
 }
+

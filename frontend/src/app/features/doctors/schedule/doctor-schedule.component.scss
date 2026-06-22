@@ -1,0 +1,68 @@
+.doctor-schedule-page {
+  padding: 2rem;
+  min-height: 100vh;
+  background: #f8fafc;
+}
+
+.schedule-card {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.loading-state,
+.error-state,
+.empty-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 12rem;
+  color: #475569;
+}
+
+.schedule-item {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 1.5rem 1rem;
+  min-height: 104px;
+}
+
+.schedule-item:last-child {
+  border-bottom: none;
+}
+
+.schedule-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.schedule-item .mat-list-icon,
+.schedule-item mat-icon[matListIcon] {
+  font-size: 40px;
+  width: 52px;
+  height: 52px;
+  margin-right: 16px;
+  color: rgba(79, 70, 229, 0.98);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.schedule-day {
+  font-size: 1.02rem;
+}
+
+.schedule-time {
+  font-size: 0.95rem;
+}
+
+.schedule-day {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.schedule-time {
+  color: #64748b;
+}

@@ -7,6 +7,8 @@ import java.util.Map;
 
 @Data
 @Builder
+@lombok.NoArgsConstructor
+@lombok.AllArgsConstructor
 public class StatisticsDto {
     private long totalPatients;
     private long totalDoctors;
@@ -15,3 +17,4 @@ public class StatisticsDto {
     private Map<String, Long> appointmentsByStatus;
     private Map<String, Long> doctorsByDepartment;
 }
+

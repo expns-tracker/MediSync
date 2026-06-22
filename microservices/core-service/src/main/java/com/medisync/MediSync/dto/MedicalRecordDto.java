@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
+@lombok.NoArgsConstructor
+@lombok.AllArgsConstructor
 public class MedicalRecordDto {
     private Long id;
     private String diagnosis;
@@ -45,3 +47,4 @@ public class MedicalRecordDto {
                 .build();
     }
 }
+

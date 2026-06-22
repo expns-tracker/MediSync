@@ -38,6 +38,10 @@
                 <mat-icon>check_circle</mat-icon>
                 Complete Appointment
               </button>
+              <button mat-stroked-button color="warn" (click)="onMarkNoShow(appointment)">
+                <mat-icon>report_problem</mat-icon>
+                Mark No-Show
+              </button>
             </mat-card-actions>
           </mat-card>
         </div>
@@ -76,6 +80,10 @@
               <button mat-stroked-button (click)="onViewMedicalRecord(appointment)">
                 <mat-icon>visibility</mat-icon>
                 View Medical Record
+              </button>
+              <button mat-stroked-button color="primary" *ngIf="appointment.medicalRecord" (click)="onEditMedicalRecord(appointment)">
+                <mat-icon>edit</mat-icon>
+                Edit Medical Record
               </button>
             </mat-card-actions>
           </mat-card>

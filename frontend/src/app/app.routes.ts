@@ -17,6 +17,8 @@ import { AdminAppointmentListComponent } from './features/admin/appointments/adm
 import { AdminSettingsComponent } from './features/admin/settings/admin-settings.component';
 import { AdminMetricsComponent } from './features/admin/metrics/admin-metrics.component';
 import { DoctorAppointmentsComponent } from './features/doctors/appointments/doctor-appointments.component';
+import { DoctorScheduleComponent } from './features/doctors/schedule/doctor-schedule.component';
+import { DoctorProfileComponent } from './features/doctors/doctor-profile.component';
 import { DoctorPatientListComponent } from './features/doctors/patients/doctor-patient-list.component';
 import { DoctorPatientDetailComponent } from './features/doctors/patients/doctor-patient-detail.component';
 import { AppointmentBookComponent } from './features/appointments/book/appointment-book.component';
@@ -160,6 +162,22 @@ export const routes: Routes = [
   {
     path: 'doctor/appointments',
     component: DoctorAppointmentsComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: {
+      roles: ['DOCTOR'],
+    },
+  },
+  {
+    path: 'doctor/schedule',
+    component: DoctorScheduleComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: {
+      roles: ['DOCTOR'],
+    },
+  },
+  {
+    path: 'doctor/profile',
+    component: DoctorProfileComponent,
     canActivate: [AuthGuard, RoleGuard],
     data: {
       roles: ['DOCTOR'],

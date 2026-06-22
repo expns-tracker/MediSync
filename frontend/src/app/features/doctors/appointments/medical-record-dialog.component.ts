@@ -33,6 +33,7 @@ export class MedicalRecordDialogComponent {
 
   appointment = this.data.appointment as AppointmentDto;
   readonly = this.data.readonly || false;
+  isExistingRecord = !!this.appointment.medicalRecord;
 
   medicalRecordForm: FormGroup;
 
@@ -57,20 +58,45 @@ export class MedicalRecordDialogComponent {
   }
 
   onSave() {
-    if (this.medicalRecordForm.valid) {
-      const medicalRecordData = this.medicalRecordForm.value;
-
-      this.appointmentService.completeAppointment(this.appointment.id, medicalRecordData).subscribe({
-        next: () => {
-          this.snackBar.open('Medical record saved successfully', 'Close', { duration: 3000 });
-          this.dialogRef.close(true);
-        },
-        error: (error) => {
-          console.error('Failed to save medical record:', error);
-          this.snackBar.open('Failed to save medical record', 'Close', { duration: 3000 });
-        },
-      });
+    if (!this.medicalRecordForm.valid) {
+      return;
     }
+
+    const medicalRecordData = this.medicalRecordForm.value;
+    const request$ = this.isExistingRecord && this.appointment.medicalRecord?.id
+      ? this.appointmentService.updateMedicalRecord(this.appointment.medicalRecord.id, medicalRecordData)
+      : this.appointmentService.completeAppointment(this.appointment.id, medicalRecordData);
+
+    request$.subscribe({
+      next: () => {
+        const message = this.isExistingRecord
+          ? 'Medical record updated successfully'
+          : 'Medical record saved successfully';
+        this.snackBar.open(message, 'Close', { duration: 3000 });
+        this.dialogRef.close(true);
+      },
+      error: (error) => {
+        console.error('Failed to save medical record:', error);
+        this.snackBar.open('Failed to save medical record', 'Close', { duration: 3000 });
+      },
+    });
+  }
+
+  onDelete() {
+    if (!this.appointment.medicalRecord?.id) {
+      return;
+    }
+
+    this.appointmentService.deleteMedicalRecord(this.appointment.medicalRecord.id).subscribe({
+      next: () => {
+        this.snackBar.open('Medical record deleted successfully', 'Close', { duration: 3000 });
+        this.dialogRef.close(true);
+      },
+      error: (error) => {
+        console.error('Failed to delete medical record:', error);
+        this.snackBar.open('Failed to delete medical record', 'Close', { duration: 3000 });
+      },
+    });
   }
 
   onCancel() {

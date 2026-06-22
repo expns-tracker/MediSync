@@ -1,5 +1,5 @@
 <h2 mat-dialog-title>
-  {{ readonly ? 'View Medical Record' : 'Complete Appointment' }}
+  {{ readonly ? 'View Medical Record' : isExistingRecord ? 'Edit Medical Record' : 'Complete Appointment' }}
 </h2>
 
 <mat-dialog-content>
@@ -34,7 +34,10 @@
 
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-stroked-button color="warn" (click)="onDelete()" *ngIf="!readonly && isExistingRecord">
+    Delete Record
+  </button>
   <button mat-raised-button color="primary" (click)="onSave()" *ngIf="!readonly" [disabled]="medicalRecordForm.invalid">
-    Save Medical Record
+    {{ isExistingRecord ? 'Update Medical Record' : 'Save Medical Record' }}
   </button>
 </mat-dialog-actions>

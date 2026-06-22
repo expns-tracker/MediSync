@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
 
 @Data
 @Builder
+@lombok.NoArgsConstructor
+@lombok.AllArgsConstructor
 public class PatientDto {
     private Long id;
     private String firstName;
@@ -50,3 +52,4 @@ public class PatientDto {
                 .build();
     }
 }
+

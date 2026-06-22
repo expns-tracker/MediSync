@@ -22,6 +22,11 @@ public class UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("User with id=" + userId + " not found")));
     }
 
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User with email=" + email + " not found"));
+    }
+
     public void changePassword(@Valid ChangePasswordDto changePasswordDto, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User id=" + userId + " not found"));

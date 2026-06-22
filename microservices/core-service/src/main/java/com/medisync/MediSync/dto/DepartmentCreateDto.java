@@ -1,9 +1,13 @@
 package com.medisync.MediSync.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
+@lombok.NoArgsConstructor
+@lombok.AllArgsConstructor
 public class DepartmentCreateDto {
 
     @NotBlank(message = "Name is required")
@@ -12,3 +16,4 @@ public class DepartmentCreateDto {
     private String description;
 
 }
+

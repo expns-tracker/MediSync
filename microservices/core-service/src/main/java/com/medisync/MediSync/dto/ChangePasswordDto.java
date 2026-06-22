@@ -2,9 +2,13 @@ package com.medisync.MediSync.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
+@lombok.NoArgsConstructor
+@lombok.AllArgsConstructor
 public class ChangePasswordDto {
     @NotBlank
     private String currentPassword;
@@ -16,3 +20,4 @@ public class ChangePasswordDto {
     )
     private String newPassword;
 }
+
