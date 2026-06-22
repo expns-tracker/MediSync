@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway-service
+  template:
+    metadata:
+      labels:
+        app: gateway-service
+    spec:
+      containers:
+        - name: gateway-service
+          image: gateway-service:local
+          ports:
+            - containerPort: 8000
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+            - name: CORE_SERVICE_URL
+              value: "http://core-service:8080"
+            - name: NOTIFICATION_SERVICE_URL
+              value: "http://notification-service:8081"
+            - name: REPORTING_SERVICE_URL
+              value: "http://reporting-service:8082"
+          livenessProbe:
+            httpGet:
+              path: /api/actuator/health
+              port: 8000
+            initialDelaySeconds: 45
+            periodSeconds: 15

@@ -1,0 +1,64 @@
+apiVersion: secrets-store.csi.x-k8s.io/v1
+kind: SecretProviderClass
+metadata:
+  name: azure-kv-medisync
+spec:
+  provider: azure
+  secretObjects:                              # Sync KV secrets to K8s Secrets
+  - secretName: db-credentials
+    type: Opaque
+    data:
+    - objectName: db-url
+      key: db-url
+    - objectName: db-user
+      key: db-user
+    - objectName: db-password
+      key: db-password
+  - secretName: redis-credentials
+    type: Opaque
+    data:
+    - objectName: redis-host
+      key: redis-host
+    - objectName: redis-port
+      key: redis-port
+  - secretName: app-secrets
+    type: Opaque
+    data:
+    - objectName: jwt-secret
+      key: jwt-secret
+    - objectName: smtp-username
+      key: smtp-username
+    - objectName: smtp-password
+      key: smtp-password
+  parameters:
+    usePodIdentity: "false"
+    useVMManagedIdentity: "true"          # Use the identity I just granted access to
+    userAssignedIdentityID: "978ffdd9-9217-40ed-8a09-f99588aaa0bd" 
+    keyvaultName: "kv-medisync-vlad"
+    objects: |
+      array:
+        - |
+          objectName: db-url
+          objectType: secret
+        - |
+          objectName: db-user
+          objectType: secret
+        - |
+          objectName: db-password
+          objectType: secret
+        - |
+          objectName: redis-host
+          objectType: secret
+        - |
+          objectName: redis-port
+          objectType: secret
+        - |
+          objectName: jwt-secret
+          objectType: secret
+        - |
+          objectName: smtp-username
+          objectType: secret
+        - |
+          objectName: smtp-password
+          objectType: secret
+    tenantId: "08a1a72f-fecd-4dae-8cec-471a2fb7c2f1"

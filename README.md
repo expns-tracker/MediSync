@@ -119,7 +119,46 @@ The backend is built with Spring Boot 4 and Java 21 using a layered architecture
 * `DOCTOR` – view assigned appointments, complete consultations, manage medical records.
 * `ADMIN` – manage doctors, departments, schedules, allergies, and activate/deactivate accounts.
 
-## 5. Backend Setup
+## 5. Frontend Implementation
+
+The frontend of MediSync is a modern, responsive Single Page Application (SPA) built using the latest web technologies to ensure a seamless experience for patients, doctors, and administrators. 
+
+### Technologies Used
+* **Framework**: Angular 21 (with Angular SSR for Server-Side Rendering)
+* **UI Library**: Angular Material & Angular CDK for accessible and responsive UI components
+* **Reactivity**: RxJS for reactive programming and state management
+* **Language**: TypeScript
+
+### User Interface Showcase
+
+Below is a walkthrough of the MediSync user interface:
+
+**Landing Page & Login**
+The entry point into the application.
+![Landing Page](/screenshots/landing%20page.png)
+![Login](/screenshots/login.png)
+
+**Admin Experience**
+Administrators have a comprehensive dashboard to oversee operations, manage users, and update medical catalogs.
+![Admin Dashboard](/screenshots/admin%20dashboard.png)
+![Admin Analytics](/screenshots/admin%20analytics.png)
+![Patient Management](/screenshots/patient%20management.png)
+![Allergy Catalog Management](/screenshots/allergy%20catalog%20management.png)
+
+**Doctor Experience**
+Doctors can view their upcoming appointments, manage patient history, and complete visits.
+![Doctor Dashboard](/screenshots/doctor%20dashboard.png)
+![Patient History (Doctor View)](/screenshots/patient%20history%20(doctor%20view).png)
+![Complete Appointment](/screenshots/complete%20appointment.png)
+
+**Patient Experience**
+Patients can manage their profile, view their history, and easily book new appointments.
+![Patient Profile](/screenshots/patient%20profile.png)
+![Patient History](/screenshots/patient%20history.png)
+![Book Appointment](/screenshots/book%20appointment.png)
+![Book Appointment 2](/screenshots/book%20appointment2.png)
+
+## 6. Backend Setup
 ### Prerequisites
 * Java 21
 * Maven (or use the included Maven wrapper)
@@ -167,7 +206,7 @@ mvn spring-boot:run
 * `spring.jpa.hibernate.ddl-auto=update` is enabled in development mode.
 * SQL initialization is allowed via `spring.sql.init.mode=always`.
 
-## 6. API Documentation
+## 7. API Documentation
 The backend exposes OpenAPI documentation via Springdoc. After starting the backend, open one of these URLs:
 * Swagger UI: `http://localhost:8080/swagger-ui/index.html`
 * OpenAPI JSON: `http://localhost:8080/v3/api-docs`
@@ -265,3 +304,44 @@ The backend exposes OpenAPI documentation via Springdoc. After starting the back
 * `DELETE /doctors/{doctorId}/schedules/{scheduleId}`
   * Delete a shift. Requires `ADMIN`.
 
+## 8. Microservices Architecture
+The application is structured as a collection of microservices to ensure scalability, resilience, and separation of concerns. They are built on Spring Boot 4 and Java 21:
+* **gateway-service**: Acts as the single entry point (API Gateway). It routes incoming HTTP requests with the `/api` prefix to the appropriate backend microservices, handling cross-cutting concerns like CORS and initial request routing.
+* **core-service**: The primary domain service containing the core business logic (Patients, Doctors, Appointments, and Medical Records). It interacts directly with the PostgreSQL database.
+* **notification-service**: Dedicated to handling system notifications. It operates asynchronously by listening to a Redis queue, parses `NotificationRequest` payloads, and dispatches them via an `EmailService`.
+* **reporting-service**: Dedicated to generating data and analytics reports. It integrates with `spring-cloud-starter-openfeign` for inter-service communication and `resilience4j` for circuit breaking and fault tolerance.
+
+## 9. Deployment (Kubernetes & Azure)
+The application is fully containerized and deployed using Kubernetes, with all configuration manifests located in the `k8s/` directory.
+* **Kubernetes Resources**: The system is composed of several Deployments and ClusterIP Services, managing the frontend, microservices, databases, and monitoring tools. The current deployment topologies (number of pods/instances) are configured as follows:
+  * `core-service`: 2 instances
+  * `frontend`: 2 instances
+  * `gateway-service`: 1 instance
+  * `notification-service`: 1 instance
+  * `reporting-service`: 1 instance
+  * `postgres`: 1 instance
+  * `redis`: 1 instance
+  * `prometheus`: 1 instance
+  * `grafana`: 1 instance
+* **Azure Integration**: The cluster integrates with Azure Key Vault via the Secrets Store CSI Driver (`keyvault-provider.yaml`). This securely mounts sensitive credentials (like DB passwords and JWT keys) directly into the pods without hardcoding them in the configurations.
+* **Ingress Routing**: External traffic is managed by an NGINX Ingress Controller (`ingress.yaml`). It routes:
+  * `/api` to the `gateway-service` (Port 80)
+  * `/` to the `frontend` application (Port 80)
+  * `/prometheus` to the Prometheus dashboard (Port 9090)
+  * `/grafana` to the Grafana dashboards (Port 3000)
+* **Health Checks & Resilience**: Services implement Kubernetes `livenessProbe` checks targeting Spring Boot Actuator endpoints (`/api/actuator/health`). This ensures Kubernetes automatically restarts unresponsive containers.
+* **Container Registry**: Application images are hosted on and pulled from a private Azure Container Registry (`acrmedisyncvlad2.azurecr.io`).
+* **Environment Injection**: Configuration secrets are safely mapped directly to container environment variables (like `SPRING_DATASOURCE_URL`) using `secretKeyRef` which links to the secrets mounted by the Azure CSI driver.
+* **Data Persistence Strategy**: To ensure data durability across pod restarts and deployments, the PostgreSQL and Redis components are configured with **Persistent Volume Claims (PVCs)**. Postgres requests a 5Gi volume mounted at `/var/lib/postgresql/data`, and Redis requests a 2Gi volume mounted at `/data`.
+
+## 10. Infrastructure Components
+### Redis (Event-Driven Pub/Sub & Caching)
+Redis is deployed to facilitate asynchronous communication between microservices as well as data caching.
+* **Pub/Sub (Asynchronous Events)**: The **core-service** publishes domain events to Redis channels. The **notification-service** utilizes a `RedisNotificationSubscriber` (implementing `MessageListener`) to pick up these JSON payloads and dispatch emails asynchronously, ensuring the core booking flow remains fast and unblocked.
+* **Caching**: Redis is also used by the **core-service** to cache frequently accessed but rarely changing data, such as Hospital Departments (via Spring's `@Cacheable`), significantly improving read performance and reducing database load.
+
+### Prometheus & Grafana (Monitoring & Observability)
+A robust observability stack is integrated for centralized metrics scraping and monitoring (`monitoring.yaml`).
+* **Metrics Exposure**: Each Spring Boot microservice is equipped with the Micrometer Prometheus registry (`micrometer-registry-prometheus`), exposing detailed JVM and application metrics via the `/actuator/prometheus` endpoint.
+* **Prometheus**: A dedicated Prometheus deployment runs inside the cluster. It is configured via a `ConfigMap` to continuously scrape the endpoints of the `core-service`, `gateway-service`, `reporting-service`, and `notification-service` every 15 seconds.
+* **Grafana**: A Grafana deployment is spun up alongside Prometheus to provide a visual dashboard for analyzing the scraped metrics and monitoring the overall health of the system.

@@ -7,11 +7,11 @@ TRUNCATE TABLE medical_records, appointments, doctor_schedules, patients_allergi
 
 -- 2. USERS (Role Enum matches ADMIN, DOCTOR, PATIENT)
 INSERT INTO users (id, email, password, role, is_active, created_at, updated_at) VALUES
-(1, 'admin@medisync.com', '$2a$10$wW5V1vGIf.K7B4...', 'ADMIN', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(2, 'g.house@medisync.com', '$2a$10$wW5V1vGIf.K7B4...', 'DOCTOR', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(3, 's.strange@medisync.com', '$2a$10$wW5V1vGIf.K7B4...', 'DOCTOR', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(4, 'j.doe@email.com', '$2a$10$wW5V1vGIf.K7B4...', 'PATIENT', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(5, 'j.smith@email.com', '$2a$10$wW5V1vGIf.K7B4...', 'PATIENT', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+(1, 'admin@medisync.com', '$2a$10$8.UnVuG9HLROJEvLuYwXheT1x88B.r78xL6Xn.g2x34m3461zL.Cq', 'ADMIN', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(2, 'g.house@medisync.com', '$2a$10$8.UnVuG9HLROJEvLuYwXheT1x88B.r78xL6Xn.g2x34m3461zL.Cq', 'DOCTOR', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(3, 's.strange@medisync.com', '$2a$10$8.UnVuG9HLROJEvLuYwXheT1x88B.r78xL6Xn.g2x34m3461zL.Cq', 'DOCTOR', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(4, 'j.doe@email.com', '$2a$10$8.UnVuG9HLROJEvLuYwXheT1x88B.r78xL6Xn.g2x34m3461zL.Cq', 'PATIENT', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(5, 'j.smith@email.com', '$2a$10$8.UnVuG9HLROJEvLuYwXheT1x88B.r78xL6Xn.g2x34m3461zL.Cq', 'PATIENT', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- 3. DEPARTMENTS
 INSERT INTO departments (id, name, created_at, updated_at) VALUES
