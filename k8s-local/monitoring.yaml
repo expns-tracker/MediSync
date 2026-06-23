@@ -34,7 +34,7 @@ spec:
           - "--storage.tsdb.path=/prometheus"
           - "--web.console.libraries=/usr/share/prometheus/console_libraries"
           - "--web.console.templates=/usr/share/prometheus/consoles"
-          - "--web.external-url=http://68.210.80.107/prometheus"
+          - "--web.external-url=http://localhost/prometheus"
           - "--web.route-prefix=/prometheus"
         ports:
         - containerPort: 9090
@@ -79,7 +79,7 @@ spec:
         image: grafana/grafana:latest
         env:
           - name: GF_SERVER_ROOT_URL
-            value: "http://68.210.80.107/grafana"
+            value: "http://localhost/grafana"
           - name: GF_SERVER_SERVE_FROM_SUB_PATH
             value: "true"
         ports:
